@@ -42,7 +42,7 @@ final class WebhookHandlerTest extends TestCase
 {
     use PHPMock;
 
-    private const string SECRET = 'my-secret-key';
+    private const SECRET = 'my-secret-key';
 
     private MockObject&Api $apiMock;
     private MockObject&ModelFactory $modelFactoryMock;

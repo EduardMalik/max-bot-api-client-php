@@ -34,9 +34,9 @@ use Psr\Log\LoggerInterface;
 #[CoversClass(Client::class)]
 final class ClientTest extends TestCase
 {
-    private const string FAKE_TOKEN = '12345:abcdef';
-    private const string API_VERSION = '0.0.6';
-    private const string API_BASE_URL = 'https://platform-api.max.ru';
+    private const FAKE_TOKEN = '12345:abcdef';
+    private const API_VERSION = '0.0.6';
+    private const API_BASE_URL = 'https://platform-api.max.ru';
 
     private MockObject&ClientInterface $httpClientMock;
     private MockObject&RequestFactoryInterface $requestFactoryMock;
