@@ -10,10 +10,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(MessageRemovedUpdate::class)]
 final class MessageRemovedUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArrayAndSerializedBack(): void
     {
         $data = [
@@ -23,9 +21,7 @@ final class MessageRemovedUpdateTest extends TestCase
             'chat_id' => 123456789,
             'user_id' => 98765,
         ];
-
         $update = MessageRemovedUpdate::fromArray($data);
-
         $this->assertInstanceOf(MessageRemovedUpdate::class, $update);
         $this->assertSame(UpdateType::MessageRemoved, $update->updateType);
         $this->assertSame(1678888000, $update->timestamp);

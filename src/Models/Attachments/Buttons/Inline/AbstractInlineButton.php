@@ -7,15 +7,26 @@ namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline;
 use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
 use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
 
-abstract readonly class AbstractInlineButton extends AbstractModel
+abstract class AbstractInlineButton extends AbstractModel
 {
     /**
-     * @param InlineButtonType $type The type of the inline button.
-     * @param string $text Visible text of the button.
+     * @var InlineButtonType
+     * @readonly
      */
-    public function __construct(
-        public InlineButtonType $type,
-        public string $text,
-    ) {
+    public $type;
+    /**
+     * @var string
+     * @readonly
+     */
+    public $text;
+    /**
+     * @param mixed $type The type of the inline button.
+     * @param string $text Visible text of the button.
+     * @param \BushlanovDev\MaxMessengerBot\Enums\InlineButtonType::* $type
+     */
+    public function __construct($type, string $text)
+    {
+        $this->type = $type;
+        $this->text = $text;
     }
 }

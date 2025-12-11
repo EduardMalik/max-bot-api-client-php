@@ -10,8 +10,28 @@ use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
  * Button that creates a new chat associated with the message.
  * The bot will be added as an administrator by default.
  */
-final readonly class ChatButton extends AbstractInlineButton
+final class ChatButton extends AbstractInlineButton
 {
+    /**
+     * @var string
+     * @readonly
+     */
+    public $chatTitle;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $chatDescription;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $startPayload;
+    /**
+     * @var int|null
+     * @readonly
+     */
+    public $uuid;
     /**
      * @param string $text Visible text of the button (1 to 128 characters).
      * @param string $chatTitle Title of the chat to be created (max 200 characters).
@@ -21,11 +41,15 @@ final readonly class ChatButton extends AbstractInlineButton
      */
     public function __construct(
         string $text,
-        public string $chatTitle,
-        public ?string $chatDescription = null,
-        public ?string $startPayload = null,
-        public ?int $uuid = null,
+        string $chatTitle,
+        ?string $chatDescription = null,
+        ?string $startPayload = null,
+        ?int $uuid = null
     ) {
+        $this->chatTitle = $chatTitle;
+        $this->chatDescription = $chatDescription;
+        $this->startPayload = $startPayload;
+        $this->uuid = $uuid;
         parent::__construct(InlineButtonType::Chat, $text);
     }
 }

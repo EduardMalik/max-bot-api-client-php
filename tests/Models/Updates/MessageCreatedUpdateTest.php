@@ -14,13 +14,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(MessageCreatedUpdate::class)]
-#[UsesClass(Message::class)]
-#[UsesClass(MessageBody::class)]
-#[UsesClass(Recipient::class)]
 final class MessageCreatedUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [
@@ -33,9 +28,7 @@ final class MessageCreatedUpdateTest extends TestCase
             ],
             'user_locale' => 'ru-RU',
         ];
-
         $update = MessageCreatedUpdate::fromArray($data);
-
         $this->assertInstanceOf(MessageCreatedUpdate::class, $update);
         $this->assertSame(UpdateType::MessageCreated, $update->updateType);
         $this->assertInstanceOf(Message::class, $update->message);

@@ -16,9 +16,9 @@ $dispatcher = $api->getUpdateDispatcher();
 
 $dispatcher->onMessageCreated(function (MessageCreatedUpdate $update, Api $api) {
     $api->sendMessage(
-        userId: $update->message->recipient->userId,
-        chatId: $update->message->recipient->chatId,
-        text: $update->message->body->text,
+        $update->message->recipient->userId,
+        $update->message->recipient->chatId,
+        $update->message->body->text
     );
 });
 

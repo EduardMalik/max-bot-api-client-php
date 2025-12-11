@@ -11,8 +11,23 @@ use BushlanovDev\MaxMessengerBot\Models\Message;
 /**
  * You will get this update as soon as a user presses a callback button.
  */
-final readonly class MessageCallbackUpdate extends AbstractUpdate
+final class MessageCallbackUpdate extends AbstractUpdate
 {
+    /**
+     * @var Callback
+     * @readonly
+     */
+    public $callback;
+    /**
+     * @var Message|null
+     * @readonly
+     */
+    public $message;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $userLocale;
     /**
      * @param int $timestamp Unix-time when event has occurred.
      * @param Callback $callback The callback query itself.
@@ -21,10 +36,13 @@ final readonly class MessageCallbackUpdate extends AbstractUpdate
      */
     public function __construct(
         int $timestamp,
-        public Callback $callback,
-        public ?Message $message,
-        public ?string $userLocale,
+        Callback $callback,
+        ?Message $message,
+        ?string $userLocale
     ) {
+        $this->callback = $callback;
+        $this->message = $message;
+        $this->userLocale = $userLocale;
         parent::__construct(UpdateType::MessageCallback, $timestamp);
     }
 }

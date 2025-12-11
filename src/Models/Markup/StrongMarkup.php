@@ -9,7 +9,7 @@ use BushlanovDev\MaxMessengerBot\Enums\MarkupType;
 /**
  * Represents a **strong** (bold) part of the text.
  */
-final readonly class StrongMarkup extends AbstractMarkup
+final class StrongMarkup extends AbstractMarkup
 {
     /**
      * @param int $from Element start index (zero-based) in text.
@@ -17,7 +17,7 @@ final readonly class StrongMarkup extends AbstractMarkup
      */
     public function __construct(
         int $from,
-        int $length,
+        int $length
     ) {
         parent::__construct(MarkupType::Strong, $from, $length);
     }

@@ -12,11 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(UserAddedToChatUpdate::class)]
-#[UsesClass(User::class)]
 final class UserAddedToChatUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedWhenInvitedByUser(): void
     {
         $data = [
@@ -34,9 +31,7 @@ final class UserAddedToChatUpdateTest extends TestCase
             'inviter_id' => 202,
             'is_channel' => false,
         ];
-
         $update = UserAddedToChatUpdate::fromArray($data);
-
         $this->assertInstanceOf(UserAddedToChatUpdate::class, $update);
         $this->assertSame(UpdateType::UserAdded, $update->updateType);
         $this->assertSame(12345, $update->chatId);
@@ -46,8 +41,6 @@ final class UserAddedToChatUpdateTest extends TestCase
         $this->assertSame(101, $update->user->userId);
         $this->assertEquals($data, $update->toArray());
     }
-
-    #[Test]
     public function canBeCreatedWhenJoinedByLink(): void
     {
         $data = [
@@ -65,9 +58,7 @@ final class UserAddedToChatUpdateTest extends TestCase
             'inviter_id' => null,
             'is_channel' => true,
         ];
-
         $update = UserAddedToChatUpdate::fromArray($data);
-
         $this->assertInstanceOf(UserAddedToChatUpdate::class, $update);
         $this->assertNull($update->inviterId);
         $this->assertTrue($update->isChannel);

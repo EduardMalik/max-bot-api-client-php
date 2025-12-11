@@ -9,19 +9,15 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(SendContactButton::class)]
 final class SendContactButtonTest extends TestCase
 {
-    #[Test]
     public function toArray(): void
     {
         $button = new SendContactButton('Share My Contact');
-
         $expected = [
             'type' => 'user_contact',
             'text' => 'Share My Contact',
         ];
-
         $this->assertEquals($expected, $button->toArray());
     }
 }

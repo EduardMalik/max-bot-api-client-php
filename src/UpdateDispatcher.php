@@ -14,33 +14,40 @@ use BushlanovDev\MaxMessengerBot\Models\Updates\MessageCreatedUpdate;
 final class UpdateDispatcher
 {
     /**
+     * @var Api
+     * @readonly
+     */
+    private $api;
+    /**
      * @var array<string, callable>
      */
-    private array $handlers = [];
+    private $handlers = [];
 
     /**
      * @var array<string, callable>
      */
-    private array $commandHandlers = [];
+    private $commandHandlers = [];
 
     /**
      * @param Api $api
      */
-    public function __construct(private readonly Api $api)
+    public function __construct(Api $api)
     {
+        $this->api = $api;
     }
 
     /**
      * Registers a handler for a specific update type.
      *
-     * @param UpdateType $type The type of update to handle.
+     * @param mixed $type The type of update to handle.
      * @param callable $handler The function to execute when the update is received.
      *
      * @return $this
+     * @param \BushlanovDev\MaxMessengerBot\Enums\UpdateType::* $type
      */
-    public function addHandler(UpdateType $type, callable $handler): self
+    public function addHandler($type, callable $handler): self
     {
-        $this->handlers[$type->value] = $handler;
+        $this->handlers[$type] = $handler;
 
         return $this;
     }
@@ -69,7 +76,7 @@ final class UpdateDispatcher
      */
     public function dispatch(AbstractUpdate $update): void
     {
-        if ($update instanceof MessageCreatedUpdate && $update->message->body?->text) {
+        if ($update instanceof MessageCreatedUpdate && (($nullsafeVariable1 = $update->message->body) ? $nullsafeVariable1->text : null)) {
             $text = $update->message->body->text;
             $parts = explode(' ', trim($text));
             $command = $parts[0];
@@ -80,7 +87,7 @@ final class UpdateDispatcher
             }
         }
 
-        $handler = $this->handlers[$update->updateType->value] ?? null;
+        $handler = $this->handlers[$update->updateType] ?? null;
         if ($handler) {
             $handler($update, $this->api);
         }

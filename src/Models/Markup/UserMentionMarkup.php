@@ -9,8 +9,18 @@ use BushlanovDev\MaxMessengerBot\Enums\MarkupType;
 /**
  * Represents a user mention in the text.
  */
-final readonly class UserMentionMarkup extends AbstractMarkup
+final class UserMentionMarkup extends AbstractMarkup
 {
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $userLink;
+    /**
+     * @var int|null
+     * @readonly
+     */
+    public $userId;
     /**
      * @param int $from Element start index (zero-based) in text.
      * @param int $length Length of the markup element.
@@ -20,9 +30,11 @@ final readonly class UserMentionMarkup extends AbstractMarkup
     public function __construct(
         int $from,
         int $length,
-        public ?string $userLink,
-        public ?int $userId,
+        ?string $userLink,
+        ?int $userId
     ) {
+        $this->userLink = $userLink;
+        $this->userId = $userId;
         parent::__construct(MarkupType::UserMention, $from, $length);
     }
 }

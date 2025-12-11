@@ -10,8 +10,23 @@ use BushlanovDev\MaxMessengerBot\Models\User;
 /**
  * Event of enabling notifications in a dialog.
  */
-final readonly class DialogUnmutedUpdate extends AbstractUpdate
+final class DialogUnmutedUpdate extends AbstractUpdate
 {
+    /**
+     * @var int
+     * @readonly
+     */
+    public $chatId;
+    /**
+     * @var User
+     * @readonly
+     */
+    public $user;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $userLocale;
     /**
      * @param int $timestamp Unix-time when event has occurred.
      * @param int $chatId Dialog identifier where event has occurred.
@@ -20,10 +35,13 @@ final readonly class DialogUnmutedUpdate extends AbstractUpdate
      */
     public function __construct(
         int $timestamp,
-        public int $chatId,
-        public User $user,
-        public ?string $userLocale,
+        int $chatId,
+        User $user,
+        ?string $userLocale
     ) {
+        $this->chatId = $chatId;
+        $this->user = $user;
+        $this->userLocale = $userLocale;
         parent::__construct(UpdateType::DialogUnmuted, $timestamp);
     }
 }

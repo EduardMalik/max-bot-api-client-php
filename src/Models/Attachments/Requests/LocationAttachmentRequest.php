@@ -10,7 +10,7 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\LocationAttachmentR
 /**
  * Request to attach a geographical location to a message.
  */
-final readonly class LocationAttachmentRequest extends AbstractAttachmentRequest
+final class LocationAttachmentRequest extends AbstractAttachmentRequest
 {
     /**
      * @param float $latitude Latitude as a floating-point number.
@@ -20,7 +20,7 @@ final readonly class LocationAttachmentRequest extends AbstractAttachmentRequest
     {
         parent::__construct(
             AttachmentType::Location,
-            new LocationAttachmentRequestPayload($latitude, $longitude),
+            new LocationAttachmentRequestPayload($latitude, $longitude)
         );
     }
 }

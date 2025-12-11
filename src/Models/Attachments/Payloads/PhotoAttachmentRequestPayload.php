@@ -10,19 +10,37 @@ use InvalidArgumentException;
 /**
  * Request to attach image. All fields are mutually exclusive.
  */
-final readonly class PhotoAttachmentRequestPayload extends AbstractAttachmentRequestPayload
+final class PhotoAttachmentRequestPayload extends AbstractAttachmentRequestPayload
 {
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $url;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $token;
+    /**
+     * @var PhotoToken[]|null
+     * @readonly
+     */
+    public $photos;
     /**
      * @param string|null $url Any external image URL you want to attach.
      * @param string|null $token Token of any existing attachment.
      * @param PhotoToken[]|null $photos Tokens were obtained after uploading images.
      */
     public function __construct(
-        public ?string $url = null,
-        public ?string $token = null,
-        #[ArrayOf(PhotoToken::class)]
-        public ?array $photos = null,
+        ?string $url = null,
+        ?string $token = null,
+        #[\BushlanovDev\MaxMessengerBot\Attributes\ArrayOf(\BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoToken::class)]
+        ?array $photos = null
     ) {
+        $this->url = $url;
+        $this->token = $token;
+        $this->photos = $photos;
         if ($this->url === null && $this->token === null && $this->photos === null) {
             throw new InvalidArgumentException(
                 'Provide one of "url", "token", or "photos" for PhotoAttachmentRequestPayload.'

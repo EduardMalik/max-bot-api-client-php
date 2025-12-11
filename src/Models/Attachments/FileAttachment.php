@@ -7,18 +7,36 @@ namespace BushlanovDev\MaxMessengerBot\Models\Attachments;
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\FileAttachmentPayload;
 
-final readonly class FileAttachment extends AbstractAttachment
+final class FileAttachment extends AbstractAttachment
 {
+    /**
+     * @var FileAttachmentPayload
+     * @readonly
+     */
+    public $payload;
+    /**
+     * @var string
+     * @readonly
+     */
+    public $filename;
+    /**
+     * @var int
+     * @readonly
+     */
+    public $size;
     /**
      * @param FileAttachmentPayload $payload File attachment payload.
      * @param string $filename Uploaded file name.
      * @param int $size File size in bytes.
      */
     public function __construct(
-        public FileAttachmentPayload $payload,
-        public string $filename,
-        public int $size,
+        FileAttachmentPayload $payload,
+        string $filename,
+        int $size
     ) {
+        $this->payload = $payload;
+        $this->filename = $filename;
+        $this->size = $size;
         parent::__construct(AttachmentType::File);
     }
 }

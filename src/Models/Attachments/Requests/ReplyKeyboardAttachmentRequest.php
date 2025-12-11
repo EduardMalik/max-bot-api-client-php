@@ -8,7 +8,7 @@ use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply\AbstractReplyButton;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\ReplyKeyboardAttachmentRequestPayload;
 
-final readonly class ReplyKeyboardAttachmentRequest extends AbstractAttachmentRequest
+final class ReplyKeyboardAttachmentRequest extends AbstractAttachmentRequest
 {
     /**
      * @param AbstractReplyButton[][] $buttons
@@ -22,7 +22,7 @@ final readonly class ReplyKeyboardAttachmentRequest extends AbstractAttachmentRe
     ) {
         parent::__construct(
             AttachmentType::ReplyKeyboard,
-            new ReplyKeyboardAttachmentRequestPayload($buttons, $direct, $directUserId),
+            new ReplyKeyboardAttachmentRequestPayload($buttons, $direct, $directUserId)
         );
     }
 }

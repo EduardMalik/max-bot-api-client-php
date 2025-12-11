@@ -12,12 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(VideoAttachmentDetails::class)]
-#[UsesClass(VideoUrls::class)]
-#[UsesClass(PhotoAttachmentRequestPayload::class)]
 final class VideoAttachmentDetailsTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedWithAllData(): void
     {
         $data = [
@@ -28,9 +24,7 @@ final class VideoAttachmentDetailsTest extends TestCase
             'urls' => ['mp4_1080' => 'http://example.com/video.mp4'],
             'thumbnail' => ['token' => 'thumb_token_456'],
         ];
-
         $details = VideoAttachmentDetails::fromArray($data);
-
         $this->assertInstanceOf(VideoAttachmentDetails::class, $details);
         $this->assertSame('video_token_123', $details->token);
         $this->assertSame(125, $details->duration);

@@ -32,8 +32,9 @@ class WebhookUnsubscribeCommand extends Command
 
     /**
      * Execute the console command.
+     * @param \BushlanovDev\MaxMessengerBot\Api $api
      */
-    public function handle(Api $api): int
+    public function handle($api): int
     {
         $url = (string)$this->argument('url'); // @phpstan-ignore-line
         $confirm = $this->option('confirm');

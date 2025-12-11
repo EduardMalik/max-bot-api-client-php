@@ -17,15 +17,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(UpdateList::class)]
-#[UsesClass(ModelFactory::class)]
-#[UsesClass(MessageCreatedUpdate::class)]
-#[UsesClass(Message::class)]
-#[UsesClass(MessageBody::class)]
-#[UsesClass(Recipient::class)]
 final class UpdateListTest extends TestCase
 {
-    #[Test]
     public function factoryCorrectlyCreatesUpdateList(): void
     {
         $data = [
@@ -43,22 +36,17 @@ final class UpdateListTest extends TestCase
             ],
             'marker' => 1,
         ];
-
         $factory = new ModelFactory();
         $updateList = $factory->createUpdateList($data);
-
         $this->assertInstanceOf(UpdateList::class, $updateList);
         $this->assertCount(1, $updateList->updates);
         $this->assertInstanceOf(MessageCreatedUpdate::class, $updateList->updates[0]);
         $this->assertSame(1, $updateList->marker);
     }
-
-    #[Test]
     public function directCallToFromArrayThrowsException(): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessageMatches('/Cannot create .* directly from an array/');
-
         UpdateList::fromArray(['updates' => [], 'marker' => 1]);
     }
 }

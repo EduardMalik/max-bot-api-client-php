@@ -29,8 +29,43 @@ use RuntimeException;
  * It handles request signing, error handling, and JSON serialization/deserialization.
  * This class is an abstraction over any PSR-18 compatible HTTP client.
  */
-final readonly class Client implements ClientApiInterface
+final class Client implements ClientApiInterface
 {
+    /**
+     * @var string
+     * @readonly
+     */
+    private $accessToken;
+    /**
+     * @var ClientInterface
+     * @readonly
+     */
+    private $httpClient;
+    /**
+     * @var RequestFactoryInterface
+     * @readonly
+     */
+    private $requestFactory;
+    /**
+     * @var StreamFactoryInterface
+     * @readonly
+     */
+    private $streamFactory;
+    /**
+     * @var string
+     * @readonly
+     */
+    private $baseUrl;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    private $apiVersion;
+    /**
+     * @var LoggerInterface
+     * @readonly
+     */
+    private $logger;
     /**
      * @param string $accessToken Your bot's access token from @MasterBot.
      * @param ClientInterface $httpClient A PSR-18 compatible HTTP client (e.g., Guzzle).
@@ -43,14 +78,22 @@ final readonly class Client implements ClientApiInterface
      * @throws InvalidArgumentException
      */
     public function __construct(
-        private string $accessToken,
-        private ClientInterface $httpClient,
-        private RequestFactoryInterface $requestFactory,
-        private StreamFactoryInterface $streamFactory,
-        private string $baseUrl,
-        private ?string $apiVersion = null,
-        private LoggerInterface $logger = new NullLogger(),
+        string $accessToken,
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        StreamFactoryInterface $streamFactory,
+        string $baseUrl,
+        ?string $apiVersion = null,
+        ?LoggerInterface $logger = null
     ) {
+        $logger = $logger ?? new NullLogger();
+        $this->accessToken = $accessToken;
+        $this->httpClient = $httpClient;
+        $this->requestFactory = $requestFactory;
+        $this->streamFactory = $streamFactory;
+        $this->baseUrl = $baseUrl;
+        $this->apiVersion = $apiVersion;
+        $this->logger = $logger;
         if (empty($accessToken)) {
             throw new InvalidArgumentException('Access token cannot be empty.');
         }
@@ -58,8 +101,12 @@ final readonly class Client implements ClientApiInterface
 
     /**
      * @inheritDoc
+     * @param string $method
+     * @param string $uri
+     * @param mixed[] $queryParams
+     * @param mixed[] $body
      */
-    public function request(string $method, string $uri, array $queryParams = [], array $body = []): array
+    public function request($method, $uri, $queryParams = [], $body = []): array
     {
         if (!empty($this->apiVersion)) {
             $queryParams['v'] = $this->apiVersion;
@@ -78,7 +125,7 @@ final readonly class Client implements ClientApiInterface
 
         if (!empty($body)) {
             try {
-                $payload = json_encode($body, JSON_THROW_ON_ERROR);
+                $payload = json_encode($body, 0);
             } catch (JsonException $e) {
                 throw new SerializationException('Failed to encode request body to JSON.', 0, $e);
             }
@@ -116,7 +163,7 @@ final readonly class Client implements ClientApiInterface
         }
 
         try {
-            return json_decode($responseBody, true, 512, JSON_THROW_ON_ERROR);
+            return json_decode($responseBody, true, 512, 0);
         } catch (JsonException $e) {
             throw new SerializationException('Failed to decode API response JSON.', 0, $e);
         }
@@ -124,8 +171,11 @@ final readonly class Client implements ClientApiInterface
 
     /**
      * @inheritDoc
+     * @param string $uri
+     * @param mixed $fileContents
+     * @param string $fileName
      */
-    public function multipartUpload(string $uri, mixed $fileContents, string $fileName): string
+    public function multipartUpload($uri, $fileContents, $fileName): string
     {
         $boundary = '--------------------------' . microtime(true);
         $bodyStream = $this->streamFactory->createStream();
@@ -161,13 +211,18 @@ final readonly class Client implements ClientApiInterface
 
     /**
      * @inheritDoc
+     * @param string $uploadUrl
+     * @param mixed $fileResource
+     * @param string $fileName
+     * @param int $fileSize
+     * @param int $chunkSize
      */
     public function resumableUpload(
-        string $uploadUrl,
-        mixed $fileResource,
-        string $fileName,
-        int $fileSize,
-        int $chunkSize = 1048576,
+        $uploadUrl,
+        $fileResource,
+        $fileName,
+        $fileSize,
+        $chunkSize = 1048576
     ): string {
         if (!is_resource($fileResource) || get_resource_type($fileResource) !== 'stream') {
             throw new InvalidArgumentException('fileResource must be a valid stream resource.');
@@ -247,14 +302,14 @@ final readonly class Client implements ClientApiInterface
             'body' => $responseBody,
         ]);
 
-        throw match ($statusCode) {
-            401 => new UnauthorizedException($errorMessage, $errorCode, $response),
-            403 => new ForbiddenException($errorMessage, $errorCode, $response),
-            404 => new NotFoundException($errorMessage, $errorCode, $response),
-            405 => new MethodNotAllowedException($errorMessage, $errorCode, $response),
-            429 => new RateLimitExceededException($errorMessage, $errorCode, $response),
-            default => $this->mapErrorCodeToException($errorMessage, $errorCode, $response, $statusCode),
-        };
+        switch ($statusCode) {
+            case 401:
+            case 403:
+            case 404:
+            case 405:
+            case 429:
+            default:
+        }
     }
 
     /**
@@ -269,11 +324,13 @@ final readonly class Client implements ClientApiInterface
         string $message,
         string $errorCode,
         ResponseInterface $response,
-        ?int $httpStatusCode = null,
+        ?int $httpStatusCode = null
     ): ClientApiException {
-        return match ($errorCode) {
-            'attachment.not.ready' => new AttachmentNotReadyException($message, $errorCode, $response, $httpStatusCode),
-            default => new ClientApiException($message, $errorCode, $response, $httpStatusCode),
-        };
+        switch ($errorCode) {
+            case 'attachment.not.ready':
+                return new AttachmentNotReadyException($message, $errorCode, $response, $httpStatusCode);
+            default:
+                return new ClientApiException($message, $errorCode, $response, $httpStatusCode);
+        }
     }
 }

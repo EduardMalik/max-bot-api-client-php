@@ -17,14 +17,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(InlineKeyboardAttachmentRequest::class)]
-#[UsesClass(InlineKeyboardAttachmentRequestPayload::class)]
-#[UsesClass(AbstractInlineButton::class)]
-#[UsesClass(CallbackButton::class)]
-#[UsesClass(LinkButton::class)]
 final class InlineKeyboardAttachmentRequestTest extends TestCase
 {
-    #[Test]
     public function createsCorrectRequestAndSerializesToArray(): void
     {
         $buttons = [
@@ -32,12 +26,10 @@ final class InlineKeyboardAttachmentRequestTest extends TestCase
             [new LinkButton('Docs', 'https://dev.max.ru')],
         ];
         $request = new InlineKeyboardAttachmentRequest($buttons);
-
         $this->assertInstanceOf(InlineKeyboardAttachmentRequest::class, $request);
         $this->assertSame(AttachmentType::InlineKeyboard, $request->type);
         $this->assertInstanceOf(InlineKeyboardAttachmentRequestPayload::class, $request->payload);
         $this->assertSame($buttons, $request->payload->buttons);
-
         $expectedArray = [
             'type' => 'inline_keyboard',
             'payload' => [
@@ -60,11 +52,8 @@ final class InlineKeyboardAttachmentRequestTest extends TestCase
                 ],
             ],
         ];
-
         $this->assertEquals($expectedArray, $request->toArray());
     }
-
-    #[Test]
     public function handlesJaggedAndMultiButtonRows(): void
     {
         $buttons = [
@@ -75,7 +64,6 @@ final class InlineKeyboardAttachmentRequestTest extends TestCase
             ],
         ];
         $request = new InlineKeyboardAttachmentRequest($buttons);
-
         $expectedArray = [
             'type' => 'inline_keyboard',
             'payload' => [
@@ -104,18 +92,13 @@ final class InlineKeyboardAttachmentRequestTest extends TestCase
                 ],
             ],
         ];
-
         $this->assertEquals($expectedArray, $request->toArray());
     }
-
-    #[Test]
     public function canBeCreatedWithEmptyButtonsArray(): void
     {
         $buttons = [];
         $request = new InlineKeyboardAttachmentRequest($buttons);
-
         $this->assertEmpty($request->payload->buttons);
-
         $expectedArray = [
             'type' => 'inline_keyboard',
             'payload' => [

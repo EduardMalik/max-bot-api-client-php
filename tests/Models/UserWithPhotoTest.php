@@ -9,10 +9,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(UserWithPhoto::class)]
 final class UserWithPhotoTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [
@@ -26,9 +24,7 @@ final class UserWithPhotoTest extends TestCase
             'avatar_url' => 'https://example.com/avatar.jpg',
             'full_avatar_url' => 'https://example.com/full_avatar.jpg',
         ];
-
         $user = UserWithPhoto::fromArray($data);
-
         $this->assertInstanceOf(UserWithPhoto::class, $user);
         $this->assertSame($data['user_id'], $user->userId);
         $this->assertSame($data['first_name'], $user->firstName);
@@ -39,14 +35,10 @@ final class UserWithPhotoTest extends TestCase
         $this->assertSame($data['description'], $user->description);
         $this->assertSame($data['avatar_url'], $user->avatarUrl);
         $this->assertSame($data['full_avatar_url'], $user->fullAvatarUrl);
-
         $array = $user->toArray();
-
         $this->assertIsArray($array);
         $this->assertSame($data, $array);
     }
-
-    #[Test]
     public function canBeCreatedFromArrayWithOptionalDataNull(): void
     {
         $data = [
@@ -55,9 +47,7 @@ final class UserWithPhotoTest extends TestCase
             'is_bot' => false,
             'last_activity_time' => 1678886400000,
         ];
-
         $user = UserWithPhoto::fromArray($data);
-
         $this->assertInstanceOf(UserWithPhoto::class, $user);
         $this->assertSame($data['user_id'], $user->userId);
         $this->assertSame($data['first_name'], $user->firstName);
@@ -68,11 +58,11 @@ final class UserWithPhotoTest extends TestCase
         $this->assertNull($user->description);
         $this->assertNull($user->avatarUrl);
         $this->assertNull($user->fullAvatarUrl);
-
         $array = $user->toArray();
-
         $this->assertIsArray($array);
-        $array = array_filter($array, fn($item) => null !== $item);
+        $array = array_filter($array, function ($item) {
+            return null !== $item;
+        });
         $this->assertSame($data, $array);
     }
 }

@@ -10,12 +10,18 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline\AbstractInlin
 /**
  * Represents an inline keyboard structure.
  */
-final readonly class KeyboardPayload extends AbstractModel
+final class KeyboardPayload extends AbstractModel
 {
+    /**
+     * @var AbstractInlineButton[][]
+     * @readonly
+     */
+    public $buttons;
     /**
      * @param AbstractInlineButton[][] $buttons Two-dimensional array of buttons.
      */
-    public function __construct(public array $buttons)
+    public function __construct(array $buttons)
     {
+        $this->buttons = $buttons;
     }
 }

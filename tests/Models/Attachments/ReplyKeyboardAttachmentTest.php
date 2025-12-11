@@ -14,14 +14,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ReplyKeyboardAttachment::class)]
-#[UsesClass(AbstractReplyButton::class)]
-#[UsesClass(SendContactButton::class)]
-#[UsesClass(SendMessageButton::class)]
-#[UsesClass(ModelFactory::class)]
 final class ReplyKeyboardAttachmentTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArrayViaFactory(): void
     {
         $data = [
@@ -31,10 +25,8 @@ final class ReplyKeyboardAttachmentTest extends TestCase
                 [['type' => 'user_contact', 'text' => 'My Contact']]
             ]
         ];
-
         $factory = new ModelFactory();
         $attachment = $factory->createAttachment($data);
-
         $this->assertInstanceOf(ReplyKeyboardAttachment::class, $attachment);
         $this->assertCount(2, $attachment->buttons);
         $this->assertInstanceOf(SendContactButton::class, $attachment->buttons[1][0]);

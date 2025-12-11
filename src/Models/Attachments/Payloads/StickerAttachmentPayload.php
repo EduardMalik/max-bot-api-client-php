@@ -9,15 +9,25 @@ use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
 /**
  * Payload for a sticker attachment.
  */
-final readonly class StickerAttachmentPayload extends AbstractModel
+final class StickerAttachmentPayload extends AbstractModel
 {
+    /**
+     * @var string
+     * @readonly
+     */
+    public $url;
+    /**
+     * @var string
+     * @readonly
+     */
+    public $code;
     /**
      * @param string $url Media attachment URL.
      * @param string $code Sticker identifier.
      */
-    public function __construct(
-        public string $url,
-        public string $code,
-    ) {
+    public function __construct(string $url, string $code)
+    {
+        $this->url = $url;
+        $this->code = $code;
     }
 }

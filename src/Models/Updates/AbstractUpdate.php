@@ -10,15 +10,26 @@ use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
 /**
  * `Update` object represents different types of events that happened in chat.
  */
-abstract readonly class AbstractUpdate extends AbstractModel
+abstract class AbstractUpdate extends AbstractModel
 {
     /**
-     * @param UpdateType $updateType Type of update.
-     * @param int $timestamp Unix-time when event has occurred.
+     * @var UpdateType
+     * @readonly
      */
-    public function __construct(
-        public UpdateType $updateType,
-        public int $timestamp,
-    ) {
+    public $updateType;
+    /**
+     * @var int
+     * @readonly
+     */
+    public $timestamp;
+    /**
+     * @param mixed $updateType Type of update.
+     * @param int $timestamp Unix-time when event has occurred.
+     * @param \BushlanovDev\MaxMessengerBot\Enums\UpdateType::* $updateType
+     */
+    public function __construct($updateType, int $timestamp)
+    {
+        $this->updateType = $updateType;
+        $this->timestamp = $timestamp;
     }
 }

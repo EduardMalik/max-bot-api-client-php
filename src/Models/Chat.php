@@ -10,12 +10,87 @@ use BushlanovDev\MaxMessengerBot\Enums\ChatType;
 /**
  * Information about the chat.
  */
-final readonly class Chat extends AbstractModel
+final class Chat extends AbstractModel
 {
     /**
+     * @var int
+     * @readonly
+     */
+    public $chatId;
+    /**
+     * @var ChatType
+     * @readonly
+     */
+    public $type;
+    /**
+     * @var ChatStatus
+     * @readonly
+     */
+    public $status;
+    /**
+     * @var int
+     * @readonly
+     */
+    public $lastEventTime;
+    /**
+     * @var int
+     * @readonly
+     */
+    public $participantsCount;
+    /**
+     * @var bool
+     * @readonly
+     */
+    public $isPublic;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $title;
+    /**
+     * @var Image|null
+     * @readonly
+     */
+    public $icon;
+    /**
+     * @var int|null
+     * @readonly
+     */
+    public $ownerId;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $link;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $description;
+    /**
+     * @var UserWithPhoto|null
+     * @readonly
+     */
+    public $dialogWithUser;
+    /**
+     * @var int|null
+     * @readonly
+     */
+    public $messagesCount;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $chatMessageId;
+    /**
+     * @var Message|null
+     * @readonly
+     */
+    public $pinnedMessage;
+    /**
      * @param int $chatId Chats identifier.
-     * @param ChatType $type Type of chat. One of: `dialog`, `chat`, `channel`.
-     * @param ChatStatus $status Chat status.
+     * @param mixed $type Type of chat. One of: `dialog`, `chat`, `channel`.
+     * @param mixed $status Chat status.
      * @param int $lastEventTime Time of last event occurred in chat.
      * @param int $participantsCount Number of people in chat. Always 2 for `dialog` chat type.
      * @param bool $isPublic Is current chat publicly available. Always false for dialogs.
@@ -28,23 +103,25 @@ final readonly class Chat extends AbstractModel
      * @param int|null $messagesCount Messages count in chat. Only for group chats and channels. Not available for dialogs.
      * @param string|null $chatMessageId Identifier of message that contains `chat` button initialized chat.
      * @param Message|null $pinnedMessage Pinned message in chat or channel. Returned only when single chat is requested.
+     * @param \BushlanovDev\MaxMessengerBot\Enums\ChatType::* $type
+     * @param \BushlanovDev\MaxMessengerBot\Enums\ChatStatus::* $status
      */
-    public function __construct(
-        public int $chatId,
-        public ChatType $type,
-        public ChatStatus $status,
-        public int $lastEventTime,
-        public int $participantsCount,
-        public bool $isPublic,
-        public ?string $title,
-        public ?Image $icon,
-        public ?int $ownerId,
-        public ?string $link,
-        public ?string $description,
-        public ?UserWithPhoto $dialogWithUser,
-        public ?int $messagesCount,
-        public ?string $chatMessageId,
-        public ?Message $pinnedMessage,
-    ) {
+    public function __construct(int $chatId, $type, $status, int $lastEventTime, int $participantsCount, bool $isPublic, ?string $title, ?Image $icon, ?int $ownerId, ?string $link, ?string $description, ?UserWithPhoto $dialogWithUser, ?int $messagesCount, ?string $chatMessageId, ?Message $pinnedMessage)
+    {
+        $this->chatId = $chatId;
+        $this->type = $type;
+        $this->status = $status;
+        $this->lastEventTime = $lastEventTime;
+        $this->participantsCount = $participantsCount;
+        $this->isPublic = $isPublic;
+        $this->title = $title;
+        $this->icon = $icon;
+        $this->ownerId = $ownerId;
+        $this->link = $link;
+        $this->description = $description;
+        $this->dialogWithUser = $dialogWithUser;
+        $this->messagesCount = $messagesCount;
+        $this->chatMessageId = $chatMessageId;
+        $this->pinnedMessage = $pinnedMessage;
     }
 }

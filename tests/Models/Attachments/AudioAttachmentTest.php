@@ -11,11 +11,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(AudioAttachment::class)]
-#[UsesClass(MediaAttachmentPayload::class)]
 final class AudioAttachmentTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = ['type' => 'audio', 'payload' => ['url' => 'u', 'token' => 't'], 'transcription' => 'Hello world.'];

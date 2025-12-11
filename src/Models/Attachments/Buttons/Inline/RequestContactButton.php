@@ -9,7 +9,7 @@ use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
 /**
  * Requests the user permission to access contact information (phone number, short link, email).
  */
-final readonly class RequestContactButton extends AbstractInlineButton
+final class RequestContactButton extends AbstractInlineButton
 {
     /**
      * @param string $text Visible button text (1 to 128 characters).

@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace BushlanovDev\MaxMessengerBot\Enums;
 
-enum AttachmentType: string
+class AttachmentType
 {
-    case Image = 'image';
-    case Video = 'video';
-    case Audio = 'audio';
-    case File = 'file';
-    case Sticker = 'sticker';
-    case Contact = 'contact';
-    case InlineKeyboard = 'inline_keyboard';
-    case ReplyKeyboard = 'reply_keyboard';
-    case Location = 'location';
-    case Share = 'share';
-    case Data = 'data';
+    public const Image = 'image';
+    public const Video = 'video';
+    public const Audio = 'audio';
+    public const File = 'file';
+    public const Sticker = 'sticker';
+    public const Contact = 'contact';
+    public const InlineKeyboard = 'inline_keyboard';
+    public const ReplyKeyboard = 'reply_keyboard';
+    public const Location = 'location';
+    public const Share = 'share';
+    public const Data = 'data';
+
+    public static function fromName(string $name){
+
+        return $name;
+    }
 }

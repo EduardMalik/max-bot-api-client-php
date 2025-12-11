@@ -11,7 +11,7 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoToken;
 /**
  * Request to attach some data to message.
  */
-final readonly class PhotoAttachmentRequest extends AbstractAttachmentRequest
+final class PhotoAttachmentRequest extends AbstractAttachmentRequest
 {
     /**
      * Creates a request to attach an image by URL.
@@ -20,9 +20,9 @@ final readonly class PhotoAttachmentRequest extends AbstractAttachmentRequest
      *
      * @return PhotoAttachmentRequest
      */
-    public static function fromUrl(string $url): self
+    public static function fromUrl($url): self
     {
-        return new self(new PhotoAttachmentRequestPayload(url: $url));
+        return new self(new PhotoAttachmentRequestPayload($url));
     }
 
     /**
@@ -32,9 +32,9 @@ final readonly class PhotoAttachmentRequest extends AbstractAttachmentRequest
      *
      * @return PhotoAttachmentRequest
      */
-    public static function fromToken(string $token): self
+    public static function fromToken($token): self
     {
-        return new self(new PhotoAttachmentRequestPayload(token: $token));
+        return new self(new PhotoAttachmentRequestPayload(null, $token));
     }
 
     /**
@@ -44,15 +44,15 @@ final readonly class PhotoAttachmentRequest extends AbstractAttachmentRequest
      *
      * @return PhotoAttachmentRequest
      */
-    public static function fromPhotos(array $photos): self
+    public static function fromPhotos($photos): self
     {
-        return new self(new PhotoAttachmentRequestPayload(photos: $photos));
+        return new self(new PhotoAttachmentRequestPayload(null, null, $photos));
     }
 
     /**
      * @param PhotoAttachmentRequestPayload $payload Request to attach image.
      */
-    private function __construct(PhotoAttachmentRequestPayload $payload)
+    function __construct(PhotoAttachmentRequestPayload $payload)
     {
         parent::__construct(AttachmentType::Image, $payload);
     }

@@ -31,8 +31,9 @@ class PollingStartCommand extends Command
 
     /**
      * Execute the console command.
+     * @param \BushlanovDev\MaxMessengerBot\Laravel\MaxBotManager $botManager
      */
-    public function handle(MaxBotManager $botManager): int
+    public function handle($botManager): int
     {
         $timeout = (int)$this->option('timeout');
 

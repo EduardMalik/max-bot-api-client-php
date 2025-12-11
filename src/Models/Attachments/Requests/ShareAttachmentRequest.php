@@ -10,7 +10,7 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\ShareAttachmentRequ
 /**
  * Request to attach a media preview of an external URL.
  */
-final readonly class ShareAttachmentRequest extends AbstractAttachmentRequest
+final class ShareAttachmentRequest extends AbstractAttachmentRequest
 {
     /**
      * Creates a request to attach a URL preview.
@@ -19,9 +19,9 @@ final readonly class ShareAttachmentRequest extends AbstractAttachmentRequest
      *
      * @return ShareAttachmentRequest
      */
-    public static function fromUrl(string $url): self
+    public static function fromUrl($url): self
     {
-        return new self(new ShareAttachmentRequestPayload(url: $url));
+        return new self(new ShareAttachmentRequestPayload($url));
     }
 
     /**
@@ -31,12 +31,12 @@ final readonly class ShareAttachmentRequest extends AbstractAttachmentRequest
      *
      * @return ShareAttachmentRequest
      */
-    public static function fromToken(string $token): self
+    public static function fromToken($token): self
     {
-        return new self(new ShareAttachmentRequestPayload(token: $token));
+        return new self(new ShareAttachmentRequestPayload(null, $token));
     }
 
-    private function __construct(ShareAttachmentRequestPayload $payload)
+    function __construct(ShareAttachmentRequestPayload $payload)
     {
         parent::__construct(AttachmentType::Share, $payload);
     }

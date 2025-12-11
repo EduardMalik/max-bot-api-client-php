@@ -31,23 +31,43 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 
-#[CoversClass(Client::class)]
 final class ClientTest extends TestCase
 {
     private const FAKE_TOKEN = '12345:abcdef';
     private const API_VERSION = '0.0.6';
     private const API_BASE_URL = 'https://platform-api.max.ru';
-
-    private MockObject&ClientInterface $httpClientMock;
-    private MockObject&RequestFactoryInterface $requestFactoryMock;
-    private StreamFactoryInterface $streamFactory;
-    private MockObject&RequestInterface $requestMock;
-    private MockObject&ResponseInterface $responseMock;
-    private MockObject&StreamInterface $streamMock;
-    private MockObject&LoggerInterface $loggerMock;
-
-    private Client $client;
-
+    /**
+     * @var (\PHPUnit\Framework\MockObject\MockObject & \Psr\Http\Client\ClientInterface)
+     */
+    private $httpClientMock;
+    /**
+     * @var (\PHPUnit\Framework\MockObject\MockObject & \Psr\Http\Message\RequestFactoryInterface)
+     */
+    private $requestFactoryMock;
+    /**
+     * @var \Psr\Http\Message\StreamFactoryInterface
+     */
+    private $streamFactory;
+    /**
+     * @var (\PHPUnit\Framework\MockObject\MockObject & \Psr\Http\Message\RequestInterface)
+     */
+    private $requestMock;
+    /**
+     * @var (\PHPUnit\Framework\MockObject\MockObject & \Psr\Http\Message\ResponseInterface)
+     */
+    private $responseMock;
+    /**
+     * @var (\PHPUnit\Framework\MockObject\MockObject & \Psr\Http\Message\StreamInterface)
+     */
+    private $streamMock;
+    /**
+     * @var (\PHPUnit\Framework\MockObject\MockObject & \Psr\Log\LoggerInterface)
+     */
+    private $loggerMock;
+    /**
+     * @var \BushlanovDev\MaxMessengerBot\Client
+     */
+    private $client;
     /**
      * This method is called before each test.
      *
@@ -79,20 +99,15 @@ final class ClientTest extends TestCase
             $this->streamFactory,
             self::API_BASE_URL,
             self::API_VERSION,
-            $this->loggerMock,
+            $this->loggerMock
         );
     }
-
-    #[Test]
     public function constructorThrowsExceptionOnEmptyToken(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Access token cannot be empty.');
-
         new Client('', $this->httpClientMock, $this->requestFactoryMock, $this->streamFactory, '', '');
     }
-
-    #[Test]
     public function successfulGetRequest(): void
     {
         $uri = '/me';
@@ -100,35 +115,28 @@ final class ClientTest extends TestCase
                 'v' => self::API_VERSION,
             ]);
         $responsePayload = ['id' => 987, 'name' => 'TestBot'];
-
         // Configure mocks for this specific test
         $this->requestFactoryMock
             ->expects($this->once())
             ->method('createRequest')
             ->with('GET', $expectedUrl)
             ->willReturn($this->requestMock);
-
         $this->requestMock
             ->expects($this->once())
             ->method('withHeader')
             ->with('Authorization', self::FAKE_TOKEN)
             ->willReturn($this->requestMock);
-
         $this->httpClientMock
             ->expects($this->once())
             ->method('sendRequest')
             ->with($this->requestMock)
             ->willReturn($this->responseMock);
-
         $this->responseMock->method('getStatusCode')->willReturn(200);
         $this->streamMock->method('__toString')->willReturn(json_encode($responsePayload));
-
         // Execute and assert
         $result = $this->client->request('GET', $uri);
         $this->assertSame($responsePayload, $result);
     }
-
-    #[Test]
     public function successfulPostRequestWithJsonBody(): void
     {
         $uri = '/subscriptions';
@@ -146,13 +154,11 @@ final class ClientTest extends TestCase
         $expectedUrl = self::API_BASE_URL . $uri . '?' . http_build_query([
                 'v' => self::API_VERSION,
             ]);
-
         $this->requestFactoryMock
             ->expects($this->once())
             ->method('createRequest')
             ->with('POST', $expectedUrl)
             ->willReturn($this->requestMock);
-
         $this->requestMock
             ->expects($this->once())
             ->method('withBody')
@@ -161,7 +167,6 @@ final class ClientTest extends TestCase
                 return true;
             }))
             ->willReturn($this->requestMock);
-
         $headerCallCount = 0;
         $this->requestMock
             ->expects($this->exactly(2))
@@ -179,64 +184,44 @@ final class ClientTest extends TestCase
 
                 return $this->requestMock;
             });
-
         $this->responseMock->method('getStatusCode')->willReturn(200);
         $this->streamMock->method('__toString')->willReturn(json_encode($responsePayload));
-
         $result = $this->client->request('POST', $uri, [], $requestBody);
         $this->assertSame($responsePayload, $result);
     }
-
-    #[Test]
     public function handlesEmptySuccessfulResponse(): void
     {
         $this->responseMock->method('getStatusCode')->willReturn(200);
         $this->streamMock->method('__toString')->willReturn('');
-
         $result = $this->client->request('DELETE', '/subscriptions');
-
         $this->assertSame(['success' => true], $result);
     }
-
-    #[Test]
     public function throwsNetworkExceptionOnClientError(): void
     {
         $this->expectException(NetworkException::class);
-
         // Create a generic PSR-18 exception
         $psrException = new class extends \Exception implements ClientExceptionInterface {};
-
         $this->httpClientMock
             ->method('sendRequest')
             ->willThrowException($psrException);
-
         $this->client->request('GET', '/me');
     }
-
-    #[Test]
     public function throwsSerializationExceptionOnInvalidJsonResponse(): void
     {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage('Failed to decode API response JSON.');
-
         $this->responseMock->method('getStatusCode')->willReturn(200);
         $this->streamMock->method('__toString')->willReturn('{not-valid-json');
-
         $this->client->request('GET', '/me');
     }
-
-    #[Test]
     public function throwsSerializationExceptionOnInvalidRequestBody(): void
     {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage('Failed to encode request body to JSON.');
-
         // \NAN cannot be encoded in JSON
         $invalidBody = ['value' => \NAN];
-
         $this->client->request('POST', '/messages', [], $invalidBody);
     }
-
     /**
      * Data provider for testing various API error status codes.
      */
@@ -268,23 +253,19 @@ final class ClientTest extends TestCase
             ],
         ];
     }
-
-    #[Test]
-    #[DataProvider('apiErrorProvider')]
-    public function throwsCorrectExceptionForApiErrorStatusCodes(
-        int $statusCode,
-        string $exceptionClass,
-        string $errorCode,
-        string $errorMessage,
-    ): void {
+    /**
+     * @param int $statusCode
+     * @param string $exceptionClass
+     * @param string $errorCode
+     * @param string $errorMessage
+     */
+    public function throwsCorrectExceptionForApiErrorStatusCodes($statusCode, $exceptionClass, $errorCode, $errorMessage): void
+    {
         $this->expectException($exceptionClass);
         $this->expectExceptionMessage($errorMessage);
-
         $errorPayload = json_encode(['code' => $errorCode, 'message' => $errorMessage]);
-
         $this->responseMock->method('getStatusCode')->willReturn($statusCode);
         $this->streamMock->method('__toString')->willReturn($errorPayload);
-
         try {
             $this->client->request('GET', '/some/failing/endpoint');
         } catch (ClientApiException $e) {
@@ -295,15 +276,12 @@ final class ClientTest extends TestCase
             throw $e; // Re-throw for PHPUnit to catch the expected exception type
         }
     }
-
-    #[Test]
     public function uploadMethodSendsCorrectMultipartRequest(): void
     {
         $uploadUrl = 'https://upload.server/path';
         $fileContents = 'fake-image-binary-data';
         $fileName = 'test.jpg';
         $responsePayload = ['token' => 'upload_successful_token'];
-
         $this->requestMock
             ->expects($this->once())
             ->method('withBody')
@@ -313,14 +291,13 @@ final class ClientTest extends TestCase
                     $body = $stream->getContents();
                     $this->assertStringContainsString(
                         'Content-Disposition: form-data; name="data"; filename="' . $fileName . '"',
-                        $body,
+                        $body
                     );
                     $this->assertStringContainsString($fileContents, $body);
                     return true;
                 })
             )
             ->willReturn($this->requestMock);
-
         $headerCallCount = 0;
         $this->requestMock
             ->expects($this->exactly(2))
@@ -338,34 +315,26 @@ final class ClientTest extends TestCase
 
                 return $this->requestMock;
             });
-
         $this->requestFactoryMock
             ->expects($this->once())
             ->method('createRequest')
             ->with('POST', $uploadUrl)
             ->willReturn($this->requestMock);
-
         $this->responseMock->method('getStatusCode')->willReturn(200);
         $this->streamMock->method('__toString')->willReturn(json_encode($responsePayload));
-
         $result = $this->client->multipartUpload($uploadUrl, $fileContents, $fileName);
         $this->assertSame(json_encode($responsePayload), $result);
     }
-
-    #[Test]
     public function uploadMethodHandlesStreamResourceCorrectly(): void
     {
         $uploadUrl = 'https://upload.server/path';
         $fileContents = 'data from a stream resource';
         $fileName = 'resource.txt';
         $responsePayload = ['token' => 'token_from_stream_upload'];
-
         $tmpFileHandle = tmpfile();
         fwrite($tmpFileHandle, $fileContents);
         rewind($tmpFileHandle);
-
         $this->requestFactoryMock->method('createRequest')->willReturn($this->requestMock);
-
         $headerCallCount = 0;
         $this->requestMock
             ->expects($this->exactly(2))
@@ -383,142 +352,103 @@ final class ClientTest extends TestCase
 
                 return $this->requestMock;
             });
-
         $this->requestMock->method('withBody')->willReturn($this->requestMock);
         $this->responseMock->method('getStatusCode')->willReturn(200);
         $this->streamMock->method('__toString')->willReturn(json_encode($responsePayload));
-
         $result = $this->client->multipartUpload($uploadUrl, $tmpFileHandle, $fileName);
-
         $this->assertSame(json_encode($responsePayload), $result);
         fclose($tmpFileHandle);
     }
-
-    #[Test]
     public function uploadThrowsNetworkExceptionOnClientError(): void
     {
         $this->expectException(NetworkException::class);
-
         $this->requestFactoryMock->method('createRequest')->willReturn($this->requestMock);
         $this->requestMock->method('withHeader')->willReturn($this->requestMock);
         $this->requestMock->method('withBody')->willReturn($this->requestMock);
-
         $psrException = new class extends \Exception implements ClientExceptionInterface {
         };
         $this->httpClientMock
             ->method('sendRequest')
             ->with($this->requestMock)
             ->willThrowException($psrException);
-
         $this->client->multipartUpload('http://some.url', 'content', 'file.txt');
     }
-
-    #[Test]
     public function requestLogsRequestAndResponseOnDebugLevel(): void
     {
         $this->responseMock->method('getStatusCode')->willReturn(200);
         $this->streamMock->method('__toString')->willReturn('{"success":true}');
-
         $this->loggerMock
             ->expects($this->exactly(2))
             ->method('debug');
-
         $this->client->request('GET', '/me');
     }
-
-    #[Test]
     public function handleErrorResponseLogsWarning(): void
     {
         $this->responseMock->method('getStatusCode')->willReturn(404);
         $this->streamMock->method('__toString')->willReturn('{"code":"not.found","message":"Not Found"}');
-
         $this->loggerMock
             ->expects($this->once())
             ->method('error')
             ->with('API error response received', $this->anything());
-
         $this->expectException(NotFoundException::class);
-
         $this->client->request('GET', '/not/found');
     }
-
-    #[Test]
     public function uploadMethodReturnsRawStringResponse(): void
     {
         $uploadUrl = 'https://upload.server/path';
         $fileContents = 'data';
         $fileName = 'file.txt';
         $rawResponse = '<retval>1</retval>';
-
         $this->requestFactoryMock->method('createRequest')->willReturn($this->requestMock);
         $this->requestMock->method('withHeader')->willReturn($this->requestMock);
         $this->requestMock->method('withBody')->willReturn($this->requestMock);
         $this->httpClientMock->method('sendRequest')->willReturn($this->responseMock);
-
         $this->responseMock->method('getStatusCode')->willReturn(200);
         $this->streamMock->method('__toString')->willReturn($rawResponse);
-
         $result = $this->client->multipartUpload($uploadUrl, $fileContents, $fileName);
         $this->assertSame($rawResponse, $result);
     }
-
-    #[Test]
     public function resumableUploadThrowsExceptionForInvalidResource(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('fileResource must be a valid stream resource.');
-
         $this->client->resumableUpload('http://a.b', 'not-a-resource', 'file.txt', 100);
     }
-
-    #[Test]
     public function resumableUploadThrowsExceptionForZeroFileSize(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('File size must be greater than 0.');
-
         $fileResource = fopen('php://memory', 'r');
         $this->client->resumableUpload('http://a.b', $fileResource, 'file.txt', 0);
         fclose($fileResource);
     }
-
-    #[Test]
     public function resumableUploadThrowsNetworkExceptionOnChunkUploadFailure(): void
     {
         $this->expectException(NetworkException::class);
-
         $fileResource = fopen('php://memory', 'w+');
         fwrite($fileResource, 'some data');
         rewind($fileResource);
-
         $this->requestFactoryMock->method('createRequest')->willReturn($this->requestMock);
         $this->requestMock->method('withBody')->willReturnSelf();
         $this->requestMock->method('withHeader')->willReturnSelf();
-
         $psrException = new class extends \Exception implements ClientExceptionInterface {};
         $this->httpClientMock
             ->method('sendRequest')
             ->willThrowException($psrException);
-
         $this->client->resumableUpload('http://a.b', $fileResource, 'file.txt', 9);
         fclose($fileResource);
     }
-
-    #[Test]
     public function resumableUploadSuccessfullyUploadsSingleChunk(): void
     {
         $fileContents = 'test-data';
         $fileResource = fopen('php://memory', 'w+');
         fwrite($fileResource, $fileContents);
         rewind($fileResource);
-
         $uploadUrl = 'http://a.b';
         $fileName = 'file.txt';
         $fileSize = strlen($fileContents);
-
         $this->requestFactoryMock->method('createRequest')->willReturn($this->requestMock);
         $this->requestMock->method('withBody')->willReturnSelf();
-
         $headerCallCount = 0;
         $this->requestMock
             ->expects($this->exactly(4))
@@ -542,73 +472,56 @@ final class ClientTest extends TestCase
 
                 return $this->requestMock;
             });
-
         $this->httpClientMock
             ->expects($this->once())
             ->method('sendRequest')
             ->with($this->requestMock)
             ->willReturn($this->responseMock);
-
         $this->responseMock->method('getStatusCode')->willReturn(200);
         $this->streamMock->method('__toString')->willReturn('<retval>1</retval>');
-
         $result = $this->client->resumableUpload($uploadUrl, $fileResource, $fileName, $fileSize);
-
         $this->assertSame('<retval>1</retval>', $result);
         fclose($fileResource);
     }
-
-    #[Test]
     public function resumableUploadSuccessfullyUploadsMultipleChunks(): void
     {
         $chunkSize = 1024 * 1024;
-        $fileContents = str_repeat('A', 3 * $chunkSize); // 3 MB
+        $fileContents = str_repeat('A', 3 * $chunkSize);
+        // 3 MB
         $fileResource = fopen('php://memory', 'w+');
         fwrite($fileResource, $fileContents);
         rewind($fileResource);
-
         $uploadUrl = 'http://a.b';
         $fileName = 'bigfile.bin';
         $fileSize = strlen($fileContents);
-
         $this->requestFactoryMock->method('createRequest')->willReturn($this->requestMock);
         $this->requestMock->method('withBody')->willReturnSelf();
         $this->requestMock->method('withHeader')->willReturnSelf();
-
         $this->httpClientMock
             ->expects($this->exactly(3))
             ->method('sendRequest')
             ->willReturnOnConsecutiveCalls(
                 $this->responseMock,
                 $this->responseMock,
-                $this->responseMock,
+                $this->responseMock
             );
-
         $this->responseMock->method('getStatusCode')->willReturn(200);
         $this->streamMock
             ->method('__toString')
             ->willReturnOnConsecutiveCalls('', '', '<retval>1</retval>');
-
         $result = $this->client->resumableUpload($uploadUrl, $fileResource, $fileName, $fileSize, $chunkSize);
-
         $this->assertSame('<retval>1</retval>', $result);
         fclose($fileResource);
     }
-
-    #[Test]
     public function resumableUploadStopsOnEmptyChunk(): void
     {
         $fileResource = fopen('php://memory', 'w+');
         rewind($fileResource);
-
         $uploadUrl = 'http://a.b';
         $fileName = 'empty.txt';
-
         $this->requestFactoryMock->expects($this->never())->method('createRequest');
         $this->httpClientMock->expects($this->never())->method('sendRequest');
-
         $result = $this->client->resumableUpload($uploadUrl, $fileResource, $fileName, 100);
-
         $this->assertSame('', $result);
         fclose($fileResource);
     }

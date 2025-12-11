@@ -12,11 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ChatMember::class)]
-#[UsesClass(ArrayOf::class)]
 final class ChatMemberTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedForAdmin(): void
     {
         $data = [
@@ -35,9 +32,7 @@ final class ChatMemberTest extends TestCase
             'join_time' => 1678000000,
             'permissions' => ['pin_message', 'write'],
         ];
-
         $member = ChatMember::fromArray($data);
-
         $this->assertInstanceOf(ChatMember::class, $member);
         $this->assertTrue($member->isAdmin);
         $this->assertFalse($member->isOwner);
@@ -47,8 +42,6 @@ final class ChatMemberTest extends TestCase
         $this->assertSame(ChatAdminPermission::Write, $member->permissions[1]);
         $this->assertEquals($data, $member->toArray());
     }
-
-    #[Test]
     public function canBeCreatedForRegularMember(): void
     {
         $data = [
@@ -67,9 +60,7 @@ final class ChatMemberTest extends TestCase
             'join_time' => 1678000001,
             'permissions' => null,
         ];
-
         $member = ChatMember::fromArray($data);
-
         $this->assertFalse($member->isAdmin);
         $this->assertNull($member->permissions);
         $this->assertEquals($data, $member->toArray());

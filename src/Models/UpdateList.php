@@ -9,16 +9,26 @@ use BushlanovDev\MaxMessengerBot\Models\Updates\AbstractUpdate;
 /**
  * List of all updates in chats your bot participated in.
  */
-final readonly class UpdateList extends AbstractModel
+final class UpdateList extends AbstractModel
 {
+    /**
+     * @var AbstractUpdate[]
+     * @readonly
+     */
+    public $updates;
+    /**
+     * @var int|null
+     * @readonly
+     */
+    public $marker;
     /**
      * @param AbstractUpdate[] $updates Page of updates.
      * @param int|null $marker Pointer to the next data page.
      */
-    public function __construct(
-        public array $updates,
-        public ?int $marker,
-    ) {
+    public function __construct(array $updates, ?int $marker)
+    {
+        $this->updates = $updates;
+        $this->marker = $marker;
     }
 
     /**
@@ -27,8 +37,9 @@ final readonly class UpdateList extends AbstractModel
      *
      * @param array<string, mixed> $data
      * @throws \LogicException Always.
+     * @return static
      */
-    public static function fromArray(array $data): static
+    public static function fromArray($data)
     {
         throw new \LogicException(
             'Cannot create UpdateList directly from an array. Use ModelFactory::createUpdateList() instead.'

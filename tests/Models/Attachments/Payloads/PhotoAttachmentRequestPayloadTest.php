@@ -13,20 +13,14 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(PhotoAttachmentRequestPayload::class)]
-#[UsesClass(PhotoToken::class)]
-#[UsesClass(ArrayOf::class)]
 final class PhotoAttachmentRequestPayloadTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedWithUrlOnly(): void
     {
-        $payload = new PhotoAttachmentRequestPayload(url: 'https://example.com/photo.jpg');
-
+        $payload = new PhotoAttachmentRequestPayload('https://example.com/photo.jpg');
         $this->assertSame('https://example.com/photo.jpg', $payload->url);
         $this->assertNull($payload->token);
         $this->assertNull($payload->photos);
-
         $expectedArray = [
             'url' => 'https://example.com/photo.jpg',
             'token' => null,
@@ -34,16 +28,12 @@ final class PhotoAttachmentRequestPayloadTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $payload->toArray());
     }
-
-    #[Test]
     public function canBeCreatedWithTokenOnly(): void
     {
-        $payload = new PhotoAttachmentRequestPayload(token: 'uploaded_token_abc');
-
+        $payload = new PhotoAttachmentRequestPayload(null, 'uploaded_token_abc');
         $this->assertSame('uploaded_token_abc', $payload->token);
         $this->assertNull($payload->url);
         $this->assertNull($payload->photos);
-
         $expectedArray = [
             'token' => 'uploaded_token_abc',
             'url' => null,
@@ -51,20 +41,16 @@ final class PhotoAttachmentRequestPayloadTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $payload->toArray());
     }
-
-    #[Test]
     public function canBeCreatedWithPhotosOnly(): void
     {
         $photos = [
             new PhotoToken('token_1'),
             new PhotoToken('token_2'),
         ];
-        $payload = new PhotoAttachmentRequestPayload(photos: $photos);
-
+        $payload = new PhotoAttachmentRequestPayload(null, null, $photos);
         $this->assertSame($photos, $payload->photos);
         $this->assertNull($payload->url);
         $this->assertNull($payload->token);
-
         $expectedArray = [
             'photos' => [
                 ['token' => 'token_1'],
@@ -75,13 +61,10 @@ final class PhotoAttachmentRequestPayloadTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $payload->toArray());
     }
-
-    #[Test]
     public function constructorThrowsExceptionForInvalidArguments(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Provide one of "url", "token", or "photos" for PhotoAttachmentRequestPayload.');
-
         new PhotoAttachmentRequestPayload(null, null, null);
     }
 }

@@ -10,8 +10,28 @@ use BushlanovDev\MaxMessengerBot\Models\User;
 /**
  * Bot gets this type of update as soon as user pressed `Start` button.
  */
-final readonly class BotStartedUpdate extends AbstractUpdate
+final class BotStartedUpdate extends AbstractUpdate
 {
+    /**
+     * @var int
+     * @readonly
+     */
+    public $chatId;
+    /**
+     * @var User
+     * @readonly
+     */
+    public $user;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $payload;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $userLocale;
     /**
      * @param int $timestamp Unix-time when event has occurred.
      * @param int $chatId Dialog identifier where event has occurred.
@@ -21,11 +41,15 @@ final readonly class BotStartedUpdate extends AbstractUpdate
      */
     public function __construct(
         int $timestamp,
-        public int $chatId,
-        public User $user,
-        public ?string $payload,
-        public ?string $userLocale,
+        int $chatId,
+        User $user,
+        ?string $payload,
+        ?string $userLocale
     ) {
+        $this->chatId = $chatId;
+        $this->user = $user;
+        $this->payload = $payload;
+        $this->userLocale = $userLocale;
         parent::__construct(UpdateType::BotStarted, $timestamp);
     }
 }

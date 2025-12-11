@@ -10,14 +10,38 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\ShareAttachmentRequ
 /**
  * Represents a share (URL preview) attachment.
  */
-final readonly class ShareAttachment extends AbstractAttachment
+final class ShareAttachment extends AbstractAttachment
 {
+    /**
+     * @readonly
+     * @var \BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\ShareAttachmentRequestPayload
+     */
+    public $payload;
+    /**
+     * @readonly
+     * @var string|null
+     */
+    public $title;
+    /**
+     * @readonly
+     * @var string|null
+     */
+    public $description;
+    /**
+     * @readonly
+     * @var string|null
+     */
+    public $imageUrl;
     public function __construct(
-        public ShareAttachmentRequestPayload $payload,
-        public ?string $title,
-        public ?string $description,
-        public ?string $imageUrl,
+        ShareAttachmentRequestPayload $payload,
+        ?string $title,
+        ?string $description,
+        ?string $imageUrl
     ) {
+        $this->payload = $payload;
+        $this->title = $title;
+        $this->description = $description;
+        $this->imageUrl = $imageUrl;
         parent::__construct(AttachmentType::Share);
     }
 }

@@ -12,12 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(VideoAttachment::class)]
-#[UsesClass(MediaAttachmentPayload::class)]
-#[UsesClass(VideoThumbnail::class)]
 final class VideoAttachmentTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [

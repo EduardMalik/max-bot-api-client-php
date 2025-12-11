@@ -14,13 +14,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(MessageChatCreatedUpdate::class)]
-#[UsesClass(Chat::class)]
-#[UsesClass(UserWithPhoto::class)]
-#[UsesClass(Image::class)]
 final class MessageChatCreatedUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedWithAllData(): void
     {
         $data = [
@@ -38,9 +33,7 @@ final class MessageChatCreatedUpdateTest extends TestCase
             'message_id' => 'mid.original.with.button',
             'start_payload' => 'payload_from_chat_button',
         ];
-
         $update = MessageChatCreatedUpdate::fromArray($data);
-
         $this->assertInstanceOf(MessageChatCreatedUpdate::class, $update);
         $this->assertSame(UpdateType::MessageChatCreated, $update->updateType);
         $this->assertInstanceOf(Chat::class, $update->chat);
@@ -48,8 +41,6 @@ final class MessageChatCreatedUpdateTest extends TestCase
         $this->assertSame('mid.original.with.button', $update->messageId);
         $this->assertSame('payload_from_chat_button', $update->startPayload);
     }
-
-    #[Test]
     public function canBeCreatedWithNullStartPayload(): void
     {
         $data = [
@@ -67,9 +58,7 @@ final class MessageChatCreatedUpdateTest extends TestCase
             'message_id' => 'mid.another.message',
             'start_payload' => null,
         ];
-
         $update = MessageChatCreatedUpdate::fromArray($data);
-
         $this->assertInstanceOf(MessageChatCreatedUpdate::class, $update);
         $this->assertNull($update->startPayload);
     }

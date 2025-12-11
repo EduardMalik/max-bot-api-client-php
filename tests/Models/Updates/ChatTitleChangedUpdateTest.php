@@ -12,11 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ChatTitleChangedUpdate::class)]
-#[UsesClass(User::class)]
 final class ChatTitleChangedUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArrayAndSerialized(): void
     {
         $data = [
@@ -33,9 +30,7 @@ final class ChatTitleChangedUpdateTest extends TestCase
             ],
             'title' => 'New Awesome Chat Title',
         ];
-
         $update = ChatTitleChangedUpdate::fromArray($data);
-
         $this->assertInstanceOf(ChatTitleChangedUpdate::class, $update);
         $this->assertSame(UpdateType::ChatTitleChanged, $update->updateType);
         $this->assertSame(1680000000, $update->timestamp);

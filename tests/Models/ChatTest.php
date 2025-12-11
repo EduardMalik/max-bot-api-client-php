@@ -11,12 +11,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(Chat::class)]
-#[CoversClass(Image::class)]
-#[CoversClass(UserWithPhoto::class)]
 final class ChatTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [
@@ -49,9 +45,7 @@ final class ChatTest extends TestCase
             'messages_count' => 100,
             'chat_message_id' => 'mid.123',
         ];
-
         $chat = Chat::fromArray($data);
-
         $this->assertInstanceOf(Chat::class, $chat);
         $this->assertSame($data['chat_id'], $chat->chatId);
         $this->assertSame($data['type'], $chat->type->value);
@@ -69,8 +63,6 @@ final class ChatTest extends TestCase
         $this->assertSame($data['messages_count'], $chat->messagesCount);
         $this->assertSame($data['chat_message_id'], $chat->chatMessageId);
     }
-
-    #[Test]
     public function canBeCreatedFromArrayWithOptionalDataNull(): void
     {
         $data = [
@@ -81,9 +73,7 @@ final class ChatTest extends TestCase
             'participants_count' => 50,
             'is_public' => true,
         ];
-
         $chat = Chat::fromArray($data);
-
         $this->assertInstanceOf(Chat::class, $chat);
         $this->assertSame($data['chat_id'], $chat->chatId);
         $this->assertSame($data['type'], $chat->type->value);

@@ -9,10 +9,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(MediaAttachmentPayload::class)]
 final class MediaAttachmentPayloadTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedAndSerialized(): void
     {
         $payload = new MediaAttachmentPayload('https://example.com/video.mp4', 'video_token_123');
@@ -20,7 +18,7 @@ final class MediaAttachmentPayloadTest extends TestCase
         $this->assertSame('video_token_123', $payload->token);
         $this->assertEquals(
             ['url' => 'https://example.com/video.mp4', 'token' => 'video_token_123'],
-            $payload->toArray(),
+            $payload->toArray()
         );
     }
 }

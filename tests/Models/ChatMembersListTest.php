@@ -12,12 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ChatMembersList::class)]
-#[UsesClass(ChatMember::class)]
-#[UsesClass(ArrayOf::class)]
 final class ChatMembersListTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedWithData(): void
     {
         $data = [
@@ -35,22 +31,17 @@ final class ChatMembersListTest extends TestCase
             ],
             'marker' => 12345,
         ];
-
         $list = ChatMembersList::fromArray($data);
-
         $this->assertInstanceOf(ChatMembersList::class, $list);
         $this->assertCount(1, $list->members);
         $this->assertInstanceOf(ChatMember::class, $list->members[0]);
         $this->assertSame(101, $list->members[0]->userId);
         $this->assertSame(12345, $list->marker);
     }
-
-    #[Test]
     public function canBeCreatedWithEmptyMembersAndNullMarker(): void
     {
         $data = ['members' => [], 'marker' => null];
         $list = ChatMembersList::fromArray($data);
-
         $this->assertIsArray($list->members);
         $this->assertEmpty($list->members);
         $this->assertNull($list->marker);

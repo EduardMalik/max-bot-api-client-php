@@ -9,15 +9,26 @@ use BushlanovDev\MaxMessengerBot\Enums\MessageLinkType;
 /**
  * Message link.
  */
-final readonly class MessageLink extends AbstractModel
+final class MessageLink extends AbstractModel
 {
     /**
-     * @param MessageLinkType $type Type of message link.
-     * @param string $mid Message identifier of original message.
+     * @var MessageLinkType
+     * @readonly
      */
-    public function __construct(
-        public MessageLinkType $type,
-        public string $mid,
-    ) {
+    public $type;
+    /**
+     * @var string
+     * @readonly
+     */
+    public $mid;
+    /**
+     * @param mixed $type Type of message link.
+     * @param string $mid Message identifier of original message.
+     * @param \BushlanovDev\MaxMessengerBot\Enums\MessageLinkType::* $type
+     */
+    public function __construct($type, string $mid)
+    {
+        $this->type = $type;
+        $this->mid = $mid;
     }
 }

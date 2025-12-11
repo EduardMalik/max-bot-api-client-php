@@ -10,9 +10,18 @@ use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
 /**
  * Represents a generic attachment received from the API.
  */
-abstract readonly class AbstractAttachment extends AbstractModel
+abstract class AbstractAttachment extends AbstractModel
 {
-    public function __construct(public AttachmentType $type)
+    /**
+     * @readonly
+     * @var \BushlanovDev\MaxMessengerBot\Enums\AttachmentType
+     */
+    public $type;
+    /**
+     * @param mixed $type
+     */
+    public function __construct($type)
     {
+        $this->type = $type;
     }
 }

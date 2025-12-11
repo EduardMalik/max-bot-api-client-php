@@ -7,15 +7,25 @@ namespace BushlanovDev\MaxMessengerBot\Models;
 /**
  * Simple response to request.
  */
-final readonly class Result extends AbstractModel
+final class Result extends AbstractModel
 {
+    /**
+     * @var bool
+     * @readonly
+     */
+    public $success;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $message;
     /**
      * @param bool $success true if request was successful, false otherwise.
      * @param string|null $message Explanatory message if the result was not successful.
      */
-    public function __construct(
-        public bool $success,
-        public ?string $message,
-    ) {
+    public function __construct(bool $success, ?string $message)
+    {
+        $this->success = $success;
+        $this->message = $message;
     }
 }

@@ -6,7 +6,7 @@ namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply;
 
 use BushlanovDev\MaxMessengerBot\Enums\ReplyButtonType;
 
-final readonly class SendContactButton extends AbstractReplyButton
+final class SendContactButton extends AbstractReplyButton
 {
     /**
      * @param string $text Visible text of the button.

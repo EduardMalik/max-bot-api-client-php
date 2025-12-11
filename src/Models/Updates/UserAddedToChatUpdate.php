@@ -10,8 +10,28 @@ use BushlanovDev\MaxMessengerBot\Models\User;
 /**
  * You will receive this update when a user has been added to a chat where the bot is an administrator.
  */
-final readonly class UserAddedToChatUpdate extends AbstractUpdate
+final class UserAddedToChatUpdate extends AbstractUpdate
 {
+    /**
+     * @var int
+     * @readonly
+     */
+    public $chatId;
+    /**
+     * @var User
+     * @readonly
+     */
+    public $user;
+    /**
+     * @var int|null
+     * @readonly
+     */
+    public $inviterId;
+    /**
+     * @var bool
+     * @readonly
+     */
+    public $isChannel;
     /**
      * @param int $timestamp Unix-time when the event has occurred.
      * @param int $chatId Chat identifier where the event has occurred.
@@ -22,11 +42,15 @@ final readonly class UserAddedToChatUpdate extends AbstractUpdate
      */
     public function __construct(
         int $timestamp,
-        public int $chatId,
-        public User $user,
-        public ?int $inviterId,
-        public bool $isChannel,
+        int $chatId,
+        User $user,
+        ?int $inviterId,
+        bool $isChannel
     ) {
+        $this->chatId = $chatId;
+        $this->user = $user;
+        $this->inviterId = $inviterId;
+        $this->isChannel = $isChannel;
         parent::__construct(UpdateType::UserAdded, $timestamp);
     }
 }

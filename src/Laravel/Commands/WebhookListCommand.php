@@ -31,8 +31,9 @@ class WebhookListCommand extends Command
 
     /**
      * Execute the console command.
+     * @param \BushlanovDev\MaxMessengerBot\Api $api
      */
-    public function handle(Api $api): int
+    public function handle($api): int
     {
         $this->info('Fetching webhook subscriptions...');
 
@@ -54,7 +55,9 @@ class WebhookListCommand extends Command
             foreach ($subscriptions as $subscription) {
                 $rows[] = [
                     $subscription->url,
-                    implode(', ', $subscription->updateTypes ? array_map(fn (UpdateType $updateType) => $updateType->value, $subscription->updateTypes) : ['all']),
+                    implode(', ', $subscription->updateTypes ? array_map(function (UpdateType $updateType) {
+                        return $updateType->value;
+                    }, $subscription->updateTypes) : ['all']),
                     date('Y-m-d H:i:s', $subscription->time),
                 ];
             }

@@ -21,21 +21,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(MessageBody::class)]
-#[UsesClass(AbstractAttachment::class)]
-#[UsesClass(ContactAttachment::class)]
-#[UsesClass(ContactAttachmentPayload::class)]
-#[UsesClass(PhotoAttachmentPayload::class)]
-#[UsesClass(PhotoAttachment::class)]
-#[UsesClass(ModelFactory::class)]
-#[UsesClass(AbstractMarkup::class)]
-#[UsesClass(StrongMarkup::class)]
-#[UsesClass(Message::class)]
-#[UsesClass(Recipient::class)]
-#[UsesClass(User::class)]
 final class MessageBodyTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArrayWithAllData(): void
     {
         $data = [
@@ -45,21 +32,15 @@ final class MessageBodyTest extends TestCase
             'attachments' => null,
             'markup' => null,
         ];
-
         $messageBody = MessageBody::fromArray($data);
-
         $this->assertInstanceOf(MessageBody::class, $messageBody);
         $this->assertSame($data['mid'], $messageBody->mid);
         $this->assertSame($data['seq'], $messageBody->seq);
         $this->assertSame($data['text'], $messageBody->text);
-
         $array = $messageBody->toArray();
-
         $this->assertIsArray($array);
         $this->assertSame($data, $array);
     }
-
-    #[Test]
     public function canBeCreatedFromArrayWithOptionalDataNull(): void
     {
         $data = [
@@ -69,21 +50,15 @@ final class MessageBodyTest extends TestCase
             'attachments' => null,
             'markup' => null,
         ];
-
         $messageBody = MessageBody::fromArray($data);
-
         $this->assertInstanceOf(MessageBody::class, $messageBody);
         $this->assertSame($data['mid'], $messageBody->mid);
         $this->assertSame($data['seq'], $messageBody->seq);
         $this->assertNull($messageBody->text);
-
         $array = $messageBody->toArray();
-
         $this->assertIsArray($array);
         $this->assertSame($data, $array);
     }
-
-    #[Test]
     public function createMessageCorrectlyHydratesComplexMessageBody(): void
     {
         $messageData = [
@@ -116,19 +91,15 @@ final class MessageBodyTest extends TestCase
             ],
             'recipient' => ['chat_type' => 'dialog', 'user_id' => 123],
         ];
-
         $factory = new ModelFactory();
         $message = $factory->createMessage($messageData);
-
         $this->assertInstanceOf(Message::class, $message);
         $this->assertInstanceOf(MessageBody::class, $message->body);
-
         $attachments = $message->body->attachments;
         $this->assertIsArray($attachments);
         $this->assertCount(2, $attachments);
         $this->assertInstanceOf(ContactAttachment::class, $attachments[0]);
         $this->assertInstanceOf(PhotoAttachment::class, $attachments[1]);
-
         $markup = $message->body->markup;
         $this->assertIsArray($markup);
         $this->assertCount(1, $markup);

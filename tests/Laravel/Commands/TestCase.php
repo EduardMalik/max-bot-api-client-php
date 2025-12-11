@@ -12,8 +12,14 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 abstract class TestCase extends TestCaseOriginal
 {
-    protected Container $container;
-    protected CommandTester $tester;
+    /**
+     * @var \Illuminate\Container\Container
+     */
+    protected $container;
+    /**
+     * @var \Symfony\Component\Console\Tester\CommandTester
+     */
+    protected $tester;
 
     protected function setUp(): void
     {

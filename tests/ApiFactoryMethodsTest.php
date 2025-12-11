@@ -18,17 +18,24 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 
-#[CoversClass(Api::class)]
-#[UsesClass(UpdateDispatcher::class)]
-#[UsesClass(WebhookHandler::class)]
-#[UsesClass(LongPollingHandler::class)]
 final class ApiFactoryMethodsTest extends TestCase
 {
-    private MockObject&ClientApiInterface $clientMock;
-    private MockObject&ModelFactory $modelFactoryMock;
-    private MockObject&LoggerInterface $loggerMock;
-    private Api $api;
-
+    /**
+     * @var (\BushlanovDev\MaxMessengerBot\ClientApiInterface & \PHPUnit\Framework\MockObject\MockObject)
+     */
+    private $clientMock;
+    /**
+     * @var (\BushlanovDev\MaxMessengerBot\ModelFactory & \PHPUnit\Framework\MockObject\MockObject)
+     */
+    private $modelFactoryMock;
+    /**
+     * @var (\PHPUnit\Framework\MockObject\MockObject & \Psr\Log\LoggerInterface)
+     */
+    private $loggerMock;
+    /**
+     * @var \BushlanovDev\MaxMessengerBot\Api
+     */
+    private $api;
     protected function setUp(): void
     {
         $this->clientMock = $this->createMock(ClientApiInterface::class);
@@ -39,44 +46,35 @@ final class ApiFactoryMethodsTest extends TestCase
             'fake-token',
             $this->clientMock,
             $this->modelFactoryMock,
-            $this->loggerMock,
+            $this->loggerMock
         );
     }
-
-    #[Test]
     public function createWebhookHandlerReturnsCorrectlyConfiguredInstance(): void
     {
         $secret = 'my-test-secret';
-
         $webhookHandler = $this->api->createWebhookHandler($secret);
-
         $this->assertInstanceOf(WebhookHandler::class, $webhookHandler);
-
         $this->assertSame(
             $this->getPrivateProperty($this->api, 'updateDispatcher'),
-            $this->getPrivateProperty($webhookHandler, 'dispatcher'),
+            $this->getPrivateProperty($webhookHandler, 'dispatcher')
         );
         $this->assertSame(
             $this->getPrivateProperty($this->api, 'modelFactory'),
-            $this->getPrivateProperty($webhookHandler, 'modelFactory'),
+            $this->getPrivateProperty($webhookHandler, 'modelFactory')
         );
         $this->assertSame(
             $this->getPrivateProperty($this->api, 'logger'),
-            $this->getPrivateProperty($webhookHandler, 'logger'),
+            $this->getPrivateProperty($webhookHandler, 'logger')
         );
         $this->assertSame(
             $secret,
-            $this->getPrivateProperty($webhookHandler, 'secret'),
+            $this->getPrivateProperty($webhookHandler, 'secret')
         );
     }
-
-    #[Test]
     public function createLongPollingHandlerReturnsCorrectlyConfiguredInstance(): void
     {
         $longPollingHandler = $this->api->createLongPollingHandler();
-
         $this->assertInstanceOf(LongPollingHandler::class, $longPollingHandler);
-
         $this->assertSame(
             $this->api,
             $this->getPrivateProperty($longPollingHandler, 'api')
@@ -90,8 +88,11 @@ final class ApiFactoryMethodsTest extends TestCase
             $this->getPrivateProperty($longPollingHandler, 'logger')
         );
     }
-
-    private function getPrivateProperty(object $object, string $propertyName): mixed
+    /**
+     * @return mixed
+     * @param object $object
+     */
+    private function getPrivateProperty($object, string $propertyName)
     {
         $reflection = new ReflectionClass($object);
         $property = $reflection->getProperty($propertyName);

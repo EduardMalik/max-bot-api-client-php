@@ -9,10 +9,18 @@ use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
 /**
  * Opens the bot's mini-application.
  */
-final readonly class OpenAppButton extends AbstractInlineButton
+final class OpenAppButton extends AbstractInlineButton
 {
-    public ?string $webApp;
-    public ?int $contactId;
+    /**
+     * @readonly
+     * @var string|null
+     */
+    public $webApp;
+    /**
+     * @readonly
+     * @var int|null
+     */
+    public $contactId;
 
     /**
      * @param string $text Visible button text (1 to 128 characters).

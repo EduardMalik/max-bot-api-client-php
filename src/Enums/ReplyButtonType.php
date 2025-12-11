@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace BushlanovDev\MaxMessengerBot\Enums;
 
-enum ReplyButtonType: string
+class ReplyButtonType
 {
-    case Message = 'message';
-    case UserGeoLocation = 'user_geo_location';
-    case UserContact = 'user_contact';
+    public const Message = 'message';
+    public const UserGeoLocation = 'user_geo_location';
+    public const UserContact = 'user_contact';
+
+    public static function fromName(string $name){
+
+        return $name;
+    }
 }

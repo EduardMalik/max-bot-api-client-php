@@ -16,15 +16,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(MessageCallbackUpdate::class)]
-#[UsesClass(Callback::class)]
-#[UsesClass(Message::class)]
-#[UsesClass(MessageBody::class)]
-#[UsesClass(Recipient::class)]
-#[UsesClass(User::class)]
 final class MessageCallbackUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArrayWithAllData(): void
     {
         $data = [
@@ -46,9 +39,7 @@ final class MessageCallbackUpdateTest extends TestCase
             ],
             'user_locale' => 'en-US',
         ];
-
         $update = MessageCallbackUpdate::fromArray($data);
-
         $this->assertInstanceOf(MessageCallbackUpdate::class, $update);
         $this->assertSame(UpdateType::MessageCallback, $update->updateType);
         $this->assertInstanceOf(Callback::class, $update->callback);
@@ -57,8 +48,6 @@ final class MessageCallbackUpdateTest extends TestCase
         $this->assertSame('button_1_pressed', $update->callback->payload);
         $this->assertSame('mid.123', $update->message->body->mid);
     }
-
-    #[Test]
     public function canBeCreatedWithNullableFieldsAsNull(): void
     {
         $data = [
@@ -76,9 +65,7 @@ final class MessageCallbackUpdateTest extends TestCase
             'message' => null,
             'user_locale' => null,
         ];
-
         $update = MessageCallbackUpdate::fromArray($data);
-
         $this->assertInstanceOf(MessageCallbackUpdate::class, $update);
         $this->assertNull($update->message);
         $this->assertNull($update->userLocale);

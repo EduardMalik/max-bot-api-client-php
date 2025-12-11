@@ -12,11 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(DialogClearedUpdate::class)]
-#[UsesClass(User::class)]
 final class DialogClearedUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [
@@ -32,9 +29,7 @@ final class DialogClearedUpdateTest extends TestCase
             ],
             'user_locale' => 'ru-ru',
         ];
-
         $update = DialogClearedUpdate::fromArray($data);
-
         $this->assertInstanceOf(DialogClearedUpdate::class, $update);
         $this->assertSame(UpdateType::DialogCleared, $update->updateType);
         $this->assertSame(123, $update->user->userId);

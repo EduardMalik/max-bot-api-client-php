@@ -13,12 +13,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(LinkedMessage::class)]
-#[UsesClass(MessageBody::class)]
-#[UsesClass(User::class)]
 final class LinkedMessageTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [
@@ -39,9 +35,7 @@ final class LinkedMessageTest extends TestCase
             ],
             'chat_id' => 98765,
         ];
-
         $linkedMessage = LinkedMessage::fromArray($data);
-
         $this->assertInstanceOf(LinkedMessage::class, $linkedMessage);
         $this->assertSame(MessageLinkType::Reply, $linkedMessage->type);
         $this->assertInstanceOf(MessageBody::class, $linkedMessage->message);

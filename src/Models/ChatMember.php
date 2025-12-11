@@ -10,8 +10,78 @@ use BushlanovDev\MaxMessengerBot\Enums\ChatAdminPermission;
 /**
  * Represents a member of a chat, including their user information and chat-specific status.
  */
-final readonly class ChatMember extends AbstractModel
+final class ChatMember extends AbstractModel
 {
+    /**
+     * @var int
+     * @readonly
+     */
+    public $userId;
+    /**
+     * @var string
+     * @readonly
+     */
+    public $firstName;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $lastName;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $username;
+    /**
+     * @var bool
+     * @readonly
+     */
+    public $isBot;
+    /**
+     * @var int
+     * @readonly
+     */
+    public $lastActivityTime;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $description;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $avatarUrl;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $fullAvatarUrl;
+    /**
+     * @var int
+     * @readonly
+     */
+    public $lastAccessTime;
+    /**
+     * @var bool
+     * @readonly
+     */
+    public $isOwner;
+    /**
+     * @var bool
+     * @readonly
+     */
+    public $isAdmin;
+    /**
+     * @var int
+     * @readonly
+     */
+    public $joinTime;
+    /**
+     * @var ChatAdminPermission[]|null
+     * @readonly
+     */
+    public $permissions;
     /**
      * @param int $userId User's identifier.
      * @param string $firstName User's first name.
@@ -29,21 +99,36 @@ final readonly class ChatMember extends AbstractModel
      * @param ChatAdminPermission[]|null $permissions A list of permissions if the member is an admin, otherwise null.
      */
     public function __construct(
-        public int $userId,
-        public string $firstName,
-        public ?string $lastName,
-        public ?string $username,
-        public bool $isBot,
-        public int $lastActivityTime,
-        public ?string $description,
-        public ?string $avatarUrl,
-        public ?string $fullAvatarUrl,
-        public int $lastAccessTime,
-        public bool $isOwner,
-        public bool $isAdmin,
-        public int $joinTime,
-        #[ArrayOf(ChatAdminPermission::class)]
-        public ?array $permissions,
-    ) {
+        int $userId,
+        string $firstName,
+        ?string $lastName,
+        ?string $username,
+        bool $isBot,
+        int $lastActivityTime,
+        ?string $description,
+        ?string $avatarUrl,
+        ?string $fullAvatarUrl,
+        int $lastAccessTime,
+        bool $isOwner,
+        bool $isAdmin,
+        int $joinTime,
+        #[\BushlanovDev\MaxMessengerBot\Attributes\ArrayOf(\BushlanovDev\MaxMessengerBot\Enums\ChatAdminPermission::class)]
+        ?array $permissions
+    )
+    {
+        $this->userId = $userId;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->username = $username;
+        $this->isBot = $isBot;
+        $this->lastActivityTime = $lastActivityTime;
+        $this->description = $description;
+        $this->avatarUrl = $avatarUrl;
+        $this->fullAvatarUrl = $fullAvatarUrl;
+        $this->lastAccessTime = $lastAccessTime;
+        $this->isOwner = $isOwner;
+        $this->isAdmin = $isAdmin;
+        $this->joinTime = $joinTime;
+        $this->permissions = $permissions;
     }
 }

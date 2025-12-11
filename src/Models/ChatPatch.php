@@ -16,6 +16,6 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoAttachmentRequ
  * @property-read string|null $pin Message ID to be pinned.
  * @property-read bool|null $notify
  */
-final readonly class ChatPatch extends AbstractPatchModel
+final class ChatPatch extends AbstractPatchModel
 {
 }

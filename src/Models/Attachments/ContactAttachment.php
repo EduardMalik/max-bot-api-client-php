@@ -7,13 +7,19 @@ namespace BushlanovDev\MaxMessengerBot\Models\Attachments;
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\ContactAttachmentPayload;
 
-final readonly class ContactAttachment extends AbstractAttachment
+final class ContactAttachment extends AbstractAttachment
 {
+    /**
+     * @var ContactAttachmentPayload
+     * @readonly
+     */
+    public $payload;
     /**
      * @param ContactAttachmentPayload $payload Contact attachment payload.
      */
-    public function __construct(public ContactAttachmentPayload $payload)
+    public function __construct(ContactAttachmentPayload $payload)
     {
+        $this->payload = $payload;
         parent::__construct(AttachmentType::Contact);
     }
 }

@@ -14,24 +14,17 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(InlineKeyboardAttachmentRequestPayload::class)]
-#[UsesClass(CallbackButton::class)]
-#[UsesClass(LinkButton::class)]
 final class InlineKeyboardPayloadTest extends TestCase
 {
-    #[Test]
     public function constructionAndPropertyAccess(): void
     {
         $buttons = [
             [new CallbackButton('Test', 'payload')],
         ];
         $payload = new InlineKeyboardAttachmentRequestPayload($buttons);
-
         $this->assertInstanceOf(InlineKeyboardAttachmentRequestPayload::class, $payload);
         $this->assertSame($buttons, $payload->buttons);
     }
-
-    #[Test]
     public function toArraySerializesCorrectly(): void
     {
         $buttons = [
@@ -42,9 +35,7 @@ final class InlineKeyboardPayloadTest extends TestCase
             ],
         ];
         $payload = new InlineKeyboardAttachmentRequestPayload($buttons);
-
         $resultArray = $payload->toArray();
-
         $expectedArray = [
             'buttons' => [
                 [
@@ -70,16 +61,12 @@ final class InlineKeyboardPayloadTest extends TestCase
                 ],
             ],
         ];
-
         $this->assertEquals($expectedArray, $resultArray);
     }
-
-    #[Test]
     public function toArrayHandlesEmptyButtonsArray(): void
     {
         $payload = new InlineKeyboardAttachmentRequestPayload([]);
         $resultArray = $payload->toArray();
-
         $expectedArray = [
             'buttons' => [],
         ];

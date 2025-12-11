@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace BushlanovDev\MaxMessengerBot\Enums;
 
-enum InlineButtonType: string
+class InlineButtonType
 {
-    case Callback = 'callback';
-    case Link = 'link';
-    case RequestGeoLocation = 'request_geo_location';
-    case RequestContact = 'request_contact';
-    case OpenApp = 'open_app';
-    case Message = 'message';
-    case Chat = 'chat';
+    public const Callback = 'callback';
+    public const Link = 'link';
+    public const RequestGeoLocation = 'request_geo_location';
+    public const RequestContact = 'request_contact';
+    public const OpenApp = 'open_app';
+    public const Message = 'message';
+    public const Chat = 'chat';
+
+    public static function fromName(string $name){
+
+        return $name;
+    }
 }

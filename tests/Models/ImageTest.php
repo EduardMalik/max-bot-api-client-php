@@ -9,18 +9,14 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(Image::class)]
 final class ImageTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [
             'url' => 'https://example.com/image.jpg',
         ];
-
         $image = Image::fromArray($data);
-
         $this->assertInstanceOf(Image::class, $image);
     }
 }

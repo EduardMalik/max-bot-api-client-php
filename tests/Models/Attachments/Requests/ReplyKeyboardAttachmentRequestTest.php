@@ -14,22 +14,15 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ReplyKeyboardAttachmentRequest::class)]
-#[UsesClass(SendMessageButton::class)]
-#[UsesClass(SendContactButton::class)]
-#[UsesClass(ReplyKeyboardAttachmentRequestPayload::class)]
 final class ReplyKeyboardAttachmentRequestTest extends TestCase
 {
-    #[Test]
     public function toArray(): void
     {
         $buttons = [
             [new SendMessageButton('Help', 'help_payload', Intent::Positive)],
             [new SendContactButton('Share Contact')],
         ];
-
-        $request = new ReplyKeyboardAttachmentRequest(buttons: $buttons, direct: true);
-
+        $request = new ReplyKeyboardAttachmentRequest($buttons, true);
         $expectedArray = [
             'type' => 'reply_keyboard',
             'payload' => [
@@ -53,7 +46,6 @@ final class ReplyKeyboardAttachmentRequestTest extends TestCase
                 'direct_user_id' => null,
             ],
         ];
-
         $this->assertEquals($expectedArray, $request->toArray());
     }
 }

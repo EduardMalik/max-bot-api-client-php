@@ -14,20 +14,40 @@ use Psr\Log\LoggerInterface;
  * It verifies the request's authenticity, parses it, and uses an UpdateDispatcher
  * to route it to the appropriate handler.
  */
-final readonly class WebhookHandler
+final class WebhookHandler
 {
+    /**
+     * @var UpdateDispatcher
+     * @readonly
+     */
+    private $dispatcher;
+    /**
+     * @var ModelFactory
+     * @readonly
+     */
+    private $modelFactory;
+    /**
+     * @var LoggerInterface
+     * @readonly
+     */
+    private $logger;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    private $secret;
     /**
      * @param UpdateDispatcher $dispatcher The update dispatcher.
      * @param ModelFactory $modelFactory The model factory.
      * @param LoggerInterface $logger PSR LoggerInterface.
      * @param string|null $secret The secret key for request verification.
      */
-    public function __construct(
-        private UpdateDispatcher $dispatcher,
-        private ModelFactory $modelFactory,
-        private LoggerInterface $logger,
-        private ?string $secret,
-    ) {
+    public function __construct(UpdateDispatcher $dispatcher, ModelFactory $modelFactory, LoggerInterface $logger, ?string $secret)
+    {
+        $this->dispatcher = $dispatcher;
+        $this->modelFactory = $modelFactory;
+        $this->logger = $logger;
+        $this->secret = $secret;
     }
 
     /**
@@ -47,7 +67,7 @@ final readonly class WebhookHandler
             if (!class_exists(\GuzzleHttp\Psr7\ServerRequest::class)) {
                 throw new \LogicException(
                     'No ServerRequest was provided and "guzzlehttp/psr7" is not found. ' .
-                    'Please run "composer require guzzlehttp/psr7" or create and pass your own PSR-7 request object.',
+                    'Please run "composer require guzzlehttp/psr7" or create and pass your own PSR-7 request object.'
                 );
             }
             $request = \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
@@ -63,7 +83,7 @@ final readonly class WebhookHandler
         $this->verifySignature($request->getHeaderLine('X-Max-Bot-Api-Secret'));
 
         try {
-            $data = json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
+            $data = json_decode($payload, true, 512, 0);
         } catch (\JsonException $e) {
             $this->logger->error('Failed to decode webhook JSON', ['payload' => $payload, 'exception' => $e]);
             throw new SerializationException('Failed to decode webhook body as JSON.', 0, $e);

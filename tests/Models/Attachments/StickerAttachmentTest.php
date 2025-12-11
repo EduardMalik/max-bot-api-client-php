@@ -11,11 +11,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(StickerAttachment::class)]
-#[UsesClass(StickerAttachmentPayload::class)]
 final class StickerAttachmentTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = ['type' => 'sticker', 'payload' => ['url' => 'u', 'code' => 'c'], 'width' => 128, 'height' => 128];

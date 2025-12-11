@@ -12,11 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(UserRemovedFromChatUpdate::class)]
-#[UsesClass(User::class)]
 final class UserRemovedFromChatUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedWhenRemovedByAdmin(): void
     {
         $data = [
@@ -34,9 +31,7 @@ final class UserRemovedFromChatUpdateTest extends TestCase
             'admin_id' => 222,
             'is_channel' => false,
         ];
-
         $update = UserRemovedFromChatUpdate::fromArray($data);
-
         $this->assertInstanceOf(UserRemovedFromChatUpdate::class, $update);
         $this->assertSame(UpdateType::UserRemoved, $update->updateType);
         $this->assertSame(98765, $update->chatId);
@@ -46,8 +41,6 @@ final class UserRemovedFromChatUpdateTest extends TestCase
         $this->assertSame(111, $update->user->userId);
         $this->assertEquals($data, $update->toArray());
     }
-
-    #[Test]
     public function canBeCreatedWhenUserLeft(): void
     {
         $data = [
@@ -65,9 +58,7 @@ final class UserRemovedFromChatUpdateTest extends TestCase
             'admin_id' => null,
             'is_channel' => true,
         ];
-
         $update = UserRemovedFromChatUpdate::fromArray($data);
-
         $this->assertInstanceOf(UserRemovedFromChatUpdate::class, $update);
         $this->assertNull($update->adminId);
         $this->assertTrue($update->isChannel);

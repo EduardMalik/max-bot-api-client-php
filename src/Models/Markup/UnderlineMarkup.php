@@ -9,7 +9,7 @@ use BushlanovDev\MaxMessengerBot\Enums\MarkupType;
 /**
  * Represents an ++underlined++ part of the text.
  */
-final readonly class UnderlineMarkup extends AbstractMarkup
+final class UnderlineMarkup extends AbstractMarkup
 {
     /**
      * @param int $from Element start index (zero-based) in text.
@@ -17,7 +17,7 @@ final readonly class UnderlineMarkup extends AbstractMarkup
      */
     public function __construct(
         int $from,
-        int $length,
+        int $length
     ) {
         parent::__construct(MarkupType::Underline, $from, $length);
     }

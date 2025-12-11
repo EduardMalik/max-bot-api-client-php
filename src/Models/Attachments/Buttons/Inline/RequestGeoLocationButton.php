@@ -9,9 +9,13 @@ use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
 /**
  * After pressing this type of button client sends new message with attachment of current user geo location.
  */
-final readonly class RequestGeoLocationButton extends AbstractInlineButton
+final class RequestGeoLocationButton extends AbstractInlineButton
 {
-    public bool $quick;
+    /**
+     * @readonly
+     * @var bool
+     */
+    public $quick;
 
     /**
      * @param string $text Visible button text (1 to 128 characters).

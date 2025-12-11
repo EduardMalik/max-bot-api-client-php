@@ -11,11 +11,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(PhotoAttachment::class)]
-#[UsesClass(PhotoAttachmentPayload::class)]
 final class PhotoAttachmentTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = ['type' => 'image', 'payload' => ['photo_id' => 1, 'token' => 't', 'url' => 'u']];

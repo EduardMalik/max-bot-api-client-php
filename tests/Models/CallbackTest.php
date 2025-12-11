@@ -11,11 +11,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(Callback::class)]
-#[UsesClass(User::class)]
 final class CallbackTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [
@@ -31,9 +28,7 @@ final class CallbackTest extends TestCase
                 'username' => null,
             ],
         ];
-
         $callback = Callback::fromArray($data);
-
         $this->assertInstanceOf(Callback::class, $callback);
         $this->assertSame(1678886400, $callback->timestamp);
         $this->assertSame('cb.12345.abc', $callback->callbackId);

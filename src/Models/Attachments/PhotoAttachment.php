@@ -7,13 +7,19 @@ namespace BushlanovDev\MaxMessengerBot\Models\Attachments;
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoAttachmentPayload;
 
-final readonly class PhotoAttachment extends AbstractAttachment
+final class PhotoAttachment extends AbstractAttachment
 {
+    /**
+     * @var PhotoAttachmentPayload
+     * @readonly
+     */
+    public $payload;
     /**
      * @param PhotoAttachmentPayload $payload Photo attachment payload.
      */
-    public function __construct(public PhotoAttachmentPayload $payload)
+    public function __construct(PhotoAttachmentPayload $payload)
     {
+        $this->payload = $payload;
         parent::__construct(AttachmentType::Image);
     }
 }

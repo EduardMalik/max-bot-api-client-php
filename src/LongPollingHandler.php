@@ -10,8 +10,23 @@ use Psr\Log\LoggerInterface;
 /**
  * Handles receiving updates via long polling.
  */
-final readonly class LongPollingHandler
+final class LongPollingHandler
 {
+    /**
+     * @var Api
+     * @readonly
+     */
+    private $api;
+    /**
+     * @var UpdateDispatcher
+     * @readonly
+     */
+    private $dispatcher;
+    /**
+     * @var LoggerInterface
+     * @readonly
+     */
+    private $logger;
     /**
      * @param Api $api
      * @param UpdateDispatcher $dispatcher The update dispatcher.
@@ -19,10 +34,13 @@ final readonly class LongPollingHandler
      * @codeCoverageIgnore
      */
     public function __construct(
-        private Api $api,
-        private UpdateDispatcher $dispatcher,
-        private LoggerInterface $logger,
+        Api $api,
+        UpdateDispatcher $dispatcher,
+        LoggerInterface $logger
     ) {
+        $this->api = $api;
+        $this->dispatcher = $dispatcher;
+        $this->logger = $logger;
         if (!(\PHP_SAPI === 'cli')) {
             throw new \RuntimeException('LongPollingHandler can only be used in CLI mode.');
         }
@@ -38,7 +56,7 @@ final readonly class LongPollingHandler
      */
     public function processUpdates(int $timeout, ?int $marker): ?int
     {
-        $updateList = $this->api->getUpdates(timeout: $timeout, marker: $marker);
+        $updateList = $this->api->getUpdates(null, $timeout, $marker);
 
         foreach ($updateList->updates as $update) {
             try {
@@ -71,13 +89,13 @@ final readonly class LongPollingHandler
             } catch (NetworkException $e) {
                 $this->logger->error(
                     'Long-polling network error: {message}',
-                    ['message' => $e->getMessage(), 'exception' => $e],
+                    ['message' => $e->getMessage(), 'exception' => $e]
                 );
                 sleep(5);
             } catch (\Exception $e) {
                 $this->logger->error(
                     'An error occurred during long-polling: {message}',
-                    ['message' => $e->getMessage(), 'exception' => $e],
+                    ['message' => $e->getMessage(), 'exception' => $e]
                 );
                 sleep(1);
             }

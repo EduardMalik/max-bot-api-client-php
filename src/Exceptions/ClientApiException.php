@@ -10,13 +10,31 @@ use Throwable;
 
 class ClientApiException extends RuntimeException
 {
+    /**
+     * @readonly
+     * @var string
+     */
+    public $errorCode;
+    /**
+     * @readonly
+     * @var \Psr\Http\Message\ResponseInterface|null
+     */
+    public $response;
+    /**
+     * @readonly
+     * @var int|null
+     */
+    public $httpStatusCode;
     public function __construct(
         string $message,
-        public readonly string $errorCode,
-        public readonly ?ResponseInterface $response = null,
-        public readonly ?int $httpStatusCode = null,
-        ?Throwable $previous = null,
+        string $errorCode,
+        ?ResponseInterface $response = null,
+        ?int $httpStatusCode = null,
+        ?Throwable $previous = null
     ) {
+        $this->errorCode = $errorCode;
+        $this->response = $response;
+        $this->httpStatusCode = $httpStatusCode;
         parent::__construct($message, $httpStatusCode ?? 0, $previous);
     }
 

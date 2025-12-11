@@ -79,9 +79,13 @@ use ReflectionException;
 /**
  * Creates DTOs from raw associative arrays returned by the API client.
  */
-readonly class ModelFactory
+class ModelFactory
 {
-    private LoggerInterface $logger;
+    /**
+     * @readonly
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param LoggerInterface|null $logger PSR LoggerInterface.
@@ -99,7 +103,7 @@ readonly class ModelFactory
      * @return Result
      * @throws ReflectionException
      */
-    public function createResult(array $data): Result
+    public function createResult($data): Result
     {
         return Result::fromArray($data);
     }
@@ -112,7 +116,7 @@ readonly class ModelFactory
      * @return BotInfo
      * @throws ReflectionException
      */
-    public function createBotInfo(array $data): BotInfo
+    public function createBotInfo($data): BotInfo
     {
         return BotInfo::fromArray($data);
     }
@@ -125,7 +129,7 @@ readonly class ModelFactory
      * @return Subscription
      * @throws ReflectionException
      */
-    public function createSubscription(array $data): Subscription
+    public function createSubscription($data): Subscription
     {
         return Subscription::fromArray($data);
     }
@@ -138,7 +142,7 @@ readonly class ModelFactory
      * @return Subscription[]
      * @throws ReflectionException
      */
-    public function createSubscriptions(array $data): array
+    public function createSubscriptions($data): array
     {
         return isset($data['subscriptions']) && is_array($data['subscriptions'])
             ? array_map([$this, 'createSubscription'], $data['subscriptions'])
@@ -153,7 +157,7 @@ readonly class ModelFactory
      * @return Message
      * @throws ReflectionException
      */
-    public function createMessageFromSendResponse(array $data): Message
+    public function createMessageFromSendResponse($data): Message
     {
         $messageData = $data['message'];
 
@@ -162,7 +166,9 @@ readonly class ModelFactory
             'recipient_id' => $data['recipient_id'] ?? null,
             'message_id' => $data['message_id'] ?? null,
         ];
-        $messageData = array_merge($messageData, array_filter($topLevelData, fn($value) => $value !== null));
+        $messageData = array_merge($messageData, array_filter($topLevelData, function ($value) {
+            return $value !== null;
+        }));
 
         if (isset($messageData['message']) && is_array($messageData['message'])) {
             $messageData['body'] = $messageData['message'];
@@ -180,7 +186,7 @@ readonly class ModelFactory
      * @return Message
      * @throws ReflectionException
      */
-    public function createMessage(array $data): Message
+    public function createMessage($data): Message
     {
         if (isset($data['body']) && is_array($data['body'])) {
             $data['body'] = $this->createMessageBody($data['body']);
@@ -196,7 +202,7 @@ readonly class ModelFactory
      *
      * @return Message[]
      */
-    public function createMessages(array $data): array
+    public function createMessages($data): array
     {
         return isset($data['messages']) && is_array($data['messages'])
             ? array_map([$this, 'createMessage'], $data['messages'])
@@ -216,14 +222,14 @@ readonly class ModelFactory
         if (isset($data['attachments']) && is_array($data['attachments'])) {
             $data['attachments'] = array_map(
                 [$this, 'createAttachment'],
-                $data['attachments'],
+                $data['attachments']
             );
         }
 
         if (isset($data['markup']) && is_array($data['markup'])) {
             $data['markup'] = array_map(
                 [$this, 'createMarkupElement'],
-                $data['markup'],
+                $data['markup']
             );
         }
 
@@ -238,39 +244,55 @@ readonly class ModelFactory
      * @return AbstractAttachment
      * @throws ReflectionException
      */
-    public function createAttachment(array $data): AbstractAttachment
+    public function createAttachment($data): AbstractAttachment
     {
-        $attachmentType = AttachmentType::tryFrom($data['type'] ?? '');
+        $attachmentType = AttachmentType::fromName($data['type'] ?? '');
         if ($attachmentType === AttachmentType::ReplyKeyboard
             && isset($data['buttons']) && is_array($data['buttons'])) {
             $data['buttons'] = array_map(
-                fn($rowOfButtons) => array_map([$this, 'createReplyButton'], $rowOfButtons),
-                $data['buttons'],
+                function ($rowOfButtons) {
+                    return array_map([$this, 'createReplyButton'], $rowOfButtons);
+                },
+                $data['buttons']
             );
         }
 
         if ($attachmentType === AttachmentType::InlineKeyboard
             && isset($data['payload']['buttons']) && is_array($data['payload']['buttons'])) {
             $data['payload']['buttons'] = array_map(
-                fn($rowOfButtons) => array_map([$this, 'createInlineButton'], $rowOfButtons),
+                function ($rowOfButtons) {
+                    return array_map([$this, 'createInlineButton'], $rowOfButtons);
+                },
                 $data['payload']['buttons']
             );
         }
 
-        return match ($attachmentType) {
-            AttachmentType::Data => DataAttachment::fromArray($data),
-            AttachmentType::Share => ShareAttachment::fromArray($data),
-            AttachmentType::Image => PhotoAttachment::fromArray($data),
-            AttachmentType::Video => VideoAttachment::fromArray($data),
-            AttachmentType::Audio => AudioAttachment::fromArray($data),
-            AttachmentType::File => FileAttachment::fromArray($data),
-            AttachmentType::Sticker => StickerAttachment::fromArray($data),
-            AttachmentType::Contact => ContactAttachment::fromArray($data),
-            AttachmentType::InlineKeyboard => InlineKeyboardAttachment::fromArray($data),
-            AttachmentType::ReplyKeyboard => ReplyKeyboardAttachment::fromArray($data),
-            AttachmentType::Location => LocationAttachment::fromArray($data),
-            default => throw new LogicException('Unknown or unsupported attachment type: ' . ($data['type'] ?? 'none')),
-        };
+        switch ($attachmentType) {
+            case AttachmentType::Data:
+                return DataAttachment::fromArray($data);
+            case AttachmentType::Share:
+                return ShareAttachment::fromArray($data);
+            case AttachmentType::Image:
+                return PhotoAttachment::fromArray($data);
+            case AttachmentType::Video:
+                return VideoAttachment::fromArray($data);
+            case AttachmentType::Audio:
+                return AudioAttachment::fromArray($data);
+            case AttachmentType::File:
+                return FileAttachment::fromArray($data);
+            case AttachmentType::Sticker:
+                return StickerAttachment::fromArray($data);
+            case AttachmentType::Contact:
+                return ContactAttachment::fromArray($data);
+            case AttachmentType::InlineKeyboard:
+                return InlineKeyboardAttachment::fromArray($data);
+            case AttachmentType::ReplyKeyboard:
+                return ReplyKeyboardAttachment::fromArray($data);
+            case AttachmentType::Location:
+                return LocationAttachment::fromArray($data);
+            default:
+                throw new LogicException('Unknown or unsupported attachment type: ' . ($data['type'] ?? 'none'));
+        }
     }
 
     /**
@@ -282,16 +304,20 @@ readonly class ModelFactory
      * @throws ReflectionException
      * @throws LogicException
      */
-    public function createReplyButton(array $data): AbstractReplyButton
+    public function createReplyButton($data): AbstractReplyButton
     {
-        return match (ReplyButtonType::tryFrom($data['type'] ?? '')) {
-            ReplyButtonType::Message => SendMessageButton::fromArray($data),
-            ReplyButtonType::UserContact => SendContactButton::fromArray($data),
-            ReplyButtonType::UserGeoLocation => SendGeoLocationButton::fromArray($data),
-            default => throw new LogicException(
-                'Unknown or unsupported reply button type: ' . ($data['type'] ?? 'none')
-            ),
-        };
+        switch (ReplyButtonType::fromName($data['type'] ?? '')) {
+            case ReplyButtonType::Message:
+                return SendMessageButton::fromArray($data);
+            case ReplyButtonType::UserContact:
+                return SendContactButton::fromArray($data);
+            case ReplyButtonType::UserGeoLocation:
+                return SendGeoLocationButton::fromArray($data);
+            default:
+                throw new LogicException(
+                    'Unknown or unsupported reply button type: ' . ($data['type'] ?? 'none')
+                );
+        }
     }
 
     /**
@@ -302,19 +328,26 @@ readonly class ModelFactory
      * @throws ReflectionException
      * @throws LogicException
      */
-    public function createInlineButton(array $data): AbstractInlineButton
+    public function createInlineButton($data): AbstractInlineButton
     {
-        return match (InlineButtonType::tryFrom($data['type'] ?? '')) {
-            InlineButtonType::Callback => CallbackButton::fromArray($data),
-            InlineButtonType::Link => LinkButton::fromArray($data),
-            InlineButtonType::RequestContact => RequestContactButton::fromArray($data),
-            InlineButtonType::RequestGeoLocation => RequestGeoLocationButton::fromArray($data),
-            InlineButtonType::Chat => ChatButton::fromArray($data),
-            InlineButtonType::OpenApp => OpenAppButton::fromArray($data),
-            default => throw new LogicException(
-                'Unknown or unsupported inline button type: ' . ($data['type'] ?? 'none')
-            ),
-        };
+        switch (InlineButtonType::fromName($data['type'] ?? '')) {
+            case InlineButtonType::Callback:
+                return CallbackButton::fromArray($data);
+            case InlineButtonType::Link:
+                return LinkButton::fromArray($data);
+            case InlineButtonType::RequestContact:
+                return RequestContactButton::fromArray($data);
+            case InlineButtonType::RequestGeoLocation:
+                return RequestGeoLocationButton::fromArray($data);
+            case InlineButtonType::Chat:
+                return ChatButton::fromArray($data);
+            case InlineButtonType::OpenApp:
+                return OpenAppButton::fromArray($data);
+            default:
+                throw new LogicException(
+                    'Unknown or unsupported inline button type: ' . ($data['type'] ?? 'none')
+                );
+        }
     }
 
     /**
@@ -325,7 +358,7 @@ readonly class ModelFactory
      * @return UploadEndpoint
      * @throws ReflectionException
      */
-    public function createUploadEndpoint(array $data): UploadEndpoint
+    public function createUploadEndpoint($data): UploadEndpoint
     {
         return UploadEndpoint::fromArray($data);
     }
@@ -338,7 +371,7 @@ readonly class ModelFactory
      * @return Chat
      * @throws ReflectionException
      */
-    public function createChat(array $data): Chat
+    public function createChat($data): Chat
     {
         return Chat::fromArray($data);
     }
@@ -352,7 +385,7 @@ readonly class ModelFactory
      * @throws ReflectionException
      * @throws LogicException
      */
-    public function createUpdateList(array $data): UpdateList
+    public function createUpdateList($data): UpdateList
     {
         $updateObjects = [];
         if (isset($data['updates']) && is_array($data['updates'])) {
@@ -368,7 +401,7 @@ readonly class ModelFactory
 
         return new UpdateList(
             $updateObjects,
-            $data['marker'] ? (int)$data['marker'] : null,
+            $data['marker'] ? (int)$data['marker'] : null
         );
     }
 
@@ -381,29 +414,46 @@ readonly class ModelFactory
      * @throws ReflectionException
      * @throws LogicException
      */
-    public function createUpdate(array $data): AbstractUpdate
+    public function createUpdate($data): AbstractUpdate
     {
-        return match (UpdateType::tryFrom($data['update_type'] ?? '')) {
-            UpdateType::MessageCreated => MessageCreatedUpdate::fromArray($data),
-            UpdateType::MessageCallback => MessageCallbackUpdate::fromArray($data),
-            UpdateType::MessageEdited => MessageEditedUpdate::fromArray($data),
-            UpdateType::MessageRemoved => MessageRemovedUpdate::fromArray($data),
-            UpdateType::BotAdded => BotAddedToChatUpdate::fromArray($data),
-            UpdateType::BotRemoved => BotRemovedFromChatUpdate::fromArray($data),
-            UpdateType::DialogMuted => DialogMutedUpdate::fromArray($data),
-            UpdateType::DialogUnmuted => DialogUnmutedUpdate::fromArray($data),
-            UpdateType::DialogCleared => DialogClearedUpdate::fromArray($data),
-            UpdateType::DialogRemoved => DialogRemovedUpdate::fromArray($data),
-            UpdateType::UserAdded => UserAddedToChatUpdate::fromArray($data),
-            UpdateType::UserRemoved => UserRemovedFromChatUpdate::fromArray($data),
-            UpdateType::BotStarted => BotStartedUpdate::fromArray($data),
-            UpdateType::BotStopped => BotStoppedUpdate::fromArray($data),
-            UpdateType::ChatTitleChanged => ChatTitleChangedUpdate::fromArray($data),
-            UpdateType::MessageChatCreated => MessageChatCreatedUpdate::fromArray($data),
-            default => throw new LogicException(
-                'Unknown or unsupported update type received: ' . ($data['update_type'] ?? 'none')
-            ),
-        };
+        switch (UpdateType::fromName($data['update_type'] ?? '')) {
+            case UpdateType::MessageCreated:
+                return MessageCreatedUpdate::fromArray($data);
+            case UpdateType::MessageCallback:
+                return MessageCallbackUpdate::fromArray($data);
+            case UpdateType::MessageEdited:
+                return MessageEditedUpdate::fromArray($data);
+            case UpdateType::MessageRemoved:
+                return MessageRemovedUpdate::fromArray($data);
+            case UpdateType::BotAdded:
+                return BotAddedToChatUpdate::fromArray($data);
+            case UpdateType::BotRemoved:
+                return BotRemovedFromChatUpdate::fromArray($data);
+            case UpdateType::DialogMuted:
+                return DialogMutedUpdate::fromArray($data);
+            case UpdateType::DialogUnmuted:
+                return DialogUnmutedUpdate::fromArray($data);
+            case UpdateType::DialogCleared:
+                return DialogClearedUpdate::fromArray($data);
+            case UpdateType::DialogRemoved:
+                return DialogRemovedUpdate::fromArray($data);
+            case UpdateType::UserAdded:
+                return UserAddedToChatUpdate::fromArray($data);
+            case UpdateType::UserRemoved:
+                return UserRemovedFromChatUpdate::fromArray($data);
+            case UpdateType::BotStarted:
+                return BotStartedUpdate::fromArray($data);
+            case UpdateType::BotStopped:
+                return BotStoppedUpdate::fromArray($data);
+            case UpdateType::ChatTitleChanged:
+                return ChatTitleChangedUpdate::fromArray($data);
+            case UpdateType::MessageChatCreated:
+                return MessageChatCreatedUpdate::fromArray($data);
+            default:
+                throw new LogicException(
+                    'Unknown or unsupported update type received: ' . ($data['update_type'] ?? 'none')
+                );
+        }
     }
 
     /**
@@ -414,7 +464,7 @@ readonly class ModelFactory
      * @return ChatList
      * @throws ReflectionException
      */
-    public function createChatList(array $data): ChatList
+    public function createChatList($data): ChatList
     {
         return ChatList::fromArray($data);
     }
@@ -427,7 +477,7 @@ readonly class ModelFactory
      * @return ChatMember
      * @throws ReflectionException
      */
-    public function createChatMember(array $data): ChatMember
+    public function createChatMember($data): ChatMember
     {
         return ChatMember::fromArray($data);
     }
@@ -440,7 +490,7 @@ readonly class ModelFactory
      * @return ChatMembersList
      * @throws ReflectionException
      */
-    public function createChatMembersList(array $data): ChatMembersList
+    public function createChatMembersList($data): ChatMembersList
     {
         return ChatMembersList::fromArray($data);
     }
@@ -453,7 +503,7 @@ readonly class ModelFactory
      * @return VideoAttachmentDetails
      * @throws ReflectionException
      */
-    public function createVideoAttachmentDetails(array $data): VideoAttachmentDetails
+    public function createVideoAttachmentDetails($data): VideoAttachmentDetails
     {
         return VideoAttachmentDetails::fromArray($data);
     }
@@ -466,21 +516,31 @@ readonly class ModelFactory
      * @return AbstractMarkup
      * @throws ReflectionException
      */
-    public function createMarkupElement(array $data): AbstractMarkup
+    public function createMarkupElement($data): AbstractMarkup
     {
-        return match (MarkupType::tryFrom($data['type'] ?? '')) {
-            MarkupType::Strong => StrongMarkup::fromArray($data),
-            MarkupType::Emphasized => EmphasizedMarkup::fromArray($data),
-            MarkupType::Monospaced => MonospacedMarkup::fromArray($data),
-            MarkupType::Strikethrough => StrikethroughMarkup::fromArray($data),
-            MarkupType::Underline => UnderlineMarkup::fromArray($data),
-            MarkupType::Heading => HeadingMarkup::fromArray($data),
-            MarkupType::Highlighted => HighlightedMarkup::fromArray($data),
-            MarkupType::Link => LinkMarkup::fromArray($data),
-            MarkupType::UserMention => UserMentionMarkup::fromArray($data),
-            default => throw new LogicException(
-                'Unknown or unsupported markup type: ' . ($data['type'] ?? 'none')
-            ),
-        };
+        switch (MarkupType::fromName($data['type'] ?? '')) {
+            case MarkupType::Strong:
+                return StrongMarkup::fromArray($data);
+            case MarkupType::Emphasized:
+                return EmphasizedMarkup::fromArray($data);
+            case MarkupType::Monospaced:
+                return MonospacedMarkup::fromArray($data);
+            case MarkupType::Strikethrough:
+                return StrikethroughMarkup::fromArray($data);
+            case MarkupType::Underline:
+                return UnderlineMarkup::fromArray($data);
+            case MarkupType::Heading:
+                return HeadingMarkup::fromArray($data);
+            case MarkupType::Highlighted:
+                return HighlightedMarkup::fromArray($data);
+            case MarkupType::Link:
+                return LinkMarkup::fromArray($data);
+            case MarkupType::UserMention:
+                return UserMentionMarkup::fromArray($data);
+            default:
+                throw new LogicException(
+                    'Unknown or unsupported markup type: ' . ($data['type'] ?? 'none')
+                );
+        }
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace BushlanovDev\MaxMessengerBot\Enums;
 
-enum MessageFormat: string
+class MessageFormat
 {
-    case Markdown = 'markdown';
-    case Html = 'html';
+    public const Markdown = 'markdown';
+    public const Html = 'html';
 }

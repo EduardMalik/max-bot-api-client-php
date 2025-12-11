@@ -10,8 +10,18 @@ use BushlanovDev\MaxMessengerBot\Models\Message;
 /**
  * You will get this `update` as soon as message is created.
  */
-final readonly class MessageCreatedUpdate extends AbstractUpdate
+final class MessageCreatedUpdate extends AbstractUpdate
 {
+    /**
+     * @var Message
+     * @readonly
+     */
+    public $message;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $userLocale;
     /**
      * @param int $timestamp Unix-time when event has occurred.
      * @param Message $message Newly created message.
@@ -19,9 +29,11 @@ final readonly class MessageCreatedUpdate extends AbstractUpdate
      */
     public function __construct(
         int $timestamp,
-        public Message $message,
-        public ?string $userLocale,
+        Message $message,
+        ?string $userLocale
     ) {
+        $this->message = $message;
+        $this->userLocale = $userLocale;
         parent::__construct(UpdateType::MessageCreated, $timestamp);
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace BushlanovDev\MaxMessengerBot\Enums;
 
-enum ChatType: string
+class ChatType
 {
-    case Dialog = 'dialog';
-    case Chat = 'chat';
-    case Channel = 'channel';
+    public const Dialog = 'dialog';
+    public const Chat = 'chat';
+    public const Channel = 'channel';
 }

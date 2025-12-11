@@ -10,7 +10,7 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\UploadedInfoAttachm
 /**
  * Request to attach an audio file to a message.
  */
-final readonly class AudioAttachmentRequest extends AbstractAttachmentRequest
+final class AudioAttachmentRequest extends AbstractAttachmentRequest
 {
     /**
      * @param string $token The unique token received after a successful audio file upload.
@@ -19,7 +19,7 @@ final readonly class AudioAttachmentRequest extends AbstractAttachmentRequest
     {
         parent::__construct(
             AttachmentType::Audio,
-            new UploadedInfoAttachmentRequestPayload($token),
+            new UploadedInfoAttachmentRequestPayload($token)
         );
     }
 }

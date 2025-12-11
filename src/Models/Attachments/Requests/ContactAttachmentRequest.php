@@ -10,7 +10,7 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\ContactAttachmentRe
 /**
  * Request to attach a contact card to a message.
  */
-final readonly class ContactAttachmentRequest extends AbstractAttachmentRequest
+final class ContactAttachmentRequest extends AbstractAttachmentRequest
 {
     /**
      * @param string|null $name Contact name.
@@ -26,7 +26,7 @@ final readonly class ContactAttachmentRequest extends AbstractAttachmentRequest
     ) {
         parent::__construct(
             AttachmentType::Contact,
-            new ContactAttachmentRequestPayload($name, $contactId, $vcfInfo, $vcfPhone),
+            new ContactAttachmentRequestPayload($name, $contactId, $vcfInfo, $vcfPhone)
         );
     }
 }

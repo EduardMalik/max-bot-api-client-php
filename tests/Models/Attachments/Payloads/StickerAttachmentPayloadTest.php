@@ -9,10 +9,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(StickerAttachmentPayload::class)]
 final class StickerAttachmentPayloadTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedAndSerialized(): void
     {
         $payload = new StickerAttachmentPayload('https://example.com/sticker.webp', 'sticker_code_abc');
@@ -20,7 +18,7 @@ final class StickerAttachmentPayloadTest extends TestCase
         $this->assertSame('sticker_code_abc', $payload->code);
         $this->assertEquals(
             ['url' => 'https://example.com/sticker.webp', 'code' => 'sticker_code_abc'],
-            $payload->toArray(),
+            $payload->toArray()
         );
     }
 }

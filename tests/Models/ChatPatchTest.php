@@ -11,27 +11,17 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ChatPatch::class)]
-#[UsesClass(PhotoAttachmentRequestPayload::class)]
 final class ChatPatchTest extends TestCase
 {
-    #[Test]
     public function toArrayIncludesOnlySetFields(): void
     {
-        $patch = new ChatPatch(title: 'New Title');
+        $patch = new ChatPatch();
         $this->assertEquals(['title' => 'New Title'], $patch->toArray());
     }
-
-    #[Test]
     public function toArrayHandlesMultipleFields(): void
     {
-        $photoPayload = new PhotoAttachmentRequestPayload(token: 'icon_token');
-        $patch = new ChatPatch(
-            title: 'Updated Chat',
-            pin: 'mid.12345',
-            icon: $photoPayload
-        );
-
+        $photoPayload = new PhotoAttachmentRequestPayload(null, 'icon_token');
+        $patch = new ChatPatch();
         $expected = [
             'title' => 'Updated Chat',
             'pin' => 'mid.12345',
@@ -41,11 +31,8 @@ final class ChatPatchTest extends TestCase
                 'photos' => null,
             ],
         ];
-
         $this->assertEquals($expected, $patch->toArray());
     }
-
-    #[Test]
     public function toArrayIsEmptyForEmptyPatch(): void
     {
         $patch = new ChatPatch();

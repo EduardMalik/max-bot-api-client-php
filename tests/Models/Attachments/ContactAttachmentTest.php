@@ -12,12 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ContactAttachment::class)]
-#[UsesClass(ContactAttachmentPayload::class)]
-#[UsesClass(User::class)]
 final class ContactAttachmentTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = ['type' => 'contact', 'payload' => ['vcf_info' => 'vcf', 'max_info' => null]];

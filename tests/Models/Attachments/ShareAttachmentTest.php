@@ -13,12 +13,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ShareAttachment::class)]
-#[UsesClass(AbstractAttachment::class)]
-#[UsesClass(ShareAttachmentRequestPayload::class)]
 final class ShareAttachmentTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [
@@ -28,9 +24,7 @@ final class ShareAttachmentTest extends TestCase
             'description' => 'Documentation for Max Bot API',
             'image_url' => 'https://dev.max.ru/image.png',
         ];
-
         $attachment = ShareAttachment::fromArray($data);
-
         $this->assertInstanceOf(ShareAttachment::class, $attachment);
         $this->assertSame(AttachmentType::Share, $attachment->type);
         $this->assertSame('Max Bot API', $attachment->title);

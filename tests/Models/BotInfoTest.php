@@ -12,12 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(BotInfo::class)]
-#[UsesClass(BotCommand::class)]
-#[UsesClass(ArrayOf::class)]
 final class BotInfoTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $botInfo = BotInfo::fromArray([
@@ -35,7 +31,6 @@ final class BotInfoTest extends TestCase
                 ['name' => 'help', 'description' => 'Show help'],
             ],
         ]);
-
         $this->assertInstanceOf(BotInfo::class, $botInfo);
         $this->assertSame(12345, $botInfo->userId);
         $this->assertSame('Test', $botInfo->firstName);

@@ -15,15 +15,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(Message::class)]
-#[UsesClass(MessageBody::class)]
-#[UsesClass(Recipient::class)]
-#[UsesClass(User::class)]
-#[UsesClass(LinkedMessage::class)]
-#[UsesClass(MessageStat::class)]
 final class MessageTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArrayWithAllData(): void
     {
         $data = [
@@ -68,9 +61,7 @@ final class MessageTest extends TestCase
             'recipient_id' => null,
             'message_id' => null,
         ];
-
         $message = Message::fromArray($data);
-
         $this->assertInstanceOf(Message::class, $message);
         $this->assertSame($data['timestamp'], $message->timestamp);
         $this->assertInstanceOf(MessageBody::class, $message->body);
@@ -79,12 +70,9 @@ final class MessageTest extends TestCase
         $this->assertSame($data['url'], $message->url);
         $this->assertInstanceOf(MessageStat::class, $message->stat);
         $this->assertSame(500, $message->stat->views);
-
         $array = $message->toArray();
-
         $this->assertIsArray($array);
         $this->assertSame($data, $array);
-
         $this->assertInstanceOf(LinkedMessage::class, $message->link);
         $this->assertSame('mid.original.123', $message->link->message->mid);
     }

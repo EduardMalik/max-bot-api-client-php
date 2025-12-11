@@ -8,12 +8,13 @@ namespace BushlanovDev\MaxMessengerBot\Models;
  * An abstract base for PATCH request models. It uses a variadic constructor
  * to capture named arguments, tracking which fields were explicitly set.
  */
-abstract readonly class AbstractPatchModel extends AbstractModel
+abstract class AbstractPatchModel extends AbstractModel
 {
     /**
      * @var array<int|string, mixed>
+     * @readonly
      */
-    protected array $patchData;
+    protected $patchData;
 
     /**
      * Captures all passed named arguments into an associative array.

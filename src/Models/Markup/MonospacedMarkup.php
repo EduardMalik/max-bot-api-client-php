@@ -9,7 +9,7 @@ use BushlanovDev\MaxMessengerBot\Enums\MarkupType;
 /**
  * Represents a `monospaced` part of the text.
  */
-final readonly class MonospacedMarkup extends AbstractMarkup
+final class MonospacedMarkup extends AbstractMarkup
 {
     /**
      * @param int $from Element start index (zero-based) in text.
@@ -17,7 +17,7 @@ final readonly class MonospacedMarkup extends AbstractMarkup
      */
     public function __construct(
         int $from,
-        int $length,
+        int $length
     ) {
         parent::__construct(MarkupType::Monospaced, $from, $length);
     }

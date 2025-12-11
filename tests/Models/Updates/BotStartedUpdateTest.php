@@ -12,11 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(BotStartedUpdate::class)]
-#[UsesClass(User::class)]
 final class BotStartedUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [
@@ -32,9 +29,7 @@ final class BotStartedUpdateTest extends TestCase
             ],
             'user_locale' => 'ru-ru',
         ];
-
         $update = BotStartedUpdate::fromArray($data);
-
         $this->assertInstanceOf(BotStartedUpdate::class, $update);
         $this->assertSame(UpdateType::BotStarted, $update->updateType);
         $this->assertSame(123, $update->user->userId);

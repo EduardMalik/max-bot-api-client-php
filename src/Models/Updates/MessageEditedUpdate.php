@@ -10,16 +10,22 @@ use BushlanovDev\MaxMessengerBot\Models\Message;
 /**
  * You will get this update as soon as a message is edited.
  */
-final readonly class MessageEditedUpdate extends AbstractUpdate
+final class MessageEditedUpdate extends AbstractUpdate
 {
+    /**
+     * @var Message
+     * @readonly
+     */
+    public $message;
     /**
      * @param int $timestamp Unix-time when the event has occurred.
      * @param Message $message The edited message.
      */
     public function __construct(
         int $timestamp,
-        public Message $message,
+        Message $message
     ) {
+        $this->message = $message;
         parent::__construct(UpdateType::MessageEdited, $timestamp);
     }
 }

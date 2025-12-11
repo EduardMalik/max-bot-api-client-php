@@ -11,11 +11,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ContactAttachmentPayload::class)]
-#[UsesClass(User::class)]
 final class ContactAttachmentPayloadTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedAndSerialized(): void
     {
         $user = User::fromArray(

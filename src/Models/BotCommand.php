@@ -7,15 +7,25 @@ namespace BushlanovDev\MaxMessengerBot\Models;
 /**
  * Command supported by the bot.
  */
-final readonly class BotCommand extends AbstractModel
+final class BotCommand extends AbstractModel
 {
+    /**
+     * @var string
+     * @readonly
+     */
+    public $name;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $description;
     /**
      * @param string $name Command name (1 to 64 characters)
      * @param string|null $description Command description (1 to 128 characters)
      */
-    public function __construct(
-        public string $name,
-        public ?string $description,
-    ) {
+    public function __construct(string $name, ?string $description)
+    {
+        $this->name = $name;
+        $this->description = $description;
     }
 }

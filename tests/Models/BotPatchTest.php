@@ -11,34 +11,22 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(BotPatch::class)]
-#[UsesClass(PhotoAttachmentRequestPayload::class)]
 final class BotPatchTest extends TestCase
 {
-    #[Test]
     public function toArrayIncludesOnlyExplicitlySetFields(): void
     {
-        $patch = new BotPatch(name: 'New Name');
+        $patch = new BotPatch();
         $this->assertEquals(['name' => 'New Name'], $patch->toArray());
     }
-
-    #[Test]
     public function toArrayIncludesFieldsSetToNull(): void
     {
-        $patch = new BotPatch(description: null);
+        $patch = new BotPatch();
         $this->assertEquals(['description' => null], $patch->toArray());
     }
-
-    #[Test]
     public function toArrayHandlesMultipleSetFields(): void
     {
-        $photoPayload = new PhotoAttachmentRequestPayload(token: 'photo123');
-        $patch = new BotPatch(
-            name: 'Updated Bot',
-            description: null,
-            photo: $photoPayload
-        );
-
+        $photoPayload = new PhotoAttachmentRequestPayload(null, 'photo123');
+        $patch = new BotPatch();
         $expected = [
             'name' => 'Updated Bot',
             'description' => null,
@@ -48,11 +36,8 @@ final class BotPatchTest extends TestCase
                 'photos' => null,
             ],
         ];
-
         $this->assertEquals($expected, $patch->toArray());
     }
-
-    #[Test]
     public function toArrayIsEmptyWhenNoArgumentsPassed(): void
     {
         $patch = new BotPatch();

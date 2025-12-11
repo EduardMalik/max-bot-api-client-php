@@ -10,7 +10,7 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\UploadedInfoAttachm
 /**
  * Request to attach a video to a message.
  */
-final readonly class VideoAttachmentRequest extends AbstractAttachmentRequest
+final class VideoAttachmentRequest extends AbstractAttachmentRequest
 {
     /**
      * @param string $token The unique token received after a successful video upload.
@@ -19,7 +19,7 @@ final readonly class VideoAttachmentRequest extends AbstractAttachmentRequest
     {
         parent::__construct(
             AttachmentType::Video,
-            new UploadedInfoAttachmentRequestPayload($token),
+            new UploadedInfoAttachmentRequestPayload($token)
         );
     }
 }

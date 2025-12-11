@@ -61,91 +61,36 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-#[CoversClass(ModelFactory::class)]
-#[UsesClass(BotInfo::class)]
-#[UsesClass(BotCommand::class)]
-#[UsesClass(Result::class)]
-#[UsesClass(Subscription::class)]
-#[UsesClass(ArrayOf::class)]
-#[UsesClass(Message::class)]
-#[UsesClass(MessageBody::class)]
-#[UsesClass(Recipient::class)]
-#[UsesClass(User::class)]
-#[UsesClass(UpdateList::class)]
-#[UsesClass(BotStartedUpdate::class)]
-#[UsesClass(MessageCreatedUpdate::class)]
-#[UsesClass(UserWithPhoto::class)]
-#[UsesClass(UploadEndpoint::class)]
-#[UsesClass(Chat::class)]
-#[UsesClass(Image::class)]
-#[UsesClass(ChatTitleChangedUpdate::class)]
-#[UsesClass(MessageChatCreatedUpdate::class)]
-#[UsesClass(ChatList::class)]
-#[UsesClass(ChatMember::class)]
-#[UsesClass(ChatMembersList::class)]
-#[UsesClass(VideoAttachmentDetails::class)]
-#[UsesClass(PhotoAttachmentRequestPayload::class)]
-#[UsesClass(VideoUrls::class)]
-#[UsesClass(AbstractAttachment::class)]
-#[UsesClass(DataAttachment::class)]
-#[UsesClass(ShareAttachment::class)]
-#[UsesClass(ShareAttachmentRequestPayload::class)]
-#[UsesClass(LinkMarkup::class)]
-#[UsesClass(AbstractMarkup::class)]
-#[UsesClass(StrongMarkup::class)]
-#[UsesClass(PhotoAttachmentPayload::class)]
-#[UsesClass(PhotoAttachment::class)]
-#[UsesClass(AbstractReplyButton::class)]
-#[UsesClass(SendContactButton::class)]
-#[UsesClass(SendMessageButton::class)]
-#[UsesClass(ReplyKeyboardAttachment::class)]
-#[UsesClass(AbstractInlineButton::class)]
-#[UsesClass(ChatButton::class)]
-#[UsesClass(RequestContactButton::class)]
-#[UsesClass(CallbackButton::class)]
-#[UsesClass(RequestGeoLocationButton::class)]
-#[UsesClass(LinkButton::class)]
-#[UsesClass(LocationAttachment::class)]
-#[UsesClass(InlineKeyboardAttachment::class)]
-#[UsesClass(KeyboardPayload::class)]
 final class ModelFactoryTest extends TestCase
 {
-    private ModelFactory $factory;
-
+    /**
+     * @var \BushlanovDev\MaxMessengerBot\ModelFactory
+     */
+    private $factory;
     protected function setUp(): void
     {
         parent::setUp();
         $this->factory = new ModelFactory();
     }
-
-    #[Test]
     public function createResultSuccessfully(): void
     {
         $rawData = ['success' => true];
-
         $result = $this->factory->createResult($rawData);
-
         $this->assertInstanceOf(Result::class, $result);
         $this->assertTrue($result->success);
         $this->assertNull($result->message);
     }
-
-    #[Test]
     public function createResultNotSuccessfully()
     {
         $rawData = [
             'success' => false,
             'message' => 'error message',
         ];
-
         $result = $this->factory->createResult($rawData);
-
         $this->assertInstanceOf(Result::class, $result);
         $this->assertFalse($result->success);
         $this->assertSame('error message', $result->message);
     }
-
-    #[Test]
     public function createBotInfoCorrectlyHydratesCommands(): void
     {
         $rawData = [
@@ -163,12 +108,9 @@ final class ModelFactoryTest extends TestCase
                 ['name' => 'help', 'description' => 'Show help'],
             ],
         ];
-
         $botInfo = $this->factory->createBotInfo($rawData);
-
         $this->assertInstanceOf(BotInfo::class, $botInfo);
         $this->assertSame(12345, $botInfo->userId);
-
         $this->assertIsArray($botInfo->commands);
         $this->assertCount(2, $botInfo->commands);
         $this->assertInstanceOf(BotCommand::class, $botInfo->commands[0]);
@@ -176,8 +118,6 @@ final class ModelFactoryTest extends TestCase
         $this->assertInstanceOf(BotCommand::class, $botInfo->commands[1]);
         $this->assertSame('help', $botInfo->commands[1]->name);
     }
-
-    #[Test]
     public function createBotInfoHandlesNullCommands(): void
     {
         $rawData = [
@@ -192,14 +132,10 @@ final class ModelFactoryTest extends TestCase
             'full_avatar_url' => null,
             'commands' => null,
         ];
-
         $botInfo = $this->factory->createBotInfo($rawData);
-
         $this->assertInstanceOf(BotInfo::class, $botInfo);
         $this->assertNull($botInfo->commands);
     }
-
-    #[Test]
     public function createSubscriptions(): void
     {
         $rawData = [
@@ -212,16 +148,12 @@ final class ModelFactoryTest extends TestCase
                 ],
             ],
         ];
-
         $subscriptions = $this->factory->createSubscriptions($rawData);
-
         $this->assertIsArray($subscriptions);
         $this->assertCount(1, $subscriptions);
         $this->assertInstanceOf(Subscription::class, $subscriptions[0]);
         $this->assertSame(UpdateType::MessageCreated, $subscriptions[0]->updateTypes[0]);
     }
-
-    #[Test]
     public function createMessageFromSendResponseCorrectlyTransformsData(): void
     {
         $apiResponse = [
@@ -240,9 +172,7 @@ final class ModelFactoryTest extends TestCase
             'recipient_id' => 4328369,
             'message_id' => 'mid.xyz',
         ];
-
         $message = $this->factory->createMessageFromSendResponse($apiResponse);
-
         $this->assertInstanceOf(Message::class, $message);
         $this->assertInstanceOf(MessageBody::class, $message->body);
         $this->assertSame('mid.xyz', $message->body->mid);
@@ -250,8 +180,6 @@ final class ModelFactoryTest extends TestCase
         $this->assertSame(4328369, $message->recipientId);
         $this->assertSame('mid.xyz', $message->messageId);
     }
-
-    #[Test]
     public function createMessage(): void
     {
         $rawData = [
@@ -276,30 +204,22 @@ final class ModelFactoryTest extends TestCase
             ],
             'url' => 'https://max.ru/message/123',
         ];
-
         $message = $this->factory->createMessage($rawData);
-
         $this->assertInstanceOf(Message::class, $message);
         $this->assertInstanceOf(MessageBody::class, $message->body);
         $this->assertInstanceOf(Recipient::class, $message->recipient);
         $this->assertInstanceOf(User::class, $message->sender);
     }
-
-    #[Test]
     public function createUploadEndpoint(): void
     {
         $rawData = [
             'url' => 'https://example.com/upload',
         ];
-
         $uploadEndpoint = $this->factory->createUploadEndpoint($rawData);
-
         $this->assertInstanceOf(UploadEndpoint::class, $uploadEndpoint);
         $this->assertSame('https://example.com/upload', $uploadEndpoint->url);
         $this->assertNull($uploadEndpoint->token);
     }
-
-    #[Test]
     public function createChat(): void
     {
         $rawData = [
@@ -327,15 +247,11 @@ final class ModelFactoryTest extends TestCase
             'messages_count' => 100,
             'chat_message_id' => 'mid.123',
         ];
-
         $chat = $this->factory->createChat($rawData);
-
         $this->assertInstanceOf(Chat::class, $chat);
         $this->assertInstanceOf(Image::class, $chat->icon);
         $this->assertInstanceOf(UserWithPhoto::class, $chat->dialogWithUser);
     }
-
-    #[Test]
     public function createUpdateListHandlesDifferentUpdateTypes(): void
     {
         $rawData = [
@@ -392,9 +308,7 @@ final class ModelFactoryTest extends TestCase
             ],
             'marker' => 12345,
         ];
-
         $updateList = $this->factory->createUpdateList($rawData);
-
         $this->assertInstanceOf(UpdateList::class, $updateList);
         $this->assertSame(12345, $updateList->marker);
         $this->assertCount(4, $updateList->updates);
@@ -404,8 +318,6 @@ final class ModelFactoryTest extends TestCase
         $this->assertInstanceOf(ChatTitleChangedUpdate::class, $updateList->updates[2]);
         $this->assertInstanceOf(MessageChatCreatedUpdate::class, $updateList->updates[3]);
     }
-
-    #[Test]
     public function createChatListDelegatesCreationToChatListModel(): void
     {
         $rawData = [
@@ -429,18 +341,13 @@ final class ModelFactoryTest extends TestCase
             ],
             'marker' => 98765,
         ];
-
         $chatList = $this->factory->createChatList($rawData);
-
         $this->assertInstanceOf(ChatList::class, $chatList);
-
         $this->assertSame(98765, $chatList->marker);
         $this->assertCount(2, $chatList->chats);
         $this->assertInstanceOf(Chat::class, $chatList->chats[0]);
         $this->assertSame(101, $chatList->chats[0]->chatId);
     }
-
-    #[Test]
     public function createChatMember()
     {
         $rawData = [
@@ -459,9 +366,7 @@ final class ModelFactoryTest extends TestCase
             'join_time' => 1678000000,
             'permissions' => ['pin_message', 'write'],
         ];
-
         $chatMember = $this->factory->createChatMember($rawData);
-
         $this->assertInstanceOf(ChatMember::class, $chatMember);
         $this->assertTrue($chatMember->isAdmin);
         $this->assertFalse($chatMember->isOwner);
@@ -471,8 +376,6 @@ final class ModelFactoryTest extends TestCase
         $this->assertSame(ChatAdminPermission::Write, $chatMember->permissions[1]);
         $this->assertEquals($rawData, $chatMember->toArray());
     }
-
-    #[Test]
     public function createMessagesReturnsArrayOfMessageObjects(): void
     {
         $data = [
@@ -489,23 +392,17 @@ final class ModelFactoryTest extends TestCase
                 ],
             ],
         ];
-
         $messages = $this->factory->createMessages($data);
-
         $this->assertIsArray($messages);
         $this->assertCount(2, $messages);
         $this->assertInstanceOf(Message::class, $messages[0]);
         $this->assertSame('mid.1', $messages[0]->body->mid);
     }
-
-    #[Test]
     public function createMessagesHandlesEmptyOrMissingKey(): void
     {
         $this->assertEmpty($this->factory->createMessages(['messages' => []]));
         $this->assertEmpty($this->factory->createMessages([]));
     }
-
-    #[Test]
     public function createChatMembersListSuccessfully(): void
     {
         $rawData = [
@@ -533,38 +430,28 @@ final class ModelFactoryTest extends TestCase
             ],
             'marker' => 98765,
         ];
-
         $list = $this->factory->createChatMembersList($rawData);
-
         $this->assertInstanceOf(ChatMembersList::class, $list);
         $this->assertCount(2, $list->members);
         $this->assertSame(98765, $list->marker);
-
         $this->assertInstanceOf(ChatMember::class, $list->members[0]);
         $this->assertSame(101, $list->members[0]->userId);
         $this->assertTrue($list->members[0]->isOwner);
-
         $this->assertInstanceOf(ChatMember::class, $list->members[1]);
         $this->assertSame(102, $list->members[1]->userId);
         $this->assertTrue($list->members[1]->isBot);
     }
-
-    #[Test]
     public function createChatMembersListHandlesEmptyResponse(): void
     {
         $rawData = [
             'members' => [],
             'marker' => null,
         ];
-
         $list = $this->factory->createChatMembersList($rawData);
-
         $this->assertInstanceOf(ChatMembersList::class, $list);
         $this->assertEmpty($list->members);
         $this->assertNull($list->marker);
     }
-
-    #[Test]
     public function createVideoAttachmentDetailsSuccessfully(): void
     {
         $rawData = [
@@ -575,16 +462,12 @@ final class ModelFactoryTest extends TestCase
             'urls' => ['mp4_720' => 'http://a.com/720.mp4'],
             'thumbnail' => ['token' => 'thumb_token'],
         ];
-
         $details = $this->factory->createVideoAttachmentDetails($rawData);
-
         $this->assertInstanceOf(VideoAttachmentDetails::class, $details);
         $this->assertSame('vid_token', $details->token);
         $this->assertInstanceOf(VideoUrls::class, $details->urls);
         $this->assertInstanceOf(PhotoAttachmentRequestPayload::class, $details->thumbnail);
     }
-
-    #[Test]
     public function createMessageCorrectlyHydratesPolymorphicAttachments(): void
     {
         $rawData = [
@@ -609,26 +492,19 @@ final class ModelFactoryTest extends TestCase
             'recipient' => ['chat_type' => 'dialog', 'user_id' => 123],
 
         ];
-
         $message = $this->factory->createMessage($rawData);
         $attachments = $message->body->attachments;
-
         $this->assertInstanceOf(Message::class, $message);
         $this->assertInstanceOf(MessageBody::class, $message->body);
         $this->assertIsArray($attachments);
         $this->assertCount(3, $attachments);
-
         $this->assertInstanceOf(DataAttachment::class, $attachments[0]);
         $this->assertSame('payload_from_reply_button', $attachments[0]->data);
-
         $this->assertInstanceOf(ShareAttachment::class, $message->body->attachments[1]);
         $this->assertSame('Test Share', $attachments[1]->title);
-
         $this->assertInstanceOf(PhotoAttachment::class, $attachments[2]);
         $this->assertSame(1, $attachments[2]->payload->photoId);
     }
-
-    #[Test]
     public function createMessageCorrectlyHydratesMarkup(): void
     {
         // ... (данные теста)
@@ -646,27 +522,19 @@ final class ModelFactoryTest extends TestCase
             ],
             'recipient' => ['chat_type' => 'dialog', 'user_id' => 123],
         ];
-
         $message = $this->factory->createMessage($rawData);
         $markup = $message->body->markup;
-
         $this->assertInstanceOf(StrongMarkup::class, $markup[0]);
         $this->assertSame(6, $markup[0]->from);
-
         $this->assertInstanceOf(LinkMarkup::class, $markup[1]);
         $this->assertSame('https://dev.max.ru', $markup[1]->url);
     }
-
-    #[Test]
     public function createMarkupElementThrowsExceptionForUnknownType(): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Unknown or unsupported markup type: brand_new_unsupported_type');
-
         $this->factory->createMarkupElement(['type' => 'brand_new_unsupported_type']);
     }
-
-    #[Test]
     public function createAttachmentCorrectlyHydratesReplyKeyboard(): void
     {
         $data = [
@@ -676,25 +544,19 @@ final class ModelFactoryTest extends TestCase
                 [['type' => 'user_contact', 'text' => 'My Contact']]
             ]
         ];
-
         $attachment = $this->factory->createAttachment($data);
-
         $this->assertInstanceOf(ReplyKeyboardAttachment::class, $attachment);
         $this->assertCount(2, $attachment->buttons);
         $this->assertInstanceOf(SendMessageButton::class, $attachment->buttons[0][0]);
         $this->assertInstanceOf(SendContactButton::class, $attachment->buttons[1][0]);
         $this->assertSame('My Contact', $attachment->buttons[1][0]->text);
     }
-
-    #[Test]
     public function createReplyButtonThrowsExceptionForUnknownType(): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Unknown or unsupported reply button type: new_fancy_button');
-
         $this->factory->createReplyButton(['type' => 'new_fancy_button']);
     }
-
     /**
      * Data provider for successful inline button creation.
      * @return array<string, array{0: array<string, mixed>, 1: class-string}>
@@ -724,17 +586,16 @@ final class ModelFactoryTest extends TestCase
             ],
         ];
     }
-
-    #[Test]
-    #[DataProvider('inlineButtonProvider')]
-    public function createInlineButtonSuccessfully(array $data, string $expectedClass): void
+    /**
+     * @param mixed[] $data
+     * @param string $expectedClass
+     */
+    public function createInlineButtonSuccessfully($data, $expectedClass): void
     {
         $button = $this->factory->createInlineButton($data);
-
         $this->assertInstanceOf($expectedClass, $button);
         $this->assertSame($data['text'], $button->text);
     }
-
     /**
      * Data provider for invalid inline button data.
      * @return array<string, array{0: array<string, mixed>, 1: string}>
@@ -752,17 +613,16 @@ final class ModelFactoryTest extends TestCase
             ],
         ];
     }
-
-    #[Test]
-    #[DataProvider('invalidInlineButtonProvider')]
-    public function createInlineButtonThrowsExceptionForInvalidType(array $invalidData, string $expectedMessage): void
+    /**
+     * @param mixed[] $invalidData
+     * @param string $expectedMessage
+     */
+    public function createInlineButtonThrowsExceptionForInvalidType($invalidData, $expectedMessage): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage($expectedMessage);
-
         $this->factory->createInlineButton($invalidData);
     }
-
     /**
      * Data provider for testing various attachment types in createAttachment.
      * @return array<string, array{0: array<string, mixed>, 1: class-string, 2: callable}>
@@ -805,22 +665,17 @@ final class ModelFactoryTest extends TestCase
             ],
         ];
     }
-
-    #[Test]
-    #[DataProvider('attachmentTypeProvider')]
-    public function createAttachmentSuccessfullyCreatesVariousTypes(
-        array $data,
-        string $expectedClass,
-        callable $assertionCallback,
-    ): void {
+    /**
+     * @param mixed[] $data
+     * @param string $expectedClass
+     * @param callable $assertionCallback
+     */
+    public function createAttachmentSuccessfullyCreatesVariousTypes($data, $expectedClass, $assertionCallback): void
+    {
         $attachment = $this->factory->createAttachment($data);
-
         $this->assertInstanceOf($expectedClass, $attachment);
-
         $assertionCallback($this, $attachment);
     }
-
-    #[Test]
     public function createUpdateListCatchesAndLogsLogicException(): void
     {
         $loggerMock = $this->createMock(LoggerInterface::class);
@@ -828,7 +683,6 @@ final class ModelFactoryTest extends TestCase
             ->setConstructorArgs([$loggerMock])
             ->onlyMethods(['createUpdate'])
             ->getMock();
-
         $validUpdateData = [
             'update_type' => 'bot_started',
             'timestamp' => 2,
@@ -847,7 +701,6 @@ final class ModelFactoryTest extends TestCase
             'updates' => [$validUpdateData, $invalidUpdateData],
             'marker' => 123,
         ];
-
         $exception = new LogicException('Unknown or unsupported update type received: unknown_type');
         $factory->expects($this->exactly(2))
             ->method('createUpdate')
@@ -860,13 +713,10 @@ final class ModelFactoryTest extends TestCase
                 }
                 return null;
             });
-
         $loggerMock->expects($this->once())
             ->method('debug')
             ->with($exception->getMessage(), ['payload' => $invalidUpdateData, 'exception' => $exception]);
-
         $updateList = $factory->createUpdateList($rawData);
-
         $this->assertCount(1, $updateList->updates);
         $this->assertInstanceOf(BotStartedUpdate::class, $updateList->updates[0]);
     }

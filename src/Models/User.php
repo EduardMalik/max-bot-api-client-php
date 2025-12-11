@@ -4,8 +4,38 @@ declare(strict_types=1);
 
 namespace BushlanovDev\MaxMessengerBot\Models;
 
-final readonly class User extends AbstractModel
+final class User extends AbstractModel
 {
+    /**
+     * @var int
+     * @readonly
+     */
+    public $userId;
+    /**
+     * @var string
+     * @readonly
+     */
+    public $firstName;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $lastName;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $username;
+    /**
+     * @var bool
+     * @readonly
+     */
+    public $isBot;
+    /**
+     * @var int
+     * @readonly
+     */
+    public $lastActivityTime;
     /**
      * @param int $userId Users identifier.
      * @param string $firstName Users first name.
@@ -15,13 +45,13 @@ final readonly class User extends AbstractModel
      * @param int $lastActivityTime Time of last user activity in Max (Unix timestamp in milliseconds).
      *                              Can be outdated if user disabled its "online" status in settings.
      */
-    public function __construct(
-        public int $userId,
-        public string $firstName,
-        public ?string $lastName,
-        public ?string $username,
-        public bool $isBot,
-        public int $lastActivityTime,
-    ) {
+    public function __construct(int $userId, string $firstName, ?string $lastName, ?string $username, bool $isBot, int $lastActivityTime)
+    {
+        $this->userId = $userId;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->username = $username;
+        $this->isBot = $isBot;
+        $this->lastActivityTime = $lastActivityTime;
     }
 }

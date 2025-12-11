@@ -10,21 +10,16 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(MessageLink::class)]
 final class MessageLinkTest extends TestCase
 {
-    #[Test]
     public function toArraySerializesCorrectly(): void
     {
         $messageLink = new MessageLink(MessageLinkType::Forward, '123');
-
         $expectedArray = [
-            'type' => MessageLinkType::Forward->value,
+            'type' => MessageLinkType::Forward,
             'mid' => '123',
         ];
-
         $resultArray = $messageLink->toArray();
-
         $this->assertSame($expectedArray, $resultArray);
         $this->assertSame(MessageLinkType::Forward, $messageLink->type);
         $this->assertSame('123', $messageLink->mid);

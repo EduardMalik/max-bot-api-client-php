@@ -10,27 +10,20 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(OpenAppButton::class)]
 final class OpenAppButtonTest extends TestCase
 {
-    #[Test]
     public function toArraySerializesCorrectly(): void
     {
         $button = new OpenAppButton('Test Button', 'MyWebApp', 123);
-
         $expectedArray = [
             'web_app' => 'MyWebApp',
             'contact_id' => 123,
             'type' => InlineButtonType::OpenApp->value,
             'text' => 'Test Button',
         ];
-
         $resultArray = $button->toArray();
-
         $this->assertSame($expectedArray, $resultArray);
     }
-
-    #[Test]
     public function fromArrayHydratesCorrectly(): void
     {
         $data = [
@@ -39,9 +32,7 @@ final class OpenAppButtonTest extends TestCase
             'web_app' => 'SomeApp',
             'contact_id' => 456,
         ];
-
         $button = OpenAppButton::fromArray($data);
-
         $this->assertInstanceOf(OpenAppButton::class, $button);
         $this->assertSame(InlineButtonType::OpenApp, $button->type);
         $this->assertSame('Launch', $button->text);

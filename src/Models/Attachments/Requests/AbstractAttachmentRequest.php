@@ -11,11 +11,24 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\AbstractAttachmentR
 /**
  * Message attachments.
  */
-abstract readonly class AbstractAttachmentRequest extends AbstractModel
+abstract class AbstractAttachmentRequest extends AbstractModel
 {
-    public function __construct(
-        public AttachmentType $type,
-        public AbstractAttachmentRequestPayload $payload,
-    ) {
+    /**
+     * @readonly
+     * @var \BushlanovDev\MaxMessengerBot\Enums\AttachmentType
+     */
+    public $type;
+    /**
+     * @readonly
+     * @var \BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\AbstractAttachmentRequestPayload
+     */
+    public $payload;
+    /**
+     * @param mixed $type
+     */
+    public function __construct($type, AbstractAttachmentRequestPayload $payload)
+    {
+        $this->type = $type;
+        $this->payload = $payload;
     }
 }

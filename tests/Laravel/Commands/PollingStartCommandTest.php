@@ -14,13 +14,16 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Tester\CommandTester;
 
-#[CoversClass(PollingStartCommand::class)]
-#[UsesClass(MaxBotManager::class)]
 final class PollingStartCommandTest extends TestCase
 {
-    private MockObject&MaxBotManager $botManagerMock;
-    private PollingStartCommand $command;
-
+    /**
+     * @var (\BushlanovDev\MaxMessengerBot\Laravel\MaxBotManager & \PHPUnit\Framework\MockObject\MockObject)
+     */
+    private $botManagerMock;
+    /**
+     * @var \BushlanovDev\MaxMessengerBot\Laravel\Commands\PollingStartCommand
+     */
+    private $command;
     protected function setUp(): void
     {
         parent::setUp();
@@ -37,66 +40,49 @@ final class PollingStartCommandTest extends TestCase
         $commandInApp = $application->find('maxbot:polling:start');
         $this->tester = new CommandTester($commandInApp);
     }
-
-    #[Test]
     public function handleSuccessfullyCallsManagerWithCustomTimeout(): void
     {
         $timeout = 60;
-
         $this->botManagerMock
             ->expects($this->once())
             ->method('startLongPolling')
             ->with($timeout);
-
         $this->tester->execute(['--timeout' => $timeout]);
         $this->tester->assertCommandIsSuccessful();
-
         $output = $this->tester->getDisplay();
         $this->assertStringContainsString("Starting long polling with a timeout of $timeout seconds...", $output);
     }
-
-    #[Test]
     public function handleSuccessfullyUsesDefaultTimeout(): void
     {
         $defaultTimeout = 90;
-
         $this->botManagerMock
             ->expects($this->once())
             ->method('startLongPolling')
             ->with($defaultTimeout);
-
         $this->tester->execute([]);
         $this->tester->assertCommandIsSuccessful();
-
         $output = $this->tester->getDisplay();
         $this->assertStringContainsString(
             "Starting long polling with a timeout of $defaultTimeout seconds...",
             $output
         );
     }
-
-    #[Test]
     public function handleCatchesExceptionAndLogsError(): void
     {
         $exceptionMessage = 'Something went wrong';
         $exception = new \RuntimeException($exceptionMessage);
-
         $this->botManagerMock
             ->expects($this->once())
             ->method('startLongPolling')
             ->willThrowException($exception);
-
         Log::shouldReceive('error')
             ->once()
             ->with(
                 "Long polling failed to start or crashed: $exceptionMessage",
-                ['exception' => $exception],
+                ['exception' => $exception]
             );
-
         $statusCode = $this->tester->execute([]);
-
         $this->assertSame(1, $statusCode, 'Command should return a failure exit code.');
-
         $output = $this->tester->getDisplay();
         $this->assertStringContainsString("❌ Long polling failed: $exceptionMessage", $output);
     }

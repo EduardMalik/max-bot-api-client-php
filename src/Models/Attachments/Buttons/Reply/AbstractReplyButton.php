@@ -7,15 +7,26 @@ namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply;
 use BushlanovDev\MaxMessengerBot\Enums\ReplyButtonType;
 use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
 
-abstract readonly class AbstractReplyButton extends AbstractModel
+abstract class AbstractReplyButton extends AbstractModel
 {
     /**
-     * @param ReplyButtonType $type The type of the reply button.
-     * @param string $text Visible text of the button.
+     * @var ReplyButtonType
+     * @readonly
      */
-    public function __construct(
-        public ReplyButtonType $type,
-        public string $text,
-    ) {
+    public $type;
+    /**
+     * @var string
+     * @readonly
+     */
+    public $text;
+    /**
+     * @param mixed $type The type of the reply button.
+     * @param string $text Visible text of the button.
+     * @param \BushlanovDev\MaxMessengerBot\Enums\ReplyButtonType::* $type
+     */
+    public function __construct($type, string $text)
+    {
+        $this->type = $type;
+        $this->text = $text;
     }
 }

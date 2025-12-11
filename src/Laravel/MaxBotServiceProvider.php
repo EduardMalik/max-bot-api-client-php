@@ -35,7 +35,7 @@ class MaxBotServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(
             __DIR__ . '/config/maxbot.php',
-            'maxbot',
+            'maxbot'
         );
 
         $this->app->singleton(ClientApiInterface::class, function (Application $app) {
@@ -78,7 +78,7 @@ class MaxBotServiceProvider extends ServiceProvider
                 $httpFactory,
                 $config->get('maxbot.base_url', 'https://platform-api.max.ru'),
                 $config->get('maxbot.api_version'),
-                $logger,
+                $logger
             );
         });
 
@@ -111,7 +111,7 @@ class MaxBotServiceProvider extends ServiceProvider
                 $accessToken,
                 $app->make(ClientApiInterface::class),
                 $app->make(ModelFactory::class),
-                $logger,
+                $logger
             );
         });
 
@@ -132,7 +132,7 @@ class MaxBotServiceProvider extends ServiceProvider
                 $app->make(UpdateDispatcher::class),
                 $app->make(ModelFactory::class),
                 $logger,
-                $secret,
+                $secret
             );
         });
 
@@ -147,7 +147,7 @@ class MaxBotServiceProvider extends ServiceProvider
             return new LongPollingHandler(
                 $app->make(Api::class),
                 $app->make(UpdateDispatcher::class),
-                $logger,
+                $logger
             );
         });
 
@@ -155,7 +155,7 @@ class MaxBotServiceProvider extends ServiceProvider
             return new MaxBotManager(
                 $app,
                 $app->make(Api::class),
-                $app->make(UpdateDispatcher::class),
+                $app->make(UpdateDispatcher::class)
             );
         });
 

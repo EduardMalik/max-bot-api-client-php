@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace BushlanovDev\MaxMessengerBot\Enums;
 
-/**
- * Defines the permissions an administrator can have in a chat.
- */
-enum ChatAdminPermission: string
+class ChatAdminPermission
 {
-    case ReadAllMessages = 'read_all_messages';
-    case AddRemoveMembers = 'add_remove_members';
-    case AddAdmins = 'add_admins';
-    case ChangeChatInfo = 'change_chat_info';
-    case PinMessage = 'pin_message';
-    case Write = 'write';
+    public const ReadAllMessages = 'read_all_messages';
+    public const AddRemoveMembers = 'add_remove_members';
+    public const AddAdmins = 'add_admins';
+    public const ChangeChatInfo = 'change_chat_info';
+    public const PinMessage = 'pin_message';
+    public const Write = 'write';
 }

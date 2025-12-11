@@ -9,8 +9,58 @@ use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
 /**
  * Information about the current bot.
  */
-final readonly class BotInfo extends AbstractModel
+final class BotInfo extends AbstractModel
 {
+    /**
+     * @var int
+     * @readonly
+     */
+    public $userId;
+    /**
+     * @var string
+     * @readonly
+     */
+    public $firstName;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $lastName;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $username;
+    /**
+     * @var bool
+     * @readonly
+     */
+    public $isBot;
+    /**
+     * @var int
+     * @readonly
+     */
+    public $lastActivityTime;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $description;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $avatarUrl;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $fullAvatarUrl;
+    /**
+     * @var BotCommand[]|null
+     * @readonly
+     */
+    public $commands;
     /**
      * @param int $userId ID user.
      * @param string $firstName User display name.
@@ -24,17 +74,28 @@ final readonly class BotInfo extends AbstractModel
      * @param BotCommand[]|null $commands Commands supported by the bot (up to 32 elements).
      */
     public function __construct(
-        public int $userId,
-        public string $firstName,
-        public ?string $lastName,
-        public ?string $username,
-        public bool $isBot,
-        public int $lastActivityTime,
-        public ?string $description,
-        public ?string $avatarUrl,
-        public ?string $fullAvatarUrl,
-        #[ArrayOf(BotCommand::class)]
-        public ?array $commands,
-    ) {
+        int $userId,
+        string $firstName,
+        ?string $lastName,
+        ?string $username,
+        bool $isBot,
+        int $lastActivityTime,
+        ?string $description,
+        ?string $avatarUrl,
+        ?string $fullAvatarUrl,
+        #[\BushlanovDev\MaxMessengerBot\Attributes\ArrayOf(\BushlanovDev\MaxMessengerBot\Models\BotCommand::class)]
+        ?array $commands
+    )
+    {
+        $this->userId = $userId;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->username = $username;
+        $this->isBot = $isBot;
+        $this->lastActivityTime = $lastActivityTime;
+        $this->description = $description;
+        $this->avatarUrl = $avatarUrl;
+        $this->fullAvatarUrl = $fullAvatarUrl;
+        $this->commands = $commands;
     }
 }

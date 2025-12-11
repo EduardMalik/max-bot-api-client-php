@@ -4,25 +4,27 @@ declare(strict_types=1);
 
 namespace BushlanovDev\MaxMessengerBot\Enums;
 
-/**
- * Represents the different types of events (updates) that can happen in a chat.
- */
-enum UpdateType: string
+class UpdateType
 {
-    case MessageCreated = 'message_created';
-    case MessageCallback = 'message_callback';
-    case MessageEdited = 'message_edited';
-    case MessageRemoved = 'message_removed';
-    case BotAdded = 'bot_added';
-    case BotRemoved = 'bot_removed';
-    case DialogMuted = 'dialog_muted';
-    case DialogUnmuted = 'dialog_unmuted';
-    case DialogCleared = 'dialog_cleared';
-    case DialogRemoved = 'dialog_removed';
-    case UserAdded = 'user_added';
-    case UserRemoved = 'user_removed';
-    case BotStarted = 'bot_started';
-    case BotStopped = 'bot_stopped';
-    case ChatTitleChanged = 'chat_title_changed';
-    case MessageChatCreated = 'message_chat_created';
+    public const MessageCreated = 'message_created';
+    public const MessageCallback = 'message_callback';
+    public const MessageEdited = 'message_edited';
+    public const MessageRemoved = 'message_removed';
+    public const BotAdded = 'bot_added';
+    public const BotRemoved = 'bot_removed';
+    public const DialogMuted = 'dialog_muted';
+    public const DialogUnmuted = 'dialog_unmuted';
+    public const DialogCleared = 'dialog_cleared';
+    public const DialogRemoved = 'dialog_removed';
+    public const UserAdded = 'user_added';
+    public const UserRemoved = 'user_removed';
+    public const BotStarted = 'bot_started';
+    public const BotStopped = 'bot_stopped';
+    public const ChatTitleChanged = 'chat_title_changed';
+    public const MessageChatCreated = 'message_chat_created';
+
+    public static function fromName(string $name){
+
+        return $name;
+    }
 }

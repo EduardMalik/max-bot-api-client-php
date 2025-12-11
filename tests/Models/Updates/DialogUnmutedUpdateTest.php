@@ -12,11 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(DialogUnmutedUpdate::class)]
-#[UsesClass(User::class)]
 final class DialogUnmutedUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [
@@ -32,9 +29,7 @@ final class DialogUnmutedUpdateTest extends TestCase
             ],
             'user_locale' => 'ru-ru',
         ];
-
         $update = DialogUnmutedUpdate::fromArray($data);
-
         $this->assertInstanceOf(DialogUnmutedUpdate::class, $update);
         $this->assertSame(UpdateType::DialogUnmuted, $update->updateType);
         $this->assertSame(123, $update->user->userId);

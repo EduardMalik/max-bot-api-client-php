@@ -12,26 +12,21 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ContactAttachmentRequest::class)]
-#[UsesClass(ContactAttachmentRequestPayload::class)]
 final class ContactAttachmentRequestTest extends TestCase
 {
-    #[Test]
     public function itCreatesRequestWithAllFieldsAndSerializes(): void
     {
         $request = new ContactAttachmentRequest(
-            name: 'John Doe',
-            contactId: 12345,
-            vcfInfo: 'BEGIN:VCARD...',
-            vcfPhone: 'TEL:+1234567890',
+            'John Doe',
+            12345,
+            'BEGIN:VCARD...',
+            'TEL:+1234567890'
         );
-
         $this->assertInstanceOf(ContactAttachmentRequest::class, $request);
         $this->assertSame(AttachmentType::Contact, $request->type);
         $this->assertInstanceOf(ContactAttachmentRequestPayload::class, $request->payload);
         $this->assertSame('John Doe', $request->payload->name);
         $this->assertSame(12345, $request->payload->contactId);
-
         $expectedArray = [
             'type' => 'contact',
             'payload' => [
@@ -43,12 +38,9 @@ final class ContactAttachmentRequestTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $request->toArray());
     }
-
-    #[Test]
     public function itCreatesRequestWithOnlySomeFields(): void
     {
-        $request = new ContactAttachmentRequest(name: 'Jane Doe', vcfPhone: 'TEL:+9876543210');
-
+        $request = new ContactAttachmentRequest('Jane Doe', null, null, 'TEL:+9876543210');
         $expectedArray = [
             'type' => 'contact',
             'payload' => [

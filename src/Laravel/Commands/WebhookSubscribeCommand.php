@@ -35,8 +35,10 @@ class WebhookSubscribeCommand extends Command
 
     /**
      * Execute the console command.
+     * @param \BushlanovDev\MaxMessengerBot\Api $api
+     * @param Config $config
      */
-    public function handle(Api $api, Config $config): int
+    public function handle($api, $config): int
     {
         $url = (string)$this->argument('url'); // @phpstan-ignore-line
         $secret = $this->option('secret') ?? $config->get('maxbot.webhook_secret');
@@ -68,7 +70,9 @@ class WebhookSubscribeCommand extends Command
             $this->line("Secret: " . str_repeat('*', strlen($secret)));
         }
         if ($updateTypes) {
-            $this->line("Update types: " . implode(', ', array_map(fn($type) => $type->value, $updateTypes)));
+            $this->line("Update types: " . implode(', ', array_map(function ($type) {
+                return $type->value;
+            }, $updateTypes)));
         } else {
             $this->line("Update types: All (default)");
         }

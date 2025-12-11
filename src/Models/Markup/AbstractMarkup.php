@@ -10,17 +10,33 @@ use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
 /**
  * Base class for a text markup element.
  */
-abstract readonly class AbstractMarkup extends AbstractModel
+abstract class AbstractMarkup extends AbstractModel
 {
     /**
-     * @param MarkupType $type The type of the markup element.
+     * @var MarkupType
+     * @readonly
+     */
+    public $type;
+    /**
+     * @var int
+     * @readonly
+     */
+    public $from;
+    /**
+     * @var int
+     * @readonly
+     */
+    public $length;
+    /**
+     * @param mixed $type The type of the markup element.
      * @param int $from Element start index (zero-based) in text.
      * @param int $length Length of the markup element.
+     * @param \BushlanovDev\MaxMessengerBot\Enums\MarkupType::* $type
      */
-    public function __construct(
-        public MarkupType $type,
-        public int $from,
-        public int $length,
-    ) {
+    public function __construct($type, int $from, int $length)
+    {
+        $this->type = $type;
+        $this->from = $from;
+        $this->length = $length;
     }
 }

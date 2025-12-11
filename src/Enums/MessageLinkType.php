@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace BushlanovDev\MaxMessengerBot\Enums;
 
-enum MessageLinkType: string
+class MessageLinkType
 {
-    case Forward = 'forward';
-    case Reply = 'reply';
+    public const Forward = 'forward';
+    public const Reply = 'reply';
 }

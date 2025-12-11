@@ -30,53 +30,6 @@ use BushlanovDev\MaxMessengerBot\WebhookHandler;
 use BushlanovDev\MaxMessengerBot\LongPollingHandler;
 use Illuminate\Support\Facades\Facade;
 
-/**
- * Laravel Facade for Max Bot API Client.
- *
- * Provides static access to the Max Bot API methods through Laravel's facade system.
- *
- * @method static array<string, mixed> request(string $method, string $uri, array<string, mixed> $queryParams = [], array<string, mixed> $body = [])
- * @method static UpdateDispatcher getUpdateDispatcher()
- * @method static WebhookHandler createWebhookHandler(?string $secret = null)
- * @method static LongPollingHandler createLongPollingHandler()
- * @method static UpdateList getUpdates(?int $limit = null, ?int $timeout = null, ?int $marker = null, ?array<UpdateType> $types = null)
- * @method static BotInfo getBotInfo()
- * @method static Subscription[] getSubscriptions()
- * @method static Result subscribe(string $url, ?string $secret = null, ?array<UpdateType> $updateTypes = null)
- * @method static Result unsubscribe(string $url)
- * @method static Message sendMessage(?int $userId = null, ?int $chatId = null, ?string $text = null, ?array<AbstractAttachmentRequest> $attachments = null, ?MessageFormat $format = null, ?MessageLink $link = null, bool $notify = true, bool $disableLinkPreview = false)
- * @method static Message sendUserMessage(?int $userId = null, ?string $text = null, ?array<AbstractAttachmentRequest> $attachments = null, ?MessageFormat $format = null, ?MessageLink $link = null, bool $notify = true, bool $disableLinkPreview = false)
- * @method static Message sendChatMessage(?int $chatId = null, ?string $text = null, ?array<AbstractAttachmentRequest> $attachments = null, ?MessageFormat $format = null, ?MessageLink $link = null, bool $notify = true, bool $disableLinkPreview = false)
- * @method static UploadEndpoint getUploadUrl(UploadType $type)
- * @method static AbstractAttachmentRequest uploadAttachment(UploadType $type, string $filePath)
- * @method static Chat getChat(int $chatId)
- * @method static Chat getChatByLink(string $chatLink)
- * @method static ChatList getChats(?int $count = null, ?int $marker = null)
- * @method static Result deleteChat(int $chatId)
- * @method static Result sendAction(int $chatId, SenderAction $action)
- * @method static Message|null getPinnedMessage(int $chatId)
- * @method static Result unpinMessage(int $chatId)
- * @method static ChatMember getMembership(int $chatId)
- * @method static Result leaveChat(int $chatId)
- * @method static Message[] getMessages(int $chatId, ?array<string> $messageIds = null, ?int $from = null, ?int $to = null, ?int $count = null)
- * @method static Result deleteMessage(string $messageId)
- * @method static Message getMessageById(string $messageId)
- * @method static Result pinMessage(int $chatId, string $messageId, bool $notify = true)
- * @method static ChatMembersList getAdmins(int $chatId)
- * @method static ChatMembersList getMembers(int $chatId, ?array<int> $userIds = null, ?int $marker = null, ?int $count = null)
- * @method static Result deleteAdmin(int $chatId, int $userId)
- * @method static Result deleteMember(int $chatId, int $userId, bool $block = false)
- * @method static Result addAdmins(int $chatId, array<ChatAdmin> $admins)
- * @method static Result addMembers(int $chatId, array<int> $userIds)
- * @method static Result answerOnCallback(string $callbackId, ?string $notification = null, ?string $text = null, ?array<AbstractAttachmentRequest> $attachments = null, ?MessageLink $link = null, ?MessageFormat $format = null, bool $notify = true)
- * @method static Result editMessage(string $messageId, ?string $text = null, ?array<AbstractAttachmentRequest> $attachments = null, ?MessageFormat $format = null, ?MessageLink $link = null, bool $notify = true)
- * @method static BotInfo editBotInfo(BotPatch $botPatch)
- * @method static Chat editChat(int $chatId, ChatPatch $chatPatch)
- * @method static VideoAttachmentDetails getVideoAttachmentDetails(string $videoToken)
- *
- * @see Api
- * @codeCoverageIgnore
- */
 class MaxBotFacade extends Facade
 {
     /**

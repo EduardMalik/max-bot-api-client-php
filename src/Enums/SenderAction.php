@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace BushlanovDev\MaxMessengerBot\Enums;
 
-/**
- * Represents the different actions a bot can send to a chat to indicate its status.
- */
-enum SenderAction: string
+class SenderAction
 {
-    case TypingOn = 'typing_on';
-    case SendingPhoto = 'sending_photo';
-    case SendingVideo = 'sending_video';
-    case SendingAudio = 'sending_audio';
-    case SendingFile = 'sending_file';
-    case MarkSeen = 'mark_seen';
+    public const TypingOn = 'typing_on';
+    public const SendingPhoto = 'sending_photo';
+    public const SendingVideo = 'sending_video';
+    public const SendingAudio = 'sending_audio';
+    public const SendingFile = 'sending_file';
+    public const MarkSeen = 'mark_seen';
 }

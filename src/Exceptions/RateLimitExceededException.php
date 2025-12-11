@@ -13,7 +13,7 @@ class RateLimitExceededException extends ClientApiException
         string $message,
         string $errorCode,
         ?ResponseInterface $response,
-        ?Throwable $previous = null,
+        ?Throwable $previous = null
     ) {
         parent::__construct($message, $errorCode, $response, 429, $previous);
     }

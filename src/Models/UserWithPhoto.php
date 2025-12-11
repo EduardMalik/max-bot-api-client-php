@@ -4,8 +4,53 @@ declare(strict_types=1);
 
 namespace BushlanovDev\MaxMessengerBot\Models;
 
-final readonly class UserWithPhoto extends AbstractModel
+final class UserWithPhoto extends AbstractModel
 {
+    /**
+     * @var int
+     * @readonly
+     */
+    public $userId;
+    /**
+     * @var string
+     * @readonly
+     */
+    public $firstName;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $lastName;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $username;
+    /**
+     * @var bool
+     * @readonly
+     */
+    public $isBot;
+    /**
+     * @var int
+     * @readonly
+     */
+    public $lastActivityTime;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $description;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $avatarUrl;
+    /**
+     * @var string|null
+     * @readonly
+     */
+    public $fullAvatarUrl;
     /**
      * @param int $userId Users identifier.
      * @param string $firstName Users first name.
@@ -17,16 +62,16 @@ final readonly class UserWithPhoto extends AbstractModel
      * @param string|null $avatarUrl URL of avatar.
      * @param string|null $fullAvatarUrl URL of avatar of a bigger size.
      */
-    public function __construct(
-        public int $userId,
-        public string $firstName,
-        public ?string $lastName,
-        public ?string $username,
-        public bool $isBot,
-        public int $lastActivityTime,
-        public ?string $description,
-        public ?string $avatarUrl,
-        public ?string $fullAvatarUrl,
-    ) {
+    public function __construct(int $userId, string $firstName, ?string $lastName, ?string $username, bool $isBot, int $lastActivityTime, ?string $description, ?string $avatarUrl, ?string $fullAvatarUrl)
+    {
+        $this->userId = $userId;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->username = $username;
+        $this->isBot = $isBot;
+        $this->lastActivityTime = $lastActivityTime;
+        $this->description = $description;
+        $this->avatarUrl = $avatarUrl;
+        $this->fullAvatarUrl = $fullAvatarUrl;
     }
 }

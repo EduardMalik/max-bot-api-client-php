@@ -12,11 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(BotRemovedFromChatUpdate::class)]
-#[UsesClass(User::class)]
 final class BotRemovedFromChatUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArrayAndSerialized(): void
     {
         $data = [
@@ -33,9 +30,7 @@ final class BotRemovedFromChatUpdateTest extends TestCase
             ],
             'is_channel' => false,
         ];
-
         $update = BotRemovedFromChatUpdate::fromArray($data);
-
         $this->assertInstanceOf(BotRemovedFromChatUpdate::class, $update);
         $this->assertSame(UpdateType::BotRemoved, $update->updateType);
         $this->assertSame(1679100000, $update->timestamp);
@@ -45,8 +40,6 @@ final class BotRemovedFromChatUpdateTest extends TestCase
         $this->assertSame(555, $update->user->userId);
         $this->assertEquals($data, $update->toArray());
     }
-
-    #[Test]
     public function canBeCreatedForChannel(): void
     {
         $data = [
@@ -61,9 +54,7 @@ final class BotRemovedFromChatUpdateTest extends TestCase
             ],
             'is_channel' => true,
         ];
-
         $update = BotRemovedFromChatUpdate::fromArray($data);
-
         $this->assertInstanceOf(BotRemovedFromChatUpdate::class, $update);
         $this->assertTrue($update->isChannel);
         $this->assertSame(777888999, $update->chatId);

@@ -12,12 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(InlineKeyboardAttachment::class)]
-#[UsesClass(KeyboardPayload::class)]
-#[UsesClass(CallbackButton::class)]
 final class InlineKeyboardAttachmentTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [

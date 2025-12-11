@@ -15,14 +15,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(MessageEditedUpdate::class)]
-#[UsesClass(Message::class)]
-#[UsesClass(MessageBody::class)]
-#[UsesClass(Recipient::class)]
-#[UsesClass(User::class)]
 final class MessageEditedUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [
@@ -44,9 +38,7 @@ final class MessageEditedUpdateTest extends TestCase
                 ],
             ],
         ];
-
         $update = MessageEditedUpdate::fromArray($data);
-
         $this->assertInstanceOf(MessageEditedUpdate::class, $update);
         $this->assertSame(UpdateType::MessageEdited, $update->updateType);
         $this->assertSame(1678887000, $update->timestamp);

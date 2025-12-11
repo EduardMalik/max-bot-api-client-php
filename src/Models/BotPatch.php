@@ -16,6 +16,6 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoAttachmentRequ
  * @property-read BotCommand[]|null $commands
  * @property-read PhotoAttachmentRequestPayload|null $photo
  */
-final readonly class BotPatch extends AbstractPatchModel
+final class BotPatch extends AbstractPatchModel
 {
 }

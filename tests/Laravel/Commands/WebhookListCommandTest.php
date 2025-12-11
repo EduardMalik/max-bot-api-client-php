@@ -16,14 +16,16 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Tester\CommandTester;
 
-#[CoversClass(WebhookListCommand::class)]
-#[UsesClass(Api::class)]
-#[UsesClass(Subscription::class)]
 final class WebhookListCommandTest extends TestCase
 {
-    private MockObject&Api $apiMock;
-    private WebhookListCommand $command;
-
+    /**
+     * @var (\BushlanovDev\MaxMessengerBot\Api & \PHPUnit\Framework\MockObject\MockObject)
+     */
+    private $apiMock;
+    /**
+     * @var \BushlanovDev\MaxMessengerBot\Laravel\Commands\WebhookListCommand
+     */
+    private $command;
     protected function setUp(): void
     {
         parent::setUp();
@@ -39,11 +41,10 @@ final class WebhookListCommandTest extends TestCase
         $commandInApp = $application->find('maxbot:webhook:list');
         $this->tester = new CommandTester($commandInApp);
     }
-
-    #[Test]
     public function handleDisplaysTableWithActiveSubscriptions(): void
     {
-        $timestamp = 1678886400; // 2023-03-15 13:20:00 UTC
+        $timestamp = 1678886400;
+        // 2023-03-15 13:20:00 UTC
         $subscriptions = [
             new Subscription(
                 'https://example.com/hook1',
@@ -58,17 +59,13 @@ final class WebhookListCommandTest extends TestCase
                 '0.0.6'
             ),
         ];
-
         $this->apiMock
             ->expects($this->once())
             ->method('getSubscriptions')
             ->willReturn($subscriptions);
-
         $this->tester->execute([]);
         $this->tester->assertCommandIsSuccessful();
-
         $output = $this->tester->getDisplay();
-
         $this->assertStringContainsString('https://example.com/hook1', $output);
         $this->assertStringContainsString('https://example.com/hook2', $output);
         $this->assertStringContainsString('message_created, bot_started', $output);
@@ -76,42 +73,31 @@ final class WebhookListCommandTest extends TestCase
         $this->assertStringContainsString(date('Y-m-d H:i:s', $timestamp), $output);
         $this->assertStringContainsString(date('Y-m-d H:i:s', $timestamp + 3600), $output);
     }
-
-    #[Test]
     public function handleDisplaysMessageWhenNoSubscriptionsExist(): void
     {
         $this->apiMock
             ->expects($this->once())
             ->method('getSubscriptions')
             ->willReturn([]);
-
         $this->tester->execute([]);
         $this->tester->assertCommandIsSuccessful();
-
         $output = $this->tester->getDisplay();
         $this->assertStringContainsString('No active webhook subscriptions found.', $output);
         $this->assertStringNotContainsString('URL', $output, 'Table headers should not be displayed.');
     }
-
-    #[Test]
     public function handleCatchesExceptionAndLogsError(): void
     {
         $exceptionMessage = 'API is down';
         $exception = new \RuntimeException($exceptionMessage);
-
         $this->apiMock
             ->expects($this->once())
             ->method('getSubscriptions')
             ->willThrowException($exception);
-
         Log::shouldReceive('error')
             ->once()
             ->with("Webhook list error: $exceptionMessage", ['exception' => $exception]);
-
         $statusCode = $this->tester->execute([]);
-
         $this->assertSame(1, $statusCode, 'Command should return a failure exit code.');
-
         $output = $this->tester->getDisplay();
         $this->assertStringContainsString("❌ Webhook list error: $exceptionMessage", $output);
     }

@@ -24,13 +24,13 @@ interface ClientApiInterface
      * @throws NetworkException for network-related issues.
      * @throws SerializationException for JSON encoding/decoding failures.
      */
-    public function request(string $method, string $uri, array $queryParams = [], array $body = []): array;
+    public function request($method, $uri, $queryParams = [], $body = []): array;
 
     /**
      * Performs a file upload at the specified URL.
      *
      * @param string $uri URL received from the download API.
-     * @param resource|string $fileContents File content (stream resource or string).
+     * @param mixed $fileContents File content (stream resource or string).
      * @param string $fileName The name of the file that will be sent to the server.
      *
      * @return string The raw response body from the upload server.
@@ -38,7 +38,7 @@ interface ClientApiInterface
      * @throws NetworkException
      * @throws SerializationException
      */
-    public function multipartUpload(string $uri, mixed $fileContents, string $fileName): string;
+    public function multipartUpload($uri, $fileContents, $fileName): string;
 
     /**
      * Uploads a file in chunks using the resumable upload method.
@@ -56,10 +56,10 @@ interface ClientApiInterface
      * @throws RuntimeException
      */
     public function resumableUpload(
-        string $uploadUrl,
+        $uploadUrl,
         $fileResource,
-        string $fileName,
-        int $fileSize,
-        int $chunkSize = 1048576,
+        $fileName,
+        $fileSize,
+        $chunkSize = 1048576
     ): string;
 }

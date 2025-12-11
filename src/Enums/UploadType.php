@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace BushlanovDev\MaxMessengerBot\Enums;
 
-enum UploadType: string
+class UploadType
 {
-    case Image = 'image';
-    case Video = 'video';
-    case Audio = 'audio';
-    case File = 'file';
+    public const Image = 'image';
+    public const Video = 'video';
+    public const Audio = 'audio';
+    public const File = 'file';
 }

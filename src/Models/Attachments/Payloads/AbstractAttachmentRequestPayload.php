@@ -6,6 +6,6 @@ namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
 
-abstract readonly class AbstractAttachmentRequestPayload extends AbstractModel
+abstract class AbstractAttachmentRequestPayload extends AbstractModel
 {
 }

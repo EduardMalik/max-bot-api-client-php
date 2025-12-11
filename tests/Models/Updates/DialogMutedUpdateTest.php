@@ -12,11 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(DialogMutedUpdate::class)]
-#[UsesClass(User::class)]
 final class DialogMutedUpdateTest extends TestCase
 {
-    #[Test]
     public function canBeCreatedFromArray(): void
     {
         $data = [
@@ -33,9 +30,7 @@ final class DialogMutedUpdateTest extends TestCase
             'muted_until' => 1678886400000,
             'user_locale' => 'ru-ru',
         ];
-
         $update = DialogMutedUpdate::fromArray($data);
-
         $this->assertInstanceOf(DialogMutedUpdate::class, $update);
         $this->assertSame(UpdateType::DialogMuted, $update->updateType);
         $this->assertSame(123, $update->user->userId);
