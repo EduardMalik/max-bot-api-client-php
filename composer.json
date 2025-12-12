@@ -2,13 +2,7 @@
     "name": "bushlanov-dev/max-bot-api-client-php",
     "description": "Max Bot API Client library",
     "keywords": [
-        "max messenger",
-        "bot",
-        "max",
-        "api",
-        "max bot",
-        "laravel",
-        "laravel max bot"
+        "max messenger"
     ],
     "type": "library",
     "license": "MIT",
