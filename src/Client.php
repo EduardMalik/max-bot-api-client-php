@@ -60,7 +60,7 @@ final class Client implements ClientApiInterface
     private $logger;
     /**
      * @param string $accessToken Your bot's access token from @MasterBot.
-     * @param ClientInterface $httpClient A PSR-18 compatible HTTP client (e.g., Guzzle).
+     * @param \GuzzleHttp\Client $httpClient A PSR-18 compatible HTTP client (e.g., Guzzle).
      * @param RequestFactoryInterface $requestFactory A PSR-17 factory for creating requests.
      * @param StreamFactoryInterface $streamFactory A PSR-17 factory for creating request body streams.
      * @param string $baseUrl The base URL for API requests.
@@ -122,7 +122,7 @@ final class Client implements ClientApiInterface
             $payload = json_encode($body, 0);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new SerializationException('Failed to encode request body to JSON' . $body, 0);
+                throw new SerializationException('Failed to encode request body to JSON:' . $body, 0);
             }
 
             $stream = $this->streamFactory->createStream($payload);
@@ -132,7 +132,7 @@ final class Client implements ClientApiInterface
         }
 
         try {
-            $response = $this->httpClient->sendRequest($request);
+            $response = $this->httpClient->send($request);
         } catch (\Exception $e) {
             // This catches network errors, DNS failures, timeouts, etc.
             $this->logger->error('Network exception during API request', [
@@ -158,11 +158,12 @@ final class Client implements ClientApiInterface
             return ['success' => true];
         }
 
-        try {
-            return json_decode($responseBody, true, 512, 0);
-        } catch (JsonException $e) {
-            throw new SerializationException('Failed to decode API response JSON.', 0, $e);
+        $decode = json_decode($responseBody, true, 512, 0);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new SerializationException('Failed to decode API response JSON:' . $responseBody, 0);
         }
+
+        return $decode;
     }
 
     /**
@@ -196,8 +197,8 @@ final class Client implements ClientApiInterface
             ->withBody($bodyStream);
 
         try {
-            $response = $this->httpClient->sendRequest($request);
-        } catch (ClientExceptionInterface $e) {
+            $response = $this->httpClient->send($request);
+        } catch (\Exception $e) {
             throw new NetworkException($e->getMessage(), $e->getCode(), $e);
         }
 
@@ -258,8 +259,8 @@ final class Client implements ClientApiInterface
                 ->withHeader('Authorization', $this->accessToken);
 
             try {
-                $response = $this->httpClient->sendRequest($request);
-            } catch (ClientExceptionInterface $e) {
+                $response = $this->httpClient->send($request);
+            } catch (\Exception $e) {
                 throw new NetworkException($e->getMessage(), $e->getCode(), $e);
             }
 

@@ -37,9 +37,24 @@ $botInfo = $api->getBotInfo();
 
 print_r($botInfo);
 
-$api->sendMessage($env['USER_ID'], null, 'Привет!', [
-new InlineKeyboardAttachmentRequest([
-    [new CallbackButton('Нажми меня!', 'payload_button1')],
-    [new LinkButton('Нет, лучше Нажми меня!', 'https://tallanto.com')],
-]),
+//file upload
+
+$fileAttachmentRequest = $api->uploadAttachment(
+     \BushlanovDev\MaxMessengerBot\Enums\UploadType::File,
+    __DIR__ . '/pdf-test.pdf'
+);
+
+//wait file upload
+sleep(2);
+
+$api->sendMessage($env['USER_ID'], null, 'Ваш файл', [
+    $fileAttachmentRequest,
 ], MessageFormat::Html);
+
+//keyboard
+//$api->sendMessage($env['USER_ID'], null, 'Привет!', [
+//new InlineKeyboardAttachmentRequest([
+//    [new CallbackButton('Нажми меня!', 'payload_button1')],
+//    [new LinkButton('Нет, лучше Нажми меня!', 'https://tallanto.com')],
+//]),
+//], MessageFormat::Html);

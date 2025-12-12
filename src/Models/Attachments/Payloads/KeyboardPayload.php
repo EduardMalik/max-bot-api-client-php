@@ -11,12 +11,12 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline\AbstractInlin
 final class KeyboardPayload extends AbstractModel
 {
     /**
-     * @var AbstractInlineButton[][]
+     * @var array
      * @readonly
      */
     public $buttons;
     /**
-     * @param AbstractInlineButton[][] $buttons Two-dimensional array of buttons.
+     * @param array $buttons Two-dimensional array of buttons.
      */
     public function __construct(array $buttons)
     {

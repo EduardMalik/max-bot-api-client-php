@@ -9,7 +9,7 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\InlineKeyboardAttac
 final class InlineKeyboardAttachmentRequest extends AbstractAttachmentRequest
 {
     /**
-     * @param AbstractInlineButton[][] $buttons
+     * @param $buttons
      */
     public function __construct(array $buttons)
     {

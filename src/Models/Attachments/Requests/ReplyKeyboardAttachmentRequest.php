@@ -9,7 +9,7 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\ReplyKeyboardAttach
 final class ReplyKeyboardAttachmentRequest extends AbstractAttachmentRequest
 {
     /**
-     * @param AbstractReplyButton[][] $buttons
+     * @param array $buttons
      * @param bool $direct
      * @param int|null $directUserId
      */

@@ -7,12 +7,11 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline\AbstractInlin
 final class InlineKeyboardAttachmentRequestPayload extends AbstractAttachmentRequestPayload
 {
     /**
-     * @var AbstractInlineButton[][]
      * @readonly
      */
     public $buttons;
     /**
-     * @param AbstractInlineButton[][] $buttons
+     * @param array $buttons
      */
     public function __construct(array $buttons)
     {

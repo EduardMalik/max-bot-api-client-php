@@ -2,8 +2,6 @@
 
 namespace BushlanovDev\MaxMessengerBot\Attributes;
 
-use Attribute;
-
 #[Attribute(Attribute::TARGET_PROPERTY)]
 final class ArrayOf
 {

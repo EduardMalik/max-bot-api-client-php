@@ -40,22 +40,17 @@ abstract class AbstractModel
             $constructorArgs[$phpPropertyName] = self::castValue($rawValue, $property);
         }
 
-        if ($property->class == 'BushlanovDev\MaxMessengerBot\Models\Attachments\InlineKeyboardAttachment')
-        {
-            return new static(new KeyboardPayload($constructorArgs['payload']));
-        }
-
-        if (!empty($constructorArgs['recipient'])) {
-            $constructorArgs['recipient'] = self::createRecipientClass($constructorArgs['recipient']);
-        }
-
-        if (!empty($constructorArgs['sender'])) {
-            $constructorArgs['sender'] = self::createUserClass($constructorArgs['sender']);
-        }
-
-        if (!empty($constructorArgs['message'])) {
-            $constructorArgs['message'] = self::createMessageClass($constructorArgs['message']);
-        }
+//        if (!empty($constructorArgs['recipient'])) {
+//            $constructorArgs['recipient'] = self::createRecipientClass($constructorArgs['recipient']);
+//        }
+//
+//        if (!empty($constructorArgs['sender'])) {
+//            $constructorArgs['sender'] = self::createUserClass($constructorArgs['sender']);
+//        }
+//
+//        if (!empty($constructorArgs['message'])) {
+//            $constructorArgs['message'] = self::createMessageClass($constructorArgs['message']);
+//        }
 
         $constructorArgs = array_values($constructorArgs);//You need to force an array to be numerically indexed in order to unpack it. You do this using array_values:
 
@@ -164,10 +159,6 @@ abstract class AbstractModel
             return array_map([$this, 'convertValue'], $value);
         }
 
-        if ($value instanceof BackedEnum) {
-            return $value->value;
-        }
-
         return $value;
     }
 
@@ -180,19 +171,21 @@ abstract class AbstractModel
      */
     private static function castValue($value, ReflectionProperty $property)
     {
-        $type = method_exists($property, 'getType') ? $property->getType() : null;
+        try {
+            if (is_null($value)) {
+                return $value;
+            }
 
-        if (is_null($value) || !$type instanceof ReflectionNamedType) {
-            return $value;
-        }
+            if (is_object($value)) {
+                return $value;
+            }
 
-        $typeName = $type->getName();
+            $typeName = self::getTypeNameFromAnnotation($property);
 
-        if (is_object($value) && is_a($value, $typeName)) {
-            return $value;
-        }
+            if (stripos($typeName, 'Abstract') !== false) {
+                return $value;
+            }
 
-        if ($type->isBuiltin()) {
             switch ($typeName) {
                 case 'int':
                     return (int)$value;
@@ -204,20 +197,39 @@ abstract class AbstractModel
                     return (float)$value;
                 case 'array':
                     return self::castArray($value, $property);
-                default:
-                    return $value;
             }
-        }
 
-        if (is_subclass_of($typeName, BackedEnum::class)) {
-            return $typeName::from($value);
-        }
+            $namespaces = ['BushlanovDev\MaxMessengerBot\Enums', 'BushlanovDev\MaxMessengerBot\Models', 'BushlanovDev\MaxMessengerBot\Models\Attachments', 'BushlanovDev\MaxMessengerBot\Models\Updates',
+                'BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline', 'BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply', 'BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads',
+                'BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Requests'];
 
-        if (is_subclass_of($typeName, self::class) && is_array($value)) {
-            return $typeName::fromArray($value);
+            foreach ($namespaces as $namespace) {
+                $className = $namespace . '\\' . $typeName;
+                if (is_subclass_of($className, self::class) && is_array($value)) {
+                    $value = $className::fromArray($value);
+                    return $value;
+                }
+            }
+
+
+        }
+        catch (\Exception $e) {
+            return $value;
         }
 
         return $value;
+
+    }
+
+    public static function getTypeNameFromAnnotation(ReflectionProperty $property)
+    {
+        if (preg_match('/@var\s+([^\s]+)/', $property->getDocComment(), $matches)) {
+            $matches[1] = str_replace(['null', '[]'], '', $matches[1]);
+            $matches[1] = trim($matches[1], '|');
+            return $matches[1];
+        }
+
+        return null;
     }
 
     /**
@@ -242,12 +254,6 @@ abstract class AbstractModel
         /** @var ArrayOf $arrayOfAttribute */
         $arrayOfAttribute = $attributes[0]->newInstance();
         $itemClassName = $arrayOfAttribute->class;
-
-        if (is_subclass_of($itemClassName, BackedEnum::class)) {
-            return array_map(function ($item) use ($itemClassName) {
-                return $itemClassName::from($item);
-            }, $value);
-        }
 
         if (is_subclass_of($itemClassName, self::class)) {
             return array_map(

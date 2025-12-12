@@ -50,6 +50,7 @@ final class MessageBody extends AbstractModel
         $this->seq = $seq;
         $this->text = $text;
         $this->attachments = $attachments;
+
         $this->markup = $markup;
     }
 }

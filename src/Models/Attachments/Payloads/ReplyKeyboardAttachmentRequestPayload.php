@@ -7,7 +7,6 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply\AbstractReplyB
 final class ReplyKeyboardAttachmentRequestPayload extends AbstractAttachmentRequestPayload
 {
     /**
-     * @var AbstractReplyButton[][]
      * @readonly
      */
     public $buttons;
@@ -22,7 +21,7 @@ final class ReplyKeyboardAttachmentRequestPayload extends AbstractAttachmentRequ
      */
     public $directUserId;
     /**
-     * @param AbstractReplyButton[][] $buttons Two-dimensional array of buttons.
+     * @param array $buttons Two-dimensional array of buttons.
      * @param bool $direct Applicable only for chats.
      * @param int|null $directUserId If set, reply keyboard will only be shown to this participant.
      */

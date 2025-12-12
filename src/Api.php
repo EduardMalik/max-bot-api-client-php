@@ -31,7 +31,6 @@ use BushlanovDev\MaxMessengerBot\Models\UpdateList;
 use BushlanovDev\MaxMessengerBot\Models\UploadEndpoint;
 use BushlanovDev\MaxMessengerBot\Models\VideoAttachmentDetails;
 use InvalidArgumentException;
-use JsonException;
 use LogicException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -121,7 +120,7 @@ class Api
         $this->logger = isset($logger) ? $logger : new NullLogger();
 
         if ($client === null) {
-            if (!class_exists(\GuzzleHttp\Client::class) || !class_exists(\GuzzleHttp\Psr7\HttpFactory::class)) {
+            if (!class_exists(\GuzzleHttp\Client::class)) {
                 throw new LogicException(
                     'No client was provided and "guzzlehttp/guzzle" is not found. ' .
                     'Please run "composer require guzzlehttp/guzzle" or create and pass your own implementation of ClientApiInterface.'
@@ -129,12 +128,12 @@ class Api
             }
 
             $guzzle = new \GuzzleHttp\Client([
-                'timeout' => 10,
-                'connect_timeout' => 5,
-                'read_timeout' => 10,
-                'headers' => ['User-Agent' => 'max-bot-api-client-php/' . self::LIBRARY_VERSION . ' PHP/' . PHP_VERSION],
+                'timeout' => 30,
+                'connect_timeout' => 15,
+                'read_timeout' => 30,
+                'headers' => ['User-Agent' => 'max-bot-api-client-php/' . self::LIBRARY_VERSION],
             ]);
-            $httpFactory = new \GuzzleHttp\Psr7\HttpFactory();
+            $httpFactory = new HttpFactory();
             $client = new Client(
                 $accessToken,
                 $guzzle,
@@ -498,7 +497,7 @@ class Api
     /**
      * A simplified method for uploading a file and getting the resulting attachment object.
      *
-     * @param UploadType $type Uploaded file type.
+     * @param string $type Uploaded file type.
      * @param string $filePath Path to the file on the local disk.
      *
      * @return AbstractAttachmentRequest

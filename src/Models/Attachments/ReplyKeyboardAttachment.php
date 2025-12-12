@@ -8,12 +8,11 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply\AbstractReplyB
 final class ReplyKeyboardAttachment extends AbstractAttachment
 {
     /**
-     * @var AbstractReplyButton[][]
      * @readonly
      */
     public $buttons;
     /**
-     * @param AbstractReplyButton[][] $buttons
+     * @param array $buttons
      */
     public function __construct(array $buttons)
     {

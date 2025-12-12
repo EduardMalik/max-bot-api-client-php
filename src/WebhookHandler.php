@@ -80,11 +80,10 @@ final class WebhookHandler
 
         $this->verifySignature($request->getHeaderLine('X-Max-Bot-Api-Secret'));
 
-        try {
-            $data = json_decode($payload, true, 512, 0);
-        } catch (\JsonException $e) {
-            $this->logger->error('Failed to decode webhook JSON', ['payload' => $payload, 'exception' => $e]);
-            throw new SerializationException('Failed to decode webhook body as JSON.', 0, $e);
+        $data = json_decode($payload, true, 512, 0);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new SerializationException('Failed to decode webhook body as JSON:' . $payload, 0);
         }
 
         try {
