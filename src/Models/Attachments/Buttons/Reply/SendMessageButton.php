@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply;
 
 use BushlanovDev\MaxMessengerBot\Enums\Intent;
@@ -18,7 +16,7 @@ final class SendMessageButton extends AbstractReplyButton
      * @var Intent
      * @readonly
      */
-    public $intent = Intent::Default;
+    public $intent = Intent::Default5;
     /**
      * @param string $text Visible text of the button.
      * @param string|null $payload Button payload.
@@ -26,10 +24,11 @@ final class SendMessageButton extends AbstractReplyButton
      * @param \BushlanovDev\MaxMessengerBot\Enums\Intent::* $intent
      */
     public function __construct(
-        string $text,
-        ?string $payload = null,
-        $intent = Intent::Default
+        $text,
+        $payload = null,
+        $intent = Intent::Default5
     ) {
+        $text = (string) $text;
         $this->payload = $payload;
         $this->intent = $intent;
         parent::__construct(ReplyButtonType::Message, $text);

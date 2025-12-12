@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Buttons\Inline;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline\ChatButton;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ChatButtonTest extends TestCase
 {
-    public function toArrayWithRequiredParameters(): void
+    /**
+     * @return void
+     */
+    public function toArrayWithRequiredParameters()
     {
         $button = new ChatButton(
             'Discuss Topic',
@@ -27,7 +28,10 @@ final class ChatButtonTest extends TestCase
         ];
         $this->assertEquals($expected, $button->toArray());
     }
-    public function toArrayWithAllParameters(): void
+    /**
+     * @return void
+     */
+    public function toArrayWithAllParameters()
     {
         $button = new ChatButton(
             'Join Project Chat',

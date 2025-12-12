@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Models\Callback;
@@ -13,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 final class CallbackTest extends TestCase
 {
-    public function canBeCreatedFromArray(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArray()
     {
         $data = [
             'timestamp' => 1678886400,

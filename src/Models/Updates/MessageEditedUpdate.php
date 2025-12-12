@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -22,9 +20,10 @@ final class MessageEditedUpdate extends AbstractUpdate
      * @param Message $message The edited message.
      */
     public function __construct(
-        int $timestamp,
+        $timestamp,
         Message $message
     ) {
+        $timestamp = (int) $timestamp;
         $this->message = $message;
         parent::__construct(UpdateType::MessageEdited, $timestamp);
     }

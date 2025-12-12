@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class BotAddedToChatUpdateTest extends TestCase
 {
-    public function canBeCreatedFromArrayAndSerialized(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayAndSerialized()
     {
         $data = [
             'update_type' => 'bot_added',
@@ -40,7 +41,10 @@ final class BotAddedToChatUpdateTest extends TestCase
         $this->assertSame(101, $update->user->userId);
         $this->assertEquals($data, $update->toArray());
     }
-    public function canBeCreatedForChannel(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedForChannel()
     {
         $data = [
             'update_type' => 'bot_added',

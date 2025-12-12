@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -19,7 +17,10 @@ use PHPUnit\Framework\TestCase;
 
 final class InlineKeyboardAttachmentRequestTest extends TestCase
 {
-    public function createsCorrectRequestAndSerializesToArray(): void
+    /**
+     * @return void
+     */
+    public function createsCorrectRequestAndSerializesToArray()
     {
         $buttons = [
             [new CallbackButton('Press Me', 'cb_payload_1')],
@@ -54,7 +55,10 @@ final class InlineKeyboardAttachmentRequestTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $request->toArray());
     }
-    public function handlesJaggedAndMultiButtonRows(): void
+    /**
+     * @return void
+     */
+    public function handlesJaggedAndMultiButtonRows()
     {
         $buttons = [
             [new CallbackButton('Positive', 'ok', Intent::Positive)],
@@ -94,7 +98,10 @@ final class InlineKeyboardAttachmentRequestTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $request->toArray());
     }
-    public function canBeCreatedWithEmptyButtonsArray(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithEmptyButtonsArray()
     {
         $buttons = [];
         $request = new InlineKeyboardAttachmentRequest($buttons);

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -99,23 +97,31 @@ final class ChatMember extends AbstractModel
      * @param ChatAdminPermission[]|null $permissions A list of permissions if the member is an admin, otherwise null.
      */
     public function __construct(
-        int $userId,
-        string $firstName,
-        ?string $lastName,
-        ?string $username,
-        bool $isBot,
-        int $lastActivityTime,
-        ?string $description,
-        ?string $avatarUrl,
-        ?string $fullAvatarUrl,
-        int $lastAccessTime,
-        bool $isOwner,
-        bool $isAdmin,
-        int $joinTime,
+        $userId,
+        $firstName,
+        $lastName,
+        $username,
+        $isBot,
+        $lastActivityTime,
+        $description,
+        $avatarUrl,
+        $fullAvatarUrl,
+        $lastAccessTime,
+        $isOwner,
+        $isAdmin,
+        $joinTime,
         #[\BushlanovDev\MaxMessengerBot\Attributes\ArrayOf(\BushlanovDev\MaxMessengerBot\Enums\ChatAdminPermission::class)]
-        ?array $permissions
+        $permissions
     )
     {
+        $userId = (int) $userId;
+        $firstName = (string) $firstName;
+        $isBot = (bool) $isBot;
+        $lastActivityTime = (int) $lastActivityTime;
+        $lastAccessTime = (int) $lastAccessTime;
+        $isOwner = (bool) $isOwner;
+        $isAdmin = (bool) $isAdmin;
+        $joinTime = (int) $joinTime;
         $this->userId = $userId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;

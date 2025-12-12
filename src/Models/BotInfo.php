@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -74,19 +72,23 @@ final class BotInfo extends AbstractModel
      * @param BotCommand[]|null $commands Commands supported by the bot (up to 32 elements).
      */
     public function __construct(
-        int $userId,
-        string $firstName,
-        ?string $lastName,
-        ?string $username,
-        bool $isBot,
-        int $lastActivityTime,
-        ?string $description,
-        ?string $avatarUrl,
-        ?string $fullAvatarUrl,
+        $userId,
+        $firstName,
+        $lastName,
+        $username,
+        $isBot,
+        $lastActivityTime,
+        $description,
+        $avatarUrl,
+        $fullAvatarUrl,
         #[\BushlanovDev\MaxMessengerBot\Attributes\ArrayOf(\BushlanovDev\MaxMessengerBot\Models\BotCommand::class)]
-        ?array $commands
+        $commands
     )
     {
+        $userId = (int) $userId;
+        $firstName = (string) $firstName;
+        $isBot = (bool) $isBot;
+        $lastActivityTime = (int) $lastActivityTime;
         $this->userId = $userId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;

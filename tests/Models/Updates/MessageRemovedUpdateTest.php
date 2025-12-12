@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -12,7 +10,10 @@ use PHPUnit\Framework\TestCase;
 
 final class MessageRemovedUpdateTest extends TestCase
 {
-    public function canBeCreatedFromArrayAndSerializedBack(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayAndSerializedBack()
     {
         $data = [
             'update_type' => 'message_removed',

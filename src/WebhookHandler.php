@@ -1,12 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot;
 
 use BushlanovDev\MaxMessengerBot\Exceptions\SecurityException;
 use BushlanovDev\MaxMessengerBot\Exceptions\SerializationException;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -42,7 +39,7 @@ final class WebhookHandler
      * @param LoggerInterface $logger PSR LoggerInterface.
      * @param string|null $secret The secret key for request verification.
      */
-    public function __construct(UpdateDispatcher $dispatcher, ModelFactory $modelFactory, LoggerInterface $logger, ?string $secret)
+    public function __construct(UpdateDispatcher $dispatcher, ModelFactory $modelFactory, LoggerInterface $logger, $secret)
     {
         $this->dispatcher = $dispatcher;
         $this->modelFactory = $modelFactory;
@@ -60,8 +57,9 @@ final class WebhookHandler
      * @throws SecurityException
      * @throws SerializationException
      * @throws \LogicException
+     * @return void
      */
-    public function handle(?ServerRequestInterface $request = null): void
+    public function handle($request = null)
     {
         if ($request === null) {
             if (!class_exists(\GuzzleHttp\Psr7\ServerRequest::class)) {
@@ -107,9 +105,11 @@ final class WebhookHandler
      * @param string $signature
      *
      * @throws SecurityException
+     * @return void
      */
-    private function verifySignature(string $signature): void
+    private function verifySignature($signature)
     {
+        $signature = (string) $signature;
         if ($this->secret === null) {
             return;
         }

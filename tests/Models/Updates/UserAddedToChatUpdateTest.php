@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class UserAddedToChatUpdateTest extends TestCase
 {
-    public function canBeCreatedWhenInvitedByUser(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWhenInvitedByUser()
     {
         $data = [
             'update_type' => 'user_added',
@@ -41,7 +42,10 @@ final class UserAddedToChatUpdateTest extends TestCase
         $this->assertSame(101, $update->user->userId);
         $this->assertEquals($data, $update->toArray());
     }
-    public function canBeCreatedWhenJoinedByLink(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWhenJoinedByLink()
     {
         $data = [
             'update_type' => 'user_added',

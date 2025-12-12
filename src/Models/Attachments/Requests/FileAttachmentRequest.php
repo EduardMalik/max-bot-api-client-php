@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -15,8 +13,9 @@ final class FileAttachmentRequest extends AbstractAttachmentRequest
     /**
      * @param string $token The unique token received after a successful file upload.
      */
-    public function __construct(string $token)
+    public function __construct($token)
     {
+        $token = (string) $token;
         parent::__construct(
             AttachmentType::File,
             new UploadedInfoAttachmentRequestPayload($token)

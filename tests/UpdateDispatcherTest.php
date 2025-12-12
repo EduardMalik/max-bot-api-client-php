@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -29,12 +27,18 @@ final class UpdateDispatcherTest extends TestCase
      * @var \BushlanovDev\MaxMessengerBot\UpdateDispatcher
      */
     private $dispatcher;
-    protected function setUp(): void
+    /**
+     * @return void
+     */
+    protected function setUp()
     {
         $this->apiMock = $this->createMock(Api::class);
         $this->dispatcher = new UpdateDispatcher($this->apiMock);
     }
-    public function addHandlerAndDispatch(): void
+    /**
+     * @return void
+     */
+    public function addHandlerAndDispatch()
     {
         $wasCalled = false;
         $user = new User(100, 'Test', 'User', 'testuser', false, time());
@@ -50,7 +54,10 @@ final class UpdateDispatcherTest extends TestCase
         $this->dispatcher->dispatch($update);
         $this->assertTrue($wasCalled, 'Handler for BotStarted update was not called.');
     }
-    public function onCommandDispatch(): void
+    /**
+     * @return void
+     */
+    public function onCommandDispatch()
     {
         $commandCalled = false;
         $messageHandlerCalled = false;
@@ -73,7 +80,10 @@ final class UpdateDispatcherTest extends TestCase
             'onMessageCreated handler should not be called when a command matches.'
         );
     }
-    public function messageWithoutCommandTriggersGenericHandler(): void
+    /**
+     * @return void
+     */
+    public function messageWithoutCommandTriggersGenericHandler()
     {
         $commandCalled = false;
         $messageHandlerCalled = false;

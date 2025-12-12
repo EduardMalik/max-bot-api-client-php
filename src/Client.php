@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot;
 
 use BushlanovDev\MaxMessengerBot\Exceptions\AttachmentNotReadyException;
@@ -14,12 +12,6 @@ use BushlanovDev\MaxMessengerBot\Exceptions\RateLimitExceededException;
 use BushlanovDev\MaxMessengerBot\Exceptions\SerializationException;
 use BushlanovDev\MaxMessengerBot\Exceptions\UnauthorizedException;
 use InvalidArgumentException;
-use JsonException;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use RuntimeException;
@@ -73,20 +65,22 @@ final class Client implements ClientApiInterface
      * @param StreamFactoryInterface $streamFactory A PSR-17 factory for creating request body streams.
      * @param string $baseUrl The base URL for API requests.
      * @param string|null $apiVersion The API version to use for requests.
-     * @param LoggerInterface $logger
+     * @param \Psr\Log\LoggerInterface|null $logger
      *
      * @throws InvalidArgumentException
      */
     public function __construct(
-        string $accessToken,
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory,
-        string $baseUrl,
-        ?string $apiVersion = null,
-        ?LoggerInterface $logger = null
+        $accessToken,
+        $httpClient,
+        $requestFactory,
+        $streamFactory,
+        $baseUrl,
+        $apiVersion = null,
+        $logger = null
     ) {
-        $logger = $logger ?? new NullLogger();
+        $accessToken = (string) $accessToken;
+        $baseUrl = (string) $baseUrl;
+        $logger = isset($logger) ? $logger : new NullLogger();
         $this->accessToken = $accessToken;
         $this->httpClient = $httpClient;
         $this->requestFactory = $requestFactory;
@@ -105,8 +99,9 @@ final class Client implements ClientApiInterface
      * @param string $uri
      * @param mixed[] $queryParams
      * @param mixed[] $body
+     * @return mixed[]
      */
-    public function request($method, $uri, $queryParams = [], $body = []): array
+    public function request($method, $uri, $queryParams = [], $body = [])
     {
         if (!empty($this->apiVersion)) {
             $queryParams['v'] = $this->apiVersion;
@@ -124,11 +119,12 @@ final class Client implements ClientApiInterface
             ->withHeader('Authorization', $this->accessToken);
 
         if (!empty($body)) {
-            try {
-                $payload = json_encode($body, 0);
-            } catch (JsonException $e) {
-                throw new SerializationException('Failed to encode request body to JSON.', 0, $e);
+            $payload = json_encode($body, 0);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new SerializationException('Failed to encode request body to JSON' . $body, 0);
             }
+
             $stream = $this->streamFactory->createStream($payload);
             $request = $request
                 ->withBody($stream)
@@ -137,7 +133,7 @@ final class Client implements ClientApiInterface
 
         try {
             $response = $this->httpClient->sendRequest($request);
-        } catch (ClientExceptionInterface $e) {
+        } catch (\Exception $e) {
             // This catches network errors, DNS failures, timeouts, etc.
             $this->logger->error('Network exception during API request', [
                 'message' => $e->getMessage(),
@@ -174,8 +170,9 @@ final class Client implements ClientApiInterface
      * @param string $uri
      * @param mixed $fileContents
      * @param string $fileName
+     * @return string
      */
-    public function multipartUpload($uri, $fileContents, $fileName): string
+    public function multipartUpload($uri, $fileContents, $fileName)
     {
         $boundary = '--------------------------' . microtime(true);
         $bodyStream = $this->streamFactory->createStream();
@@ -216,6 +213,7 @@ final class Client implements ClientApiInterface
      * @param string $fileName
      * @param int $fileSize
      * @param int $chunkSize
+     * @return string
      */
     public function resumableUpload(
         $uploadUrl,
@@ -223,7 +221,7 @@ final class Client implements ClientApiInterface
         $fileName,
         $fileSize,
         $chunkSize = 1048576
-    ): string {
+    ) {
         if (!is_resource($fileResource) || get_resource_type($fileResource) !== 'stream') {
             throw new InvalidArgumentException('fileResource must be a valid stream resource.');
         }
@@ -282,8 +280,9 @@ final class Client implements ClientApiInterface
      * Checks the response for an error status code and throws a corresponding typed exception.
      *
      * @throws ClientApiException
+     * @return void
      */
-    private function handleErrorResponse(ResponseInterface $response): void
+    private function handleErrorResponse($response)
     {
         $statusCode = $response->getStatusCode();
 
@@ -293,9 +292,9 @@ final class Client implements ClientApiInterface
         }
 
         $responseBody = (string)$response->getBody();
-        $data = json_decode($responseBody, true) ?? [];
-        $errorCode = $data['code'] ?? 'unknown';
-        $errorMessage = $data['message'] ?? 'An unknown error occurred.';
+        $data = json_decode($responseBody, true) !== null ? json_decode($responseBody, true) : [];
+        $errorCode = isset($data['code']) ? $data['code'] : 'unknown';
+        $errorMessage = isset($data['message']) ? $data['message'] : 'An unknown error occurred.';
 
         $this->logger->error('API error response received', [
             'status' => $statusCode,
@@ -321,11 +320,13 @@ final class Client implements ClientApiInterface
      * @return ClientApiException
      */
     private function mapErrorCodeToException(
-        string $message,
-        string $errorCode,
-        ResponseInterface $response,
-        ?int $httpStatusCode = null
-    ): ClientApiException {
+        $message,
+        $errorCode,
+        $response,
+        $httpStatusCode = null
+    ) {
+        $message = (string) $message;
+        $errorCode = (string) $errorCode;
         switch ($errorCode) {
             case 'attachment.not.ready':
                 return new AttachmentNotReadyException($message, $errorCode, $response, $httpStatusCode);

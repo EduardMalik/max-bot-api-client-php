@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
@@ -13,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 final class VideoThumbnailTest extends TestCase
 {
-    public function canBeCreatedAndSerialized(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedAndSerialized()
     {
         $data = [
             'url' => 'https://example.com/video_thumbnail.jpg',

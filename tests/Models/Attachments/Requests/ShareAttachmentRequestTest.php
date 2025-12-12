@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -15,7 +13,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ShareAttachmentRequestTest extends TestCase
 {
-    public function fromUrlCreatesCorrectRequestAndSerializes(): void
+    /**
+     * @return void
+     */
+    public function fromUrlCreatesCorrectRequestAndSerializes()
     {
         $request = ShareAttachmentRequest::fromUrl('https://dev.max.ru');
         $this->assertSame(AttachmentType::Share, $request->type);
@@ -24,7 +25,10 @@ final class ShareAttachmentRequestTest extends TestCase
         $expected = ['type' => 'share', 'payload' => ['url' => 'https://dev.max.ru', 'token' => null]];
         $this->assertEquals($expected, $request->toArray());
     }
-    public function fromTokenCreatesCorrectRequestAndSerializes(): void
+    /**
+     * @return void
+     */
+    public function fromTokenCreatesCorrectRequestAndSerializes()
     {
         $request = ShareAttachmentRequest::fromToken('share_token_123');
         $this->assertSame(AttachmentType::Share, $request->type);
@@ -33,7 +37,10 @@ final class ShareAttachmentRequestTest extends TestCase
         $expected = ['type' => 'share', 'payload' => ['token' => 'share_token_123', 'url' => null]];
         $this->assertEquals($expected, $request->toArray());
     }
-    public function payloadThrowsExceptionForInvalidArguments(): void
+    /**
+     * @return void
+     */
+    public function payloadThrowsExceptionForInvalidArguments()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Provide one of "url" or "token" for ShareAttachmentRequestPayload.');

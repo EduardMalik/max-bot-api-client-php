@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Enums\MessageLinkType;
@@ -12,7 +10,10 @@ use PHPUnit\Framework\TestCase;
 
 final class MessageLinkTest extends TestCase
 {
-    public function toArraySerializesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function toArraySerializesCorrectly()
     {
         $messageLink = new MessageLink(MessageLinkType::Forward, '123');
         $expectedArray = [

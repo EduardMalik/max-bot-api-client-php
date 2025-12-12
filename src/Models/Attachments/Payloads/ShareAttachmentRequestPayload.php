@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads;
 
 use InvalidArgumentException;
@@ -26,8 +24,8 @@ final class ShareAttachmentRequestPayload extends AbstractAttachmentRequestPaylo
      * @param string|null $token Token of a previously generated share attachment.
      */
     public function __construct(
-        ?string $url = null,
-        ?string $token = null
+        $url = null,
+        $token = null
     ) {
         $this->url = $url;
         $this->token = $token;

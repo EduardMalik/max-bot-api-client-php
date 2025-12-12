@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -19,8 +17,9 @@ final class DataAttachment extends AbstractAttachment
     /**
      * @param string $data The payload from the button.
      */
-    public function __construct(string $data)
+    public function __construct($data)
     {
+        $data = (string) $data;
         $this->data = $data;
         parent::__construct(AttachmentType::Data);
     }

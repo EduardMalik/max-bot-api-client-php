@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\Intent;
@@ -16,7 +14,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ReplyKeyboardAttachmentRequestTest extends TestCase
 {
-    public function toArray(): void
+    /**
+     * @return void
+     */
+    public function toArray()
     {
         $buttons = [
             [new SendMessageButton('Help', 'help_payload', Intent::Positive)],

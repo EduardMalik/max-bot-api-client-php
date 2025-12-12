@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply\AbstractReplyButton;
@@ -28,8 +26,9 @@ final class ReplyKeyboardAttachmentRequestPayload extends AbstractAttachmentRequ
      * @param bool $direct Applicable only for chats.
      * @param int|null $directUserId If set, reply keyboard will only be shown to this participant.
      */
-    public function __construct(array $buttons, bool $direct = false, ?int $directUserId = null)
+    public function __construct(array $buttons, $direct = false, $directUserId = null)
     {
+        $direct = (bool) $direct;
         $this->buttons = $buttons;
         $this->direct = $direct;
         $this->directUserId = $directUserId;

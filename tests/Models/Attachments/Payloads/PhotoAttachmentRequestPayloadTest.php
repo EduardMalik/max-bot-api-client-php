@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -15,7 +13,10 @@ use PHPUnit\Framework\TestCase;
 
 final class PhotoAttachmentRequestPayloadTest extends TestCase
 {
-    public function canBeCreatedWithUrlOnly(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithUrlOnly()
     {
         $payload = new PhotoAttachmentRequestPayload('https://example.com/photo.jpg');
         $this->assertSame('https://example.com/photo.jpg', $payload->url);
@@ -28,7 +29,10 @@ final class PhotoAttachmentRequestPayloadTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $payload->toArray());
     }
-    public function canBeCreatedWithTokenOnly(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithTokenOnly()
     {
         $payload = new PhotoAttachmentRequestPayload(null, 'uploaded_token_abc');
         $this->assertSame('uploaded_token_abc', $payload->token);
@@ -41,7 +45,10 @@ final class PhotoAttachmentRequestPayloadTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $payload->toArray());
     }
-    public function canBeCreatedWithPhotosOnly(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithPhotosOnly()
     {
         $photos = [
             new PhotoToken('token_1'),
@@ -61,7 +68,10 @@ final class PhotoAttachmentRequestPayloadTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $payload->toArray());
     }
-    public function constructorThrowsExceptionForInvalidArguments(): void
+    /**
+     * @return void
+     */
+    public function constructorThrowsExceptionForInvalidArguments()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Provide one of "url", "token", or "photos" for PhotoAttachmentRequestPayload.');

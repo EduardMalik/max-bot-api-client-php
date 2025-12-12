@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Laravel\Commands;
 
 use Illuminate\Container\Container;
@@ -21,7 +19,10 @@ abstract class TestCase extends TestCaseOriginal
      */
     protected $tester;
 
-    protected function setUp(): void
+    /**
+     * @return void
+     */
+    protected function setUp()
     {
         parent::setUp();
 
@@ -33,7 +34,10 @@ abstract class TestCase extends TestCaseOriginal
         $this->container->instance('log', $loggerMock);
     }
 
-    protected function tearDown(): void
+    /**
+     * @return void
+     */
+    protected function tearDown()
     {
         Container::setInstance(null);
         Facade::clearResolvedInstances();
@@ -47,7 +51,10 @@ abstract class TestCase extends TestCaseOriginal
 
 class TestApplicationContainer extends Container
 {
-    public function runningUnitTests(): bool
+    /**
+     * @return bool
+     */
+    public function runningUnitTests()
     {
         return true;
     }

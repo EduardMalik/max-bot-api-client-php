@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoAttachmentRequestPayload;
@@ -13,17 +11,26 @@ use PHPUnit\Framework\TestCase;
 
 final class BotPatchTest extends TestCase
 {
-    public function toArrayIncludesOnlyExplicitlySetFields(): void
+    /**
+     * @return void
+     */
+    public function toArrayIncludesOnlyExplicitlySetFields()
     {
         $patch = new BotPatch();
         $this->assertEquals(['name' => 'New Name'], $patch->toArray());
     }
-    public function toArrayIncludesFieldsSetToNull(): void
+    /**
+     * @return void
+     */
+    public function toArrayIncludesFieldsSetToNull()
     {
         $patch = new BotPatch();
         $this->assertEquals(['description' => null], $patch->toArray());
     }
-    public function toArrayHandlesMultipleSetFields(): void
+    /**
+     * @return void
+     */
+    public function toArrayHandlesMultipleSetFields()
     {
         $photoPayload = new PhotoAttachmentRequestPayload(null, 'photo123');
         $patch = new BotPatch();
@@ -38,7 +45,10 @@ final class BotPatchTest extends TestCase
         ];
         $this->assertEquals($expected, $patch->toArray());
     }
-    public function toArrayIsEmptyWhenNoArgumentsPassed(): void
+    /**
+     * @return void
+     */
+    public function toArrayIsEmptyWhenNoArgumentsPassed()
     {
         $patch = new BotPatch();
         $this->assertEmpty($patch->toArray());

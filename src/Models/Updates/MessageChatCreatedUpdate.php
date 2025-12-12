@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -35,11 +33,13 @@ final class MessageChatCreatedUpdate extends AbstractUpdate
      * @param string|null $startPayload Payload from the chat button.
      */
     public function __construct(
-        int $timestamp,
+        $timestamp,
         Chat $chat,
-        string $messageId,
-        ?string $startPayload
+        $messageId,
+        $startPayload
     ) {
+        $timestamp = (int) $timestamp;
+        $messageId = (string) $messageId;
         $this->chat = $chat;
         $this->messageId = $messageId;
         $this->startPayload = $startPayload;

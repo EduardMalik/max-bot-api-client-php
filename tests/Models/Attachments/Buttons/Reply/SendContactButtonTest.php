@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Buttons\Reply;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply\SendContactButton;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class SendContactButtonTest extends TestCase
 {
-    public function toArray(): void
+    /**
+     * @return void
+     */
+    public function toArray()
     {
         $button = new SendContactButton('Share My Contact');
         $expected = [

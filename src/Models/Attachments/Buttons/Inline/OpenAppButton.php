@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline;
 
 use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
@@ -27,8 +25,9 @@ final class OpenAppButton extends AbstractInlineButton
      * @param string|null $webApp The public name (username) of the bot or a link to it, whose mini-application should be launched.
      * @param int|null $contactId The ID of the bot whose mini-app should be launched.
      */
-    public function __construct(string $text, ?string $webApp = null, ?int $contactId = null)
+    public function __construct($text, $webApp = null, $contactId = null)
     {
+        $text = (string) $text;
         parent::__construct(InlineButtonType::OpenApp, $text);
 
         $this->webApp = $webApp;

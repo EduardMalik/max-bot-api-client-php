@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\MediaAttachmentPayload;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class MediaAttachmentPayloadTest extends TestCase
 {
-    public function canBeCreatedAndSerialized(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedAndSerialized()
     {
         $payload = new MediaAttachmentPayload('https://example.com/video.mp4', 'video_token_123');
         $this->assertSame('https://example.com/video.mp4', $payload->url);

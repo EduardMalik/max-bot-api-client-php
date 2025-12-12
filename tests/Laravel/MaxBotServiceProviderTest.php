@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Laravel;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -35,22 +33,34 @@ use ReflectionClass;
 final class MaxBotServiceProviderTest extends TestCase
 {
     use PHPMock;
-    protected function getEnvironmentSetUp($app): void
+    /**
+     * @return void
+     */
+    protected function getEnvironmentSetUp($app)
     {
         $app['config']->set('maxbot.access_token', 'test-token');
         $app['config']->set('maxbot.webhook_secret', 'test-secret');
         $app['config']->set('maxbot.base_url', 'https://test.max.ru');
         $app['config']->set('maxbot.api_version', 'test-version');
     }
-    protected function getPackageProviders($app): array
+    /**
+     * @return mixed[]
+     */
+    protected function getPackageProviders($app)
     {
         return [MaxBotServiceProvider::class];
     }
-    public function serviceProviderIsLoaded(): void
+    /**
+     * @return void
+     */
+    public function serviceProviderIsLoaded()
     {
         $this->assertInstanceOf(MaxBotServiceProvider::class, $this->app->getProvider(MaxBotServiceProvider::class));
     }
-    public function itThrowsExceptionWhenAccessTokenIsMissingForClient(): void
+    /**
+     * @return void
+     */
+    public function itThrowsExceptionWhenAccessTokenIsMissingForClient()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -59,7 +69,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $this->app['config']->set('maxbot.access_token', null);
         $this->app->make(ClientApiInterface::class);
     }
-    public function itThrowsExceptionWhenAccessTokenIsMissingForApi(): void
+    /**
+     * @return void
+     */
+    public function itThrowsExceptionWhenAccessTokenIsMissingForApi()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -68,7 +81,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $this->app['config']->set('maxbot.access_token', null);
         $this->app->make(Api::class);
     }
-    public function itThrowsExceptionWhenGuzzleIsMissing(): void
+    /**
+     * @return void
+     */
+    public function itThrowsExceptionWhenGuzzleIsMissing()
     {
         error_reporting(E_ALL & ~E_DEPRECATED);
         $this->expectException(LogicException::class);
@@ -83,7 +99,7 @@ final class MaxBotServiceProviderTest extends TestCase
     /**
      * @return array<string, array{0: string, 1: class-string}>
      */
-    public static function servicesProvider(): array
+    public static function servicesProvider()
     {
         return [
             'Api::class' => [Api::class, Api::class],
@@ -105,15 +121,16 @@ final class MaxBotServiceProviderTest extends TestCase
     /**
      * @param string $service
      * @param string $expectedClass
+     * @return void
      */
-    public function allServicesAreRegisteredCorrectly($service, $expectedClass): void
+    public function allServicesAreRegisteredCorrectly($service, $expectedClass)
     {
         $this->assertInstanceOf($expectedClass, $this->app->make($service));
     }
     /**
      * @return array<string, array{0: string}>
      */
-    public static function singletonsProvider(): array
+    public static function singletonsProvider()
     {
         return [
             'Api' => [Api::class],
@@ -125,14 +142,18 @@ final class MaxBotServiceProviderTest extends TestCase
     }
     /**
      * @param string $service
+     * @return void
      */
-    public function servicesAreRegisteredAsSingletons($service): void
+    public function servicesAreRegisteredAsSingletons($service)
     {
         $instance1 = $this->app->make($service);
         $instance2 = $this->app->make($service);
         $this->assertSame($instance1, $instance2);
     }
-    public function clientIsConfiguredCorrectlyFromConfig(): void
+    /**
+     * @return void
+     */
+    public function clientIsConfiguredCorrectlyFromConfig()
     {
         /** @var Client $client */
         $client = $this->app->make(ClientApiInterface::class);
@@ -145,7 +166,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $this->assertSame('https://test.max.ru', $baseUrlProp->getValue($client));
         $this->assertSame('test-version', $apiVersionProp->getValue($client));
     }
-    public function clientIsConfiguredWithApplicationLoggerWhenLoggingIsEnabled(): void
+    /**
+     * @return void
+     */
+    public function clientIsConfiguredWithApplicationLoggerWhenLoggingIsEnabled()
     {
         $this->app['config']->set('maxbot.logging.enabled', true);
         $mockLogger = $this->createMock(LoggerInterface::class);
@@ -157,7 +181,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $actualLogger = $loggerProp->getValue($client);
         $this->assertSame($mockLogger, $actualLogger);
     }
-    public function clientIsConfiguredWithNullLoggerWhenLoggingIsDisabled(): void
+    /**
+     * @return void
+     */
+    public function clientIsConfiguredWithNullLoggerWhenLoggingIsDisabled()
     {
         $this->app['config']->set('maxbot.logging.enabled', false);
         /** @var Client $client */
@@ -167,7 +194,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $actualLogger = $loggerProp->getValue($client);
         $this->assertInstanceOf(NullLogger::class, $actualLogger);
     }
-    public function modelFactoryIsConfiguredWithApplicationLoggerWhenLoggingIsEnabled(): void
+    /**
+     * @return void
+     */
+    public function modelFactoryIsConfiguredWithApplicationLoggerWhenLoggingIsEnabled()
     {
         $this->app['config']->set('maxbot.logging.enabled', true);
         $mockLogger = $this->createMock(LoggerInterface::class);
@@ -179,7 +209,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $actualLogger = $loggerProp->getValue($factory);
         $this->assertSame($mockLogger, $actualLogger);
     }
-    public function modelFactoryIsConfiguredWithNullLoggerWhenLoggingIsDisabled(): void
+    /**
+     * @return void
+     */
+    public function modelFactoryIsConfiguredWithNullLoggerWhenLoggingIsDisabled()
     {
         $this->app['config']->set('maxbot.logging.enabled', false);
         /** @var ModelFactory $factory */
@@ -189,7 +222,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $actualLogger = $loggerProp->getValue($factory);
         $this->assertInstanceOf(NullLogger::class, $actualLogger);
     }
-    public function webhookHandlerIsConfiguredWithApplicationLoggerWhenLoggingIsEnabled(): void
+    /**
+     * @return void
+     */
+    public function webhookHandlerIsConfiguredWithApplicationLoggerWhenLoggingIsEnabled()
     {
         $this->app['config']->set('maxbot.logging.enabled', true);
         $mockLogger = $this->createMock(LoggerInterface::class);
@@ -201,7 +237,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $actualLogger = $loggerProp->getValue($handler);
         $this->assertSame($mockLogger, $actualLogger);
     }
-    public function webhookHandlerIsConfiguredWithNullLoggerWhenLoggingIsDisabled(): void
+    /**
+     * @return void
+     */
+    public function webhookHandlerIsConfiguredWithNullLoggerWhenLoggingIsDisabled()
     {
         $this->app['config']->set('maxbot.logging.enabled', false);
         /** @var WebhookHandler $handler */
@@ -211,7 +250,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $actualLogger = $loggerProp->getValue($handler);
         $this->assertInstanceOf(NullLogger::class, $actualLogger);
     }
-    public function longPollingHandlerIsConfiguredWithApplicationLoggerWhenLoggingIsEnabled(): void
+    /**
+     * @return void
+     */
+    public function longPollingHandlerIsConfiguredWithApplicationLoggerWhenLoggingIsEnabled()
     {
         $this->app['config']->set('maxbot.logging.enabled', true);
         $mockLogger = $this->createMock(LoggerInterface::class);
@@ -223,7 +265,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $actualLogger = $loggerProp->getValue($handler);
         $this->assertSame($mockLogger, $actualLogger);
     }
-    public function longPollingHandlerIsConfiguredWithNullLoggerWhenLoggingIsDisabled(): void
+    /**
+     * @return void
+     */
+    public function longPollingHandlerIsConfiguredWithNullLoggerWhenLoggingIsDisabled()
     {
         $this->app['config']->set('maxbot.logging.enabled', false);
         /** @var LongPollingHandler $handler */
@@ -233,7 +278,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $actualLogger = $loggerProp->getValue($handler);
         $this->assertInstanceOf(NullLogger::class, $actualLogger);
     }
-    public function webhookHandlerIsConfiguredWithSecretFromConfig(): void
+    /**
+     * @return void
+     */
+    public function webhookHandlerIsConfiguredWithSecretFromConfig()
     {
         /** @var WebhookHandler $handler */
         $handler = $this->app->make(WebhookHandler::class);
@@ -242,7 +290,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $secretProp = $reflection->getProperty('secret');
         $this->assertSame('test-secret', $secretProp->getValue($handler));
     }
-    public function apiIsCreatedWithAllDependenciesFromContainer(): void
+    /**
+     * @return void
+     */
+    public function apiIsCreatedWithAllDependenciesFromContainer()
     {
         /** @var Api $api */
         $api = $this->app->make(Api::class);
@@ -256,7 +307,10 @@ final class MaxBotServiceProviderTest extends TestCase
         $this->assertInstanceOf(NullLogger::class, $loggerProp->getValue($api));
         $this->assertSame($this->app->make(UpdateDispatcher::class), $dispatcherProp->getValue($api));
     }
-    public function apiIsConfiguredWithApplicationLoggerWhenLoggingIsEnabled(): void
+    /**
+     * @return void
+     */
+    public function apiIsConfiguredWithApplicationLoggerWhenLoggingIsEnabled()
     {
         $this->app['config']->set('maxbot.logging.enabled', true);
         $mockLogger = $this->createMock(LoggerInterface::class);
@@ -271,7 +325,7 @@ final class MaxBotServiceProviderTest extends TestCase
     /**
      * @return array<string, array{0: string}>
      */
-    public static function commandsProvider(): array
+    public static function commandsProvider()
     {
         return [
             'WebhookSubscribeCommand' => [WebhookSubscribeCommand::class, 'maxbot:webhook:subscribe'],
@@ -283,14 +337,18 @@ final class MaxBotServiceProviderTest extends TestCase
     /**
      * @param string $class
      * @param string $signature
+     * @return void
      */
-    public function bootMethodRegistersCommandsInConsole($class, $signature): void
+    public function bootMethodRegistersCommandsInConsole($class, $signature)
     {
         $commands = Artisan::all();
         $this->assertArrayHasKey($signature, $commands);
         $this->assertInstanceOf($class, $commands[$signature]);
     }
-    public function providesMethod(): void
+    /**
+     * @return void
+     */
+    public function providesMethod()
     {
         $provides = [
             Api::class,

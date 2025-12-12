@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -90,9 +88,9 @@ class ModelFactory
     /**
      * @param LoggerInterface|null $logger PSR LoggerInterface.
      */
-    public function __construct(?LoggerInterface $logger = null)
+    public function __construct($logger = null)
     {
-        $this->logger = $logger ?? new NullLogger();
+        $this->logger = isset($logger) ? $logger : new NullLogger();
     }
 
     /**
@@ -103,7 +101,7 @@ class ModelFactory
      * @return Result
      * @throws ReflectionException
      */
-    public function createResult($data): Result
+    public function createResult($data)
     {
         return Result::fromArray($data);
     }
@@ -116,7 +114,7 @@ class ModelFactory
      * @return BotInfo
      * @throws ReflectionException
      */
-    public function createBotInfo($data): BotInfo
+    public function createBotInfo($data)
     {
         return BotInfo::fromArray($data);
     }
@@ -129,7 +127,7 @@ class ModelFactory
      * @return Subscription
      * @throws ReflectionException
      */
-    public function createSubscription($data): Subscription
+    public function createSubscription($data)
     {
         return Subscription::fromArray($data);
     }
@@ -142,7 +140,7 @@ class ModelFactory
      * @return Subscription[]
      * @throws ReflectionException
      */
-    public function createSubscriptions($data): array
+    public function createSubscriptions($data)
     {
         return isset($data['subscriptions']) && is_array($data['subscriptions'])
             ? array_map([$this, 'createSubscription'], $data['subscriptions'])
@@ -157,14 +155,14 @@ class ModelFactory
      * @return Message
      * @throws ReflectionException
      */
-    public function createMessageFromSendResponse($data): Message
+    public function createMessageFromSendResponse($data)
     {
         $messageData = $data['message'];
 
         $topLevelData = [
-            'chat_id' => $data['chat_id'] ?? null,
-            'recipient_id' => $data['recipient_id'] ?? null,
-            'message_id' => $data['message_id'] ?? null,
+            'chat_id' => isset($data['chat_id']) ? $data['chat_id'] : null,
+            'recipient_id' => isset($data['recipient_id']) ? $data['recipient_id'] : null,
+            'message_id' => isset($data['message_id']) ? $data['message_id'] : null,
         ];
         $messageData = array_merge($messageData, array_filter($topLevelData, function ($value) {
             return $value !== null;
@@ -186,7 +184,7 @@ class ModelFactory
      * @return Message
      * @throws ReflectionException
      */
-    public function createMessage($data): Message
+    public function createMessage($data)
     {
         if (isset($data['body']) && is_array($data['body'])) {
             $data['body'] = $this->createMessageBody($data['body']);
@@ -202,7 +200,7 @@ class ModelFactory
      *
      * @return Message[]
      */
-    public function createMessages($data): array
+    public function createMessages($data)
     {
         return isset($data['messages']) && is_array($data['messages'])
             ? array_map([$this, 'createMessage'], $data['messages'])
@@ -217,7 +215,7 @@ class ModelFactory
      * @return MessageBody
      * @throws ReflectionException
      */
-    private function createMessageBody(array $data): MessageBody
+    private function createMessageBody(array $data)
     {
         if (isset($data['attachments']) && is_array($data['attachments'])) {
             $data['attachments'] = array_map(
@@ -244,9 +242,9 @@ class ModelFactory
      * @return AbstractAttachment
      * @throws ReflectionException
      */
-    public function createAttachment($data): AbstractAttachment
+    public function createAttachment($data)
     {
-        $attachmentType = AttachmentType::fromName($data['type'] ?? '');
+        $attachmentType = AttachmentType::fromName(isset($data['type']) ? $data['type'] : '');
         if ($attachmentType === AttachmentType::ReplyKeyboard
             && isset($data['buttons']) && is_array($data['buttons'])) {
             $data['buttons'] = array_map(
@@ -291,7 +289,7 @@ class ModelFactory
             case AttachmentType::Location:
                 return LocationAttachment::fromArray($data);
             default:
-                throw new LogicException('Unknown or unsupported attachment type: ' . ($data['type'] ?? 'none'));
+                throw new LogicException('Unknown or unsupported attachment type: ' . (isset($data['type']) ? $data['type'] : 'none'));
         }
     }
 
@@ -304,9 +302,9 @@ class ModelFactory
      * @throws ReflectionException
      * @throws LogicException
      */
-    public function createReplyButton($data): AbstractReplyButton
+    public function createReplyButton($data)
     {
-        switch (ReplyButtonType::fromName($data['type'] ?? '')) {
+        switch (ReplyButtonType::fromName(isset($data['type']) ? $data['type'] : '')) {
             case ReplyButtonType::Message:
                 return SendMessageButton::fromArray($data);
             case ReplyButtonType::UserContact:
@@ -315,7 +313,7 @@ class ModelFactory
                 return SendGeoLocationButton::fromArray($data);
             default:
                 throw new LogicException(
-                    'Unknown or unsupported reply button type: ' . ($data['type'] ?? 'none')
+                    'Unknown or unsupported reply button type: ' . (isset($data['type']) ? $data['type'] : 'none')
                 );
         }
     }
@@ -328,9 +326,9 @@ class ModelFactory
      * @throws ReflectionException
      * @throws LogicException
      */
-    public function createInlineButton($data): AbstractInlineButton
+    public function createInlineButton($data)
     {
-        switch (InlineButtonType::fromName($data['type'] ?? '')) {
+        switch (InlineButtonType::fromName(isset($data['type']) ? $data['type'] : '')) {
             case InlineButtonType::Callback:
                 return CallbackButton::fromArray($data);
             case InlineButtonType::Link:
@@ -345,7 +343,7 @@ class ModelFactory
                 return OpenAppButton::fromArray($data);
             default:
                 throw new LogicException(
-                    'Unknown or unsupported inline button type: ' . ($data['type'] ?? 'none')
+                    'Unknown or unsupported inline button type: ' . (isset($data['type']) ? $data['type'] : 'none')
                 );
         }
     }
@@ -358,7 +356,7 @@ class ModelFactory
      * @return UploadEndpoint
      * @throws ReflectionException
      */
-    public function createUploadEndpoint($data): UploadEndpoint
+    public function createUploadEndpoint($data)
     {
         return UploadEndpoint::fromArray($data);
     }
@@ -371,7 +369,7 @@ class ModelFactory
      * @return Chat
      * @throws ReflectionException
      */
-    public function createChat($data): Chat
+    public function createChat($data)
     {
         return Chat::fromArray($data);
     }
@@ -385,7 +383,7 @@ class ModelFactory
      * @throws ReflectionException
      * @throws LogicException
      */
-    public function createUpdateList($data): UpdateList
+    public function createUpdateList($data)
     {
         $updateObjects = [];
         if (isset($data['updates']) && is_array($data['updates'])) {
@@ -414,9 +412,9 @@ class ModelFactory
      * @throws ReflectionException
      * @throws LogicException
      */
-    public function createUpdate($data): AbstractUpdate
+    public function createUpdate($data)
     {
-        switch (UpdateType::fromName($data['update_type'] ?? '')) {
+        switch (UpdateType::fromName(isset($data['update_type']) ? $data['update_type'] : '')) {
             case UpdateType::MessageCreated:
                 return MessageCreatedUpdate::fromArray($data);
             case UpdateType::MessageCallback:
@@ -451,7 +449,7 @@ class ModelFactory
                 return MessageChatCreatedUpdate::fromArray($data);
             default:
                 throw new LogicException(
-                    'Unknown or unsupported update type received: ' . ($data['update_type'] ?? 'none')
+                    'Unknown or unsupported update type received: ' . (isset($data['update_type']) ? $data['update_type'] : 'none')
                 );
         }
     }
@@ -464,7 +462,7 @@ class ModelFactory
      * @return ChatList
      * @throws ReflectionException
      */
-    public function createChatList($data): ChatList
+    public function createChatList($data)
     {
         return ChatList::fromArray($data);
     }
@@ -477,7 +475,7 @@ class ModelFactory
      * @return ChatMember
      * @throws ReflectionException
      */
-    public function createChatMember($data): ChatMember
+    public function createChatMember($data)
     {
         return ChatMember::fromArray($data);
     }
@@ -490,7 +488,7 @@ class ModelFactory
      * @return ChatMembersList
      * @throws ReflectionException
      */
-    public function createChatMembersList($data): ChatMembersList
+    public function createChatMembersList($data)
     {
         return ChatMembersList::fromArray($data);
     }
@@ -503,7 +501,7 @@ class ModelFactory
      * @return VideoAttachmentDetails
      * @throws ReflectionException
      */
-    public function createVideoAttachmentDetails($data): VideoAttachmentDetails
+    public function createVideoAttachmentDetails($data)
     {
         return VideoAttachmentDetails::fromArray($data);
     }
@@ -516,9 +514,9 @@ class ModelFactory
      * @return AbstractMarkup
      * @throws ReflectionException
      */
-    public function createMarkupElement($data): AbstractMarkup
+    public function createMarkupElement($data)
     {
-        switch (MarkupType::fromName($data['type'] ?? '')) {
+        switch (MarkupType::fromName(isset($data['type']) ? $data['type'] : '')) {
             case MarkupType::Strong:
                 return StrongMarkup::fromArray($data);
             case MarkupType::Emphasized:
@@ -539,7 +537,7 @@ class ModelFactory
                 return UserMentionMarkup::fromArray($data);
             default:
                 throw new LogicException(
-                    'Unknown or unsupported markup type: ' . ($data['type'] ?? 'none')
+                    'Unknown or unsupported markup type: ' . (isset($data['type']) ? $data['type'] : 'none')
                 );
         }
     }

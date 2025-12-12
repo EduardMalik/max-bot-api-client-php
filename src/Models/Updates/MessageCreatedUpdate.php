@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -28,10 +26,11 @@ final class MessageCreatedUpdate extends AbstractUpdate
      * @param string|null $userLocale Current user locale in IETF BCP 47 format. Available only in dialogs.
      */
     public function __construct(
-        int $timestamp,
+        $timestamp,
         Message $message,
-        ?string $userLocale
+        $userLocale
     ) {
+        $timestamp = (int) $timestamp;
         $this->message = $message;
         $this->userLocale = $userLocale;
         parent::__construct(UpdateType::MessageCreated, $timestamp);

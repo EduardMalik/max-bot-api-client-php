@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 use BushlanovDev\MaxMessengerBot\Enums\MessageLinkType;
@@ -38,7 +36,7 @@ final class LinkedMessage extends AbstractModel
      * @param int|null $chatId The chat where the message was originally posted (for forwarded messages).
      * @param \BushlanovDev\MaxMessengerBot\Enums\MessageLinkType::* $type
      */
-    public function __construct($type, MessageBody $message, ?User $sender, ?int $chatId)
+    public function __construct($type, MessageBody $message, $sender, $chatId)
     {
         $this->type = $type;
         $this->message = $message;

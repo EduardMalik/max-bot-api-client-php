@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 use BushlanovDev\MaxMessengerBot\Enums\MessageLinkType;
@@ -26,8 +24,9 @@ final class MessageLink extends AbstractModel
      * @param string $mid Message identifier of original message.
      * @param \BushlanovDev\MaxMessengerBot\Enums\MessageLinkType::* $type
      */
-    public function __construct($type, string $mid)
+    public function __construct($type, $mid)
     {
+        $mid = (string) $mid;
         $this->type = $type;
         $this->mid = $mid;
     }

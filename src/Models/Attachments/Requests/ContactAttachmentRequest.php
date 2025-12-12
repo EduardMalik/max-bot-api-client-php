@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -19,10 +17,10 @@ final class ContactAttachmentRequest extends AbstractAttachmentRequest
      * @param string|null $vcfPhone Contact phone in VCF format.
      */
     public function __construct(
-        ?string $name = null,
-        ?int $contactId = null,
-        ?string $vcfInfo = null,
-        ?string $vcfPhone = null
+        $name = null,
+        $contactId = null,
+        $vcfInfo = null,
+        $vcfPhone = null
     ) {
         parent::__construct(
             AttachmentType::Contact,

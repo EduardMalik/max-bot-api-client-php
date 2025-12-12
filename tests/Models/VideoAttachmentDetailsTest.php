@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoAttachmentRequestPayload;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class VideoAttachmentDetailsTest extends TestCase
 {
-    public function canBeCreatedWithAllData(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithAllData()
     {
         $data = [
             'token' => 'video_token_123',

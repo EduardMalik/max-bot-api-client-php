@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class VideoAttachmentRequestTest extends TestCase
 {
-    public function itCreatesCorrectRequestAndSerializesToArray(): void
+    /**
+     * @return void
+     */
+    public function itCreatesCorrectRequestAndSerializesToArray()
     {
         $token = 'some_unique_video_upload_token_54321';
         $request = new VideoAttachmentRequest($token);

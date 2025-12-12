@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -31,9 +29,11 @@ final class StickerAttachment extends AbstractAttachment
      */
     public function __construct(
         StickerAttachmentPayload $payload,
-        int $width,
-        int $height
+        $width,
+        $height
     ) {
+        $width = (int) $width;
+        $height = (int) $height;
         $this->payload = $payload;
         $this->width = $width;
         $this->height = $height;

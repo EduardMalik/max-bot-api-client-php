@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
@@ -25,8 +23,10 @@ final class MediaAttachmentPayload extends AbstractModel
      * @param string $url Media attachment URL.
      * @param string $token Token to reuse the same attachment in other messages.
      */
-    public function __construct(string $url, string $token)
+    public function __construct($url, $token)
     {
+        $url = (string) $url;
+        $token = (string) $token;
         $this->url = $url;
         $this->token = $token;
     }

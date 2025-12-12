@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 /**
@@ -17,8 +15,9 @@ final class MessageStat extends AbstractModel
     /**
      * @param int $views Number of views.
      */
-    public function __construct(int $views)
+    public function __construct($views)
     {
+        $views = (int) $views;
         $this->views = $views;
     }
 }

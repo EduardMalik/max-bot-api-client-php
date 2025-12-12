@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Models\Result;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ResultTest extends TestCase
 {
-    public function canBeCreatedFromArrayWithNullMessage(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayWithNullMessage()
     {
         $data = [
             'success' => true,
@@ -25,7 +26,10 @@ final class ResultTest extends TestCase
         $this->assertIsArray($array);
         $this->assertSame($data, $array);
     }
-    public function canBeCreatedFromArray(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArray()
     {
         $data = [
             'success' => false,

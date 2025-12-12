@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -16,7 +14,10 @@ use stdClass;
 
 final class AbstractModelMappingTest extends TestCase
 {
-    public function itCorrectlyCastsArrayOfEnums(): void
+    /**
+     * @return void
+     */
+    public function itCorrectlyCastsArrayOfEnums()
     {
         $result = DummyModelForMapping::fromArray([
             'name' => 'Test With Enums',
@@ -29,7 +30,10 @@ final class AbstractModelMappingTest extends TestCase
         $this->assertSame(UpdateType::MessageCreated, $result->updateTypes[0]);
         $this->assertSame(UpdateType::BotStarted, $result->updateTypes[1]);
     }
-    public function itCorrectlyCastsArrayOfModels(): void
+    /**
+     * @return void
+     */
+    public function itCorrectlyCastsArrayOfModels()
     {
         $result = DummyModelForMapping::fromArray([
             'name' => 'Test With Models',
@@ -43,13 +47,19 @@ final class AbstractModelMappingTest extends TestCase
         $this->assertInstanceOf(DummyChildModel::class, $result->childModels[0]);
         $this->assertSame('child 1', $result->childModels[0]->value);
     }
-    public function itReturnsRawArrayWhenAttributeIsMissing(): void
+    /**
+     * @return void
+     */
+    public function itReturnsRawArrayWhenAttributeIsMissing()
     {
         $result = DummyModelForMapping::fromArray(['untyped_array' => ['a', 'b', 'c']]);
         $this->assertIsArray($result->untypedArray);
         $this->assertSame(['a', 'b', 'c'], $result->untypedArray);
     }
-    public function itHandlesEmptyArraysCorrectly(): void
+    /**
+     * @return void
+     */
+    public function itHandlesEmptyArraysCorrectly()
     {
         $result = DummyModelForMapping::fromArray([
             'name' => 'Test with Empty',
@@ -58,30 +68,45 @@ final class AbstractModelMappingTest extends TestCase
         $this->assertIsArray($result->updateTypes);
         $this->assertEmpty($result->updateTypes);
     }
-    public function itHandlesNullForNullableArray(): void
+    /**
+     * @return void
+     */
+    public function itHandlesNullForNullableArray()
     {
         $result = DummyModelForMapping::fromArray(['child_models' => null]);
         $this->assertNull($result->childModels);
     }
-    public function itCorrectlyCastsInteger(): void
+    /**
+     * @return void
+     */
+    public function itCorrectlyCastsInteger()
     {
         $result = DummyModelForMapping::fromArray(['untyped_int' => 123]);
         $this->assertIsInt($result->untypedInt);
         $this->assertSame(123, $result->untypedInt);
     }
-    public function itCorrectlyCastsFloat(): void
+    /**
+     * @return void
+     */
+    public function itCorrectlyCastsFloat()
     {
         $result = DummyModelForMapping::fromArray(['untyped_float' => 1.23]);
         $this->assertIsFloat($result->untypedFloat);
         $this->assertSame(1.23, $result->untypedFloat);
     }
-    public function itCorrectlyCastsBoolean(): void
+    /**
+     * @return void
+     */
+    public function itCorrectlyCastsBoolean()
     {
         $result = DummyModelForMapping::fromArray(['untyped_bool' => true]);
         $this->assertIsBool($result->untypedBool);
         $this->assertTrue($result->untypedBool);
     }
-    public function itReturnsValueAsIsForUnmanagedObjectType(): void
+    /**
+     * @return void
+     */
+    public function itReturnsValueAsIsForUnmanagedObjectType()
     {
         $externalObject = new stdClass();
         $externalObject->data = 'some value';
@@ -94,7 +119,10 @@ final class AbstractModelMappingTest extends TestCase
         $this->assertSame($externalObject, $result->externalObject);
         $this->assertSame('some value', $result->externalObject->data);
     }
-    public function castArrayHandlesNonArrayValueForArrayProperty(): void
+    /**
+     * @return void
+     */
+    public function castArrayHandlesNonArrayValueForArrayProperty()
     {
         $rawData = [
             'name' => 'Test with scalar instead of array',
@@ -105,7 +133,10 @@ final class AbstractModelMappingTest extends TestCase
         $this->assertIsArray($result->tags);
         $this->assertSame(['single_tag_value'], $result->tags);
     }
-    public function castArrayReturnsArrayAsIsForUnmanagedObjectTypesInArrayOf(): void
+    /**
+     * @return void
+     */
+    public function castArrayReturnsArrayAsIsForUnmanagedObjectTypesInArrayOf()
     {
         $items = [
             (object)['id' => 1, 'name' => 'Item A'],
@@ -121,7 +152,10 @@ final class AbstractModelMappingTest extends TestCase
         $this->assertSame($items, $result->items);
         $this->assertSame('Item A', $result->items[0]->name);
     }
-    public function toArraySkipsUninitializedProperties(): void
+    /**
+     * @return void
+     */
+    public function toArraySkipsUninitializedProperties()
     {
         $reflection = new \ReflectionClass(DummyModelForUninitializedProperty::class);
         $instance = $reflection->newInstanceWithoutConstructor();
@@ -134,7 +168,10 @@ final class AbstractModelMappingTest extends TestCase
         $this->assertEquals($expectedArray, $resultArray);
         $this->assertArrayNotHasKey('uninitialized_prop', $resultArray);
     }
-    public function castValueReturnsValueAsIsForUnmanagedScalarAssignedToObjectType(): void
+    /**
+     * @return void
+     */
+    public function castValueReturnsValueAsIsForUnmanagedScalarAssignedToObjectType()
     {
         $dateString = '2025-08-26';
         $reflectionClass = new ReflectionClass(ModelForUnmanagedType::class);
@@ -186,7 +223,11 @@ final class DummyModelForArrayCast extends AbstractModel
      * @var mixed[]|null
      */
     public $tags;
-    public function __construct(?string $name, ?array $tags)
+    /**
+     * @param string|null $name
+     * @param mixed[]|null $tags
+     */
+    public function __construct($name, $tags)
     {
         $this->name = $name;
         $this->tags = $tags;
@@ -205,10 +246,14 @@ final class ModelWithUnmanagedArray extends AbstractModel
      * @var mixed[]|null
      */
     public $items;
+    /**
+     * @param string|null $name
+     * @param mixed[]|null $items
+     */
     public function __construct(
-        ?string $name,
+        $name,
         #[\BushlanovDev\MaxMessengerBot\Attributes\ArrayOf(\stdClass::class)]
-        ?array $items
+        $items
     )
     {
         $this->name = $name;
@@ -228,7 +273,11 @@ final class ModelWithExternalObject extends AbstractModel
      * @var \stdClass|null
      */
     public $externalObject;
-    public function __construct(?string $name, ?stdClass $externalObject)
+    /**
+     * @param string|null $name
+     * @param \stdClass|null $externalObject
+     */
+    public function __construct($name, $externalObject)
     {
         $this->name = $name;
         $this->externalObject = $externalObject;
@@ -272,16 +321,25 @@ final class DummyModelForMapping extends AbstractModel
      * @var bool|null
      */
     public $untypedBool;
+    /**
+     * @param string|null $name
+     * @param mixed[]|null $updateTypes
+     * @param mixed[]|null $childModels
+     * @param mixed[]|null $untypedArray
+     * @param int|null $untypedInt
+     * @param float|null $untypedFloat
+     * @param bool|null $untypedBool
+     */
     public function __construct(
-        ?string $name,
+        $name,
         #[\BushlanovDev\MaxMessengerBot\Attributes\ArrayOf(\BushlanovDev\MaxMessengerBot\Enums\UpdateType::class)]
-        ?array $updateTypes,
+        $updateTypes,
         #[\BushlanovDev\MaxMessengerBot\Attributes\ArrayOf(\BushlanovDev\MaxMessengerBot\Tests\Models\DummyChildModel::class)]
-        ?array $childModels,
-        ?array $untypedArray,
-        ?int $untypedInt,
-        ?float $untypedFloat,
-        ?bool $untypedBool
+        $childModels,
+        $untypedArray,
+        $untypedInt,
+        $untypedFloat,
+        $untypedBool
     )
     {
         $this->name = $name;
@@ -301,8 +359,12 @@ final class DummyChildModel extends AbstractModel
      * @var string
      */
     public $value;
-    public function __construct(string $value)
+    /**
+     * @param string $value
+     */
+    public function __construct($value)
     {
+        $value = (string) $value;
         $this->value = $value;
     }
 }

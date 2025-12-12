@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class DataAttachmentTest extends TestCase
 {
-    public function canBeCreatedAndSerialized(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedAndSerialized()
     {
         $attachment = new DataAttachment('some_payload_from_button');
         $this->assertSame(AttachmentType::Data, $attachment->type);
@@ -25,7 +26,10 @@ final class DataAttachmentTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $attachment->toArray());
     }
-    public function canBeCreatedFromArray(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArray()
     {
         $data = [
             'type' => 'data',

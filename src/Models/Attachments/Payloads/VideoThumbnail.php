@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
@@ -19,8 +17,9 @@ final class VideoThumbnail extends AbstractModel
     /**
      * @param string $url Media attachment URL.
      */
-    public function __construct(string $url)
+    public function __construct($url)
     {
+        $url = (string) $url;
         $this->url = $url;
     }
 }

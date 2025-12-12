@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
@@ -16,7 +14,10 @@ use PHPUnit\Framework\TestCase;
 
 final class InlineKeyboardPayloadTest extends TestCase
 {
-    public function constructionAndPropertyAccess(): void
+    /**
+     * @return void
+     */
+    public function constructionAndPropertyAccess()
     {
         $buttons = [
             [new CallbackButton('Test', 'payload')],
@@ -25,7 +26,10 @@ final class InlineKeyboardPayloadTest extends TestCase
         $this->assertInstanceOf(InlineKeyboardAttachmentRequestPayload::class, $payload);
         $this->assertSame($buttons, $payload->buttons);
     }
-    public function toArraySerializesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function toArraySerializesCorrectly()
     {
         $buttons = [
             [new CallbackButton('Accept', 'accept_payload', Intent::Positive)],
@@ -63,7 +67,10 @@ final class InlineKeyboardPayloadTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $resultArray);
     }
-    public function toArrayHandlesEmptyButtonsArray(): void
+    /**
+     * @return void
+     */
+    public function toArrayHandlesEmptyButtonsArray()
     {
         $payload = new InlineKeyboardAttachmentRequestPayload([]);
         $resultArray = $payload->toArray();

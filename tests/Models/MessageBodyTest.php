@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\ModelFactory;
@@ -23,7 +21,10 @@ use PHPUnit\Framework\TestCase;
 
 final class MessageBodyTest extends TestCase
 {
-    public function canBeCreatedFromArrayWithAllData(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayWithAllData()
     {
         $data = [
             'mid' => 'mid.456.xyz',
@@ -41,7 +42,10 @@ final class MessageBodyTest extends TestCase
         $this->assertIsArray($array);
         $this->assertSame($data, $array);
     }
-    public function canBeCreatedFromArrayWithOptionalDataNull(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayWithOptionalDataNull()
     {
         $data = [
             'mid' => 'mid.456.xyz',
@@ -59,7 +63,10 @@ final class MessageBodyTest extends TestCase
         $this->assertIsArray($array);
         $this->assertSame($data, $array);
     }
-    public function createMessageCorrectlyHydratesComplexMessageBody(): void
+    /**
+     * @return void
+     */
+    public function createMessageCorrectlyHydratesComplexMessageBody()
     {
         $messageData = [
             'timestamp' => time(),

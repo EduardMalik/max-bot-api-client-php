@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Buttons\Inline;
 
 use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
@@ -12,7 +10,10 @@ use PHPUnit\Framework\TestCase;
 
 final class LinkButtonTest extends TestCase
 {
-    public function toArraySerializesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function toArraySerializesCorrectly()
     {
         $button = new LinkButton('Test Button', 'https://example.com');
         $expectedArray = [

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -15,8 +13,9 @@ final class StickerAttachmentRequest extends AbstractAttachmentRequest
     /**
      * @param string $code The unique code of the sticker.
      */
-    public function __construct(string $code)
+    public function __construct($code)
     {
+        $code = (string) $code;
         parent::__construct(
             AttachmentType::Sticker,
             new StickerAttachmentRequestPayload($code)

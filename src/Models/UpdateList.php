@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 use BushlanovDev\MaxMessengerBot\Models\Updates\AbstractUpdate;
@@ -25,7 +23,7 @@ final class UpdateList extends AbstractModel
      * @param AbstractUpdate[] $updates Page of updates.
      * @param int|null $marker Pointer to the next data page.
      */
-    public function __construct(array $updates, ?int $marker)
+    public function __construct(array $updates, $marker)
     {
         $this->updates = $updates;
         $this->marker = $marker;

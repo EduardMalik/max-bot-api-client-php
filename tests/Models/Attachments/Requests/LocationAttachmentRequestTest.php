@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class LocationAttachmentRequestTest extends TestCase
 {
-    public function itCreatesRequestWithCoordinatesAndSerializes(): void
+    /**
+     * @return void
+     */
+    public function itCreatesRequestWithCoordinatesAndSerializes()
     {
         $latitude = 55.7558;
         $longitude = 37.6173;

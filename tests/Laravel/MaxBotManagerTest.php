@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Laravel;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -49,7 +47,10 @@ final class MaxBotManagerTest extends TestCase
      * @var \BushlanovDev\MaxMessengerBot\Laravel\MaxBotManager
      */
     private $manager;
-    protected function setUp(): void
+    /**
+     * @return void
+     */
+    protected function setUp()
     {
         parent::setUp();
 
@@ -87,13 +88,19 @@ final class MaxBotManagerTest extends TestCase
 
         Handlers::reset();
     }
-    protected function tearDown(): void
+    /**
+     * @return void
+     */
+    protected function tearDown()
     {
         Container::setInstance(null);
         Facade::clearResolvedInstances();
         parent::tearDown();
     }
-    public function handleWebhookReturns200OnSuccess(): void
+    /**
+     * @return void
+     */
+    public function handleWebhookReturns200OnSuccess()
     {
         $webhookHandler = new WebhookHandler(
             $this->updateDispatcher,
@@ -117,7 +124,10 @@ final class MaxBotManagerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertTrue($wasDispatched, 'The update was not dispatched correctly.');
     }
-    public function handleWebhookReturns403OnSecurityException(): void
+    /**
+     * @return void
+     */
+    public function handleWebhookReturns403OnSecurityException()
     {
         $webhookHandler = new WebhookHandler(
             $this->updateDispatcher,
@@ -132,7 +142,10 @@ final class MaxBotManagerTest extends TestCase
         $this->assertSame(403, $response->getStatusCode());
         $this->assertJsonStringEqualsJsonString('{"status":"error","message":"Forbidden"}', $response->getContent());
     }
-    public function handleWebhookReturns400OnSerializationException(): void
+    /**
+     * @return void
+     */
+    public function handleWebhookReturns400OnSerializationException()
     {
         $webhookHandler = new WebhookHandler(
             $this->updateDispatcher,
@@ -146,7 +159,10 @@ final class MaxBotManagerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
         $this->assertJsonStringEqualsJsonString('{"status":"error","message":"Bad Request"}', $response->getContent());
     }
-    public function handleWebhookReturns500OnGenericException(): void
+    /**
+     * @return void
+     */
+    public function handleWebhookReturns500OnGenericException()
     {
         $webhookHandler = new WebhookHandler(
             $this->updateDispatcher,
@@ -164,7 +180,10 @@ final class MaxBotManagerTest extends TestCase
             $response->getContent()
         );
     }
-    public function resolveHandlerCanResolveCallable(): void
+    /**
+     * @return void
+     */
+    public function resolveHandlerCanResolveCallable()
     {
         $wasCalled = false;
         $callable = function () use (&$wasCalled) {
@@ -178,26 +197,38 @@ final class MaxBotManagerTest extends TestCase
         $dispatcher->dispatch($update);
         $this->assertTrue($wasCalled, 'The resolved callable handler was not called.');
     }
-    public function resolveHandlerResolvesClassWithHandleMethod(): void
+    /**
+     * @return void
+     */
+    public function resolveHandlerResolvesClassWithHandleMethod()
     {
         $this->manager->onCommand('test', TestHandlerWithHandleMethod::class);
         $this->dispatchCommand('test');
         $this->assertTrue(Handlers::$wasCalled, 'Handler with handle() method was not resolved and called.');
     }
-    public function resolveHandlerResolvesInvokableClassFromContainer(): void
+    /**
+     * @return void
+     */
+    public function resolveHandlerResolvesInvokableClassFromContainer()
     {
         $this->container->bind(TestHandlerWithInvokeMethod::class);
         $this->manager->onCommand('test', TestHandlerWithInvokeMethod::class);
         $this->dispatchCommand('test');
         $this->assertTrue(Handlers::$wasCalled, 'Invokable handler was not resolved and called.');
     }
-    public function resolveHandlerResolvesClassAtMethodString(): void
+    /**
+     * @return void
+     */
+    public function resolveHandlerResolvesClassAtMethodString()
     {
         $this->manager->onCommand('test', TestHandlerWithCustomMethod::class . '@custom');
         $this->dispatchCommand('test');
         $this->assertTrue(Handlers::$wasCalled, 'Handler with "Class@method" string was not resolved and called.');
     }
-    public function resolveHandlerResolvesBoundClassWithHandleMethod(): void
+    /**
+     * @return void
+     */
+    public function resolveHandlerResolvesBoundClassWithHandleMethod()
     {
         // Шаг 1: Явно регистрируем класс обработчика в контейнере.
         // Это гарантирует, что будет выбрана ветка `if ($this->container->bound($handler))`.
@@ -212,13 +243,19 @@ final class MaxBotManagerTest extends TestCase
             'Bound handler with handle() method was not resolved and called via the bound path.'
         );
     }
-    public function resolveHandlerThrowsExceptionForUnresolvableString(): void
+    /**
+     * @return void
+     */
+    public function resolveHandlerThrowsExceptionForUnresolvableString()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unable to resolve handler: NonExistentClass');
         $this->manager->onCommand('test', 'NonExistentClass');
     }
-    public function resolveHandlerThrowsExceptionForClassWithoutHandleOrInvoke(): void
+    /**
+     * @return void
+     */
+    public function resolveHandlerThrowsExceptionForClassWithoutHandleOrInvoke()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -229,9 +266,12 @@ final class MaxBotManagerTest extends TestCase
     }
     /**
      * Helper to dispatch a command to the real UpdateDispatcher.
+     * @return void
+     * @param string $commandText
      */
-    private function dispatchCommand(string $commandText): void
+    private function dispatchCommand($commandText)
     {
+        $commandText = (string) $commandText;
         $dispatcher = $this->manager->getDispatcher();
         $messageBody = new MessageBody('mid.cmd', 1, $commandText, [], []);
         $message = new Message(time(), new Recipient(ChatType::Dialog, 1, null), $messageBody, null, null, null, null);
@@ -239,7 +279,10 @@ final class MaxBotManagerTest extends TestCase
 
         $dispatcher->dispatch($update);
     }
-    private function createMinimalMessage(): Message
+    /**
+     * @return \BushlanovDev\MaxMessengerBot\Models\Message
+     */
+    private function createMinimalMessage()
     {
         return new Message(
             time(),
@@ -260,7 +303,10 @@ class Handlers
      */
     public static $wasCalled = false;
 
-    public static function reset(): void
+    /**
+     * @return void
+     */
+    public static function reset()
     {
         self::$wasCalled = false;
     }
@@ -271,8 +317,9 @@ class TestHandlerWithHandleMethod
     /**
      * @param \BushlanovDev\MaxMessengerBot\Models\Updates\MessageCreatedUpdate $update
      * @param \BushlanovDev\MaxMessengerBot\Api $api
+     * @return void
      */
-    public function handle($update, $api): void
+    public function handle($update, $api)
     {
         Handlers::$wasCalled = true;
     }
@@ -280,7 +327,10 @@ class TestHandlerWithHandleMethod
 
 class TestHandlerWithInvokeMethod
 {
-    public function __invoke(MessageCreatedUpdate $update, Api $api): void
+    /**
+     * @return void
+     */
+    public function __invoke(MessageCreatedUpdate $update, Api $api)
     {
         Handlers::$wasCalled = true;
     }
@@ -291,8 +341,9 @@ class TestHandlerWithCustomMethod
     /**
      * @param \BushlanovDev\MaxMessengerBot\Models\Updates\MessageCreatedUpdate $update
      * @param \BushlanovDev\MaxMessengerBot\Api $api
+     * @return void
      */
-    public function custom($update, $api): void
+    public function custom($update, $api)
     {
         Handlers::$wasCalled = true;
     }

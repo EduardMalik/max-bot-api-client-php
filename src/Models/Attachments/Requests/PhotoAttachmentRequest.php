@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -20,7 +18,7 @@ final class PhotoAttachmentRequest extends AbstractAttachmentRequest
      *
      * @return PhotoAttachmentRequest
      */
-    public static function fromUrl($url): self
+    public static function fromUrl($url)
     {
         return new self(new PhotoAttachmentRequestPayload($url));
     }
@@ -32,7 +30,7 @@ final class PhotoAttachmentRequest extends AbstractAttachmentRequest
      *
      * @return PhotoAttachmentRequest
      */
-    public static function fromToken($token): self
+    public static function fromToken($token)
     {
         return new self(new PhotoAttachmentRequestPayload(null, $token));
     }
@@ -44,7 +42,7 @@ final class PhotoAttachmentRequest extends AbstractAttachmentRequest
      *
      * @return PhotoAttachmentRequest
      */
-    public static function fromPhotos($photos): self
+    public static function fromPhotos($photos)
     {
         return new self(new PhotoAttachmentRequestPayload(null, null, $photos));
     }

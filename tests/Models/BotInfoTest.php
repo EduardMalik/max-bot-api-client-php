@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class BotInfoTest extends TestCase
 {
-    public function canBeCreatedFromArray(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArray()
     {
         $botInfo = BotInfo::fromArray([
             'user_id' => 12345,

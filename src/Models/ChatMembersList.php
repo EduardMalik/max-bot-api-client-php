@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -28,7 +26,7 @@ final class ChatMembersList extends AbstractModel
     public function __construct(
         #[\BushlanovDev\MaxMessengerBot\Attributes\ArrayOf(\BushlanovDev\MaxMessengerBot\Models\ChatMember::class)]
         array $members,
-        ?int $marker
+        $marker
     )
     {
         $this->members = $members;

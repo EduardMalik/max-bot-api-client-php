@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Markup;
 
 use BushlanovDev\MaxMessengerBot\Enums\MarkupType;
@@ -22,10 +20,13 @@ final class LinkMarkup extends AbstractMarkup
      * @param string $url Link's URL.
      */
     public function __construct(
-        int $from,
-        int $length,
-        string $url
+        $from,
+        $length,
+        $url
     ) {
+        $from = (int) $from;
+        $length = (int) $length;
+        $url = (string) $url;
         $this->url = $url;
         parent::__construct(MarkupType::Link, $from, $length);
     }

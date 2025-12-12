@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 /**
@@ -23,8 +21,9 @@ final class Result extends AbstractModel
      * @param bool $success true if request was successful, false otherwise.
      * @param string|null $message Explanatory message if the result was not successful.
      */
-    public function __construct(bool $success, ?string $message)
+    public function __construct($success, $message)
     {
+        $success = (bool) $success;
         $this->success = $success;
         $this->message = $message;
     }

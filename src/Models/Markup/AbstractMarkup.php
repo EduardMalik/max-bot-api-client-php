@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Markup;
 
 use BushlanovDev\MaxMessengerBot\Enums\MarkupType;
@@ -33,8 +31,10 @@ abstract class AbstractMarkup extends AbstractModel
      * @param int $length Length of the markup element.
      * @param \BushlanovDev\MaxMessengerBot\Enums\MarkupType::* $type
      */
-    public function __construct($type, int $from, int $length)
+    public function __construct($type, $from, $length)
     {
+        $from = (int) $from;
+        $length = (int) $length;
         $this->type = $type;
         $this->from = $from;
         $this->length = $length;

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline;
 
 use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
@@ -29,8 +27,10 @@ final class CallbackButton extends AbstractInlineButton
      * @param Intent|null $intent The intent of the button. Affects how it is displayed by the client.
      * @param ?\BushlanovDev\MaxMessengerBot\Enums\Intent::* $intent
      */
-    public function __construct(string $text, string $payload, $intent = null)
+    public function __construct($text, $payload, $intent = null)
     {
+        $text = (string) $text;
+        $payload = (string) $payload;
         parent::__construct(InlineButtonType::Callback, $text);
 
         $this->payload = $payload;

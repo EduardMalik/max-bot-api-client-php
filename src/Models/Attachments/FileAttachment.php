@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -31,9 +29,11 @@ final class FileAttachment extends AbstractAttachment
      */
     public function __construct(
         FileAttachmentPayload $payload,
-        string $filename,
-        int $size
+        $filename,
+        $size
     ) {
+        $filename = (string) $filename;
+        $size = (int) $size;
         $this->payload = $payload;
         $this->filename = $filename;
         $this->size = $size;

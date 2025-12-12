@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -19,7 +17,10 @@ use PHPUnit\Framework\TestCase;
 
 final class UpdateListTest extends TestCase
 {
-    public function factoryCorrectlyCreatesUpdateList(): void
+    /**
+     * @return void
+     */
+    public function factoryCorrectlyCreatesUpdateList()
     {
         $data = [
             'updates' => [
@@ -43,7 +44,10 @@ final class UpdateListTest extends TestCase
         $this->assertInstanceOf(MessageCreatedUpdate::class, $updateList->updates[0]);
         $this->assertSame(1, $updateList->marker);
     }
-    public function directCallToFromArrayThrowsException(): void
+    /**
+     * @return void
+     */
+    public function directCallToFromArrayThrowsException()
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessageMatches('/Cannot create .* directly from an array/');

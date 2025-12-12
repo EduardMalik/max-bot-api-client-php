@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class SubscriptionTest extends TestCase
 {
-    public function canBeCreatedFromArrayWithAllData(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayWithAllData()
     {
         $data = [
             'url' => 'https://example.com/webhook',
@@ -32,7 +33,10 @@ final class SubscriptionTest extends TestCase
         $this->assertIsArray($array);
         $this->assertSame($data, $array);
     }
-    public function canBeCreatedFromArrayWithOptionalDataNull(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayWithOptionalDataNull()
     {
         $data = [
             'url' => 'https://example.com/webhook',

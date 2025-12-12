@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -44,10 +42,10 @@ final class VideoAttachment extends AbstractAttachment
      */
     public function __construct(
         MediaAttachmentPayload $payload,
-        ?VideoThumbnail $thumbnail,
-        ?int $width,
-        ?int $height,
-        ?int $duration
+        $thumbnail,
+        $width,
+        $height,
+        $duration
     ) {
         $this->payload = $payload;
         $this->thumbnail = $thumbnail;

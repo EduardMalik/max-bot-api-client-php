@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoAttachmentRequestPayload;
@@ -49,8 +47,12 @@ final class VideoAttachmentDetails extends AbstractModel
      * @param VideoUrls|null $urls URLs to download or play the video. Can be null if the video is unavailable.
      * @param PhotoAttachmentRequestPayload|null $thumbnail The video's thumbnail image information.
      */
-    public function __construct(string $token, int $width, int $height, int $duration, ?VideoUrls $urls = null, ?PhotoAttachmentRequestPayload $thumbnail = null)
+    public function __construct($token, $width, $height, $duration, $urls = null, $thumbnail = null)
     {
+        $token = (string) $token;
+        $width = (int) $width;
+        $height = (int) $height;
+        $duration = (int) $duration;
         $this->token = $token;
         $this->width = $width;
         $this->height = $height;

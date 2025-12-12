@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\StickerAttachmentPayload;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class StickerAttachmentPayloadTest extends TestCase
 {
-    public function canBeCreatedAndSerialized(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedAndSerialized()
     {
         $payload = new StickerAttachmentPayload('https://example.com/sticker.webp', 'sticker_code_abc');
         $this->assertSame('https://example.com/sticker.webp', $payload->url);

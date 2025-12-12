@@ -1,13 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Laravel\Commands;
 
 use BushlanovDev\MaxMessengerBot\Api;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Throwable;
 
 /**
  * Artisan command for unsubscribing from webhook updates.
@@ -33,8 +30,9 @@ class WebhookUnsubscribeCommand extends Command
     /**
      * Execute the console command.
      * @param \BushlanovDev\MaxMessengerBot\Api $api
+     * @return int
      */
-    public function handle($api): int
+    public function handle($api)
     {
         $url = (string)$this->argument('url'); // @phpstan-ignore-line
         $confirm = $this->option('confirm');
@@ -69,12 +67,11 @@ class WebhookUnsubscribeCommand extends Command
 
                 return self::FAILURE;
             }
-        } catch (Throwable $e) {
+        } catch (\Exception $e) {
             Log::error("Webhook unsubscribe error: {$e->getMessage()}", [
                 'exception' => $e,
             ]);
             $this->error("❌ Webhook unsubscribe error: {$e->getMessage()}");
-
             return self::FAILURE;
         }
     }

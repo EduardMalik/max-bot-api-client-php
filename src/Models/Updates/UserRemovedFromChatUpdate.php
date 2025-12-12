@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -41,12 +39,15 @@ final class UserRemovedFromChatUpdate extends AbstractUpdate
      * @param bool $isChannel Indicates whether the user has been removed from a channel or not.
      */
     public function __construct(
-        int $timestamp,
-        int $chatId,
+        $timestamp,
+        $chatId,
         User $user,
-        ?int $adminId,
-        bool $isChannel
+        $adminId,
+        $isChannel
     ) {
+        $timestamp = (int) $timestamp;
+        $chatId = (int) $chatId;
+        $isChannel = (bool) $isChannel;
         $this->chatId = $chatId;
         $this->user = $user;
         $this->adminId = $adminId;

@@ -1,20 +1,23 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Exceptions;
-
-use Psr\Http\Message\ResponseInterface;
-use Throwable;
 
 class UnauthorizedException extends ClientApiException
 {
+    /**
+     * @param \Psr\Http\Message\ResponseInterface|null $response
+     * @param \Exception|null $previous
+     * @param string $message
+     * @param string $errorCode
+     */
     public function __construct(
-        string $message,
-        string $errorCode,
-        ?ResponseInterface $response,
-        ?Throwable $previous = null
+        $message,
+        $errorCode,
+        $response,
+        $previous = null
     ) {
+        $message = (string) $message;
+        $errorCode = (string) $errorCode;
         parent::__construct($message, $errorCode, $response, 401, $previous);
     }
 }

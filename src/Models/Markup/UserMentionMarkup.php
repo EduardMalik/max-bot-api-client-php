@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Markup;
 
 use BushlanovDev\MaxMessengerBot\Enums\MarkupType;
@@ -28,11 +26,13 @@ final class UserMentionMarkup extends AbstractMarkup
      * @param int|null $userId Identifier of the mentioned user without a username.
      */
     public function __construct(
-        int $from,
-        int $length,
-        ?string $userLink,
-        ?int $userId
+        $from,
+        $length,
+        $userLink,
+        $userId
     ) {
+        $from = (int) $from;
+        $length = (int) $length;
         $this->userLink = $userLink;
         $this->userId = $userId;
         parent::__construct(MarkupType::UserMention, $from, $length);

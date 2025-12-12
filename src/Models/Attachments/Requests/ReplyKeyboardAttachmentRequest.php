@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -17,9 +15,10 @@ final class ReplyKeyboardAttachmentRequest extends AbstractAttachmentRequest
      */
     public function __construct(
         array $buttons,
-        bool $direct = false,
-        ?int $directUserId = null
+        $direct = false,
+        $directUserId = null
     ) {
+        $direct = (bool) $direct;
         parent::__construct(
             AttachmentType::ReplyKeyboard,
             new ReplyKeyboardAttachmentRequestPayload($buttons, $direct, $directUserId)

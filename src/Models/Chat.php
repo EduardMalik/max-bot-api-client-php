@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 use BushlanovDev\MaxMessengerBot\Enums\ChatStatus;
@@ -106,8 +104,12 @@ final class Chat extends AbstractModel
      * @param \BushlanovDev\MaxMessengerBot\Enums\ChatType::* $type
      * @param \BushlanovDev\MaxMessengerBot\Enums\ChatStatus::* $status
      */
-    public function __construct(int $chatId, $type, $status, int $lastEventTime, int $participantsCount, bool $isPublic, ?string $title, ?Image $icon, ?int $ownerId, ?string $link, ?string $description, ?UserWithPhoto $dialogWithUser, ?int $messagesCount, ?string $chatMessageId, ?Message $pinnedMessage)
+    public function __construct($chatId, $type, $status, $lastEventTime, $participantsCount, $isPublic, $title, $icon, $ownerId, $link, $description, $dialogWithUser, $messagesCount, $chatMessageId, $pinnedMessage)
     {
+        $chatId = (int) $chatId;
+        $lastEventTime = (int) $lastEventTime;
+        $participantsCount = (int) $participantsCount;
+        $isPublic = (bool) $isPublic;
         $this->chatId = $chatId;
         $this->type = $type;
         $this->status = $status;

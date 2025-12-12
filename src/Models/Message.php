@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 /**
@@ -71,8 +69,9 @@ final class Message extends AbstractModel
      * @param int|null $recipientId User identifier, if message was sent to user.
      * @param string|null $messageId Unique identifier of message.
      */
-    public function __construct(int $timestamp, Recipient $recipient, ?MessageBody $body, ?User $sender, ?string $url, ?LinkedMessage $link, ?MessageStat $stat, ?int $chatId = null, ?int $recipientId = null, ?string $messageId = null)
+    public function __construct($timestamp, Recipient $recipient, $body, $sender, $url, $link, $stat, $chatId = null, $recipientId = null, $messageId = null)
     {
+        $timestamp = (int) $timestamp;
         $this->timestamp = $timestamp;
         $this->recipient = $recipient;
         $this->body = $body;

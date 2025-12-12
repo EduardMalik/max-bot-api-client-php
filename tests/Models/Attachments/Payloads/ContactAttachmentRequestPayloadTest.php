@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\ContactAttachmentRequestPayload;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ContactAttachmentRequestPayloadTest extends TestCase
 {
-    public function itConstructsWithAllPropertiesAndSerializesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function itConstructsWithAllPropertiesAndSerializesCorrectly()
     {
         $name = 'John Doe';
         $contactId = 123456;
@@ -31,7 +32,10 @@ final class ContactAttachmentRequestPayloadTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $payload->toArray());
     }
-    public function itConstructsWithNullablePropertiesAndSerializesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function itConstructsWithNullablePropertiesAndSerializesCorrectly()
     {
         $name = 'Jane Doe';
         $vcfPhone = 'TEL:+79876543210';
@@ -48,7 +52,10 @@ final class ContactAttachmentRequestPayloadTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $payload->toArray());
     }
-    public function itConstructsWithAllNullsAndSerializesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function itConstructsWithAllNullsAndSerializesCorrectly()
     {
         $payload = new ContactAttachmentRequestPayload();
         $this->assertNull($payload->name);

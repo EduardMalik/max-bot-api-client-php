@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Buttons\Reply;
 
 use BushlanovDev\MaxMessengerBot\Enums\Intent;
@@ -12,7 +10,10 @@ use PHPUnit\Framework\TestCase;
 
 final class SendMessageButtonTest extends TestCase
 {
-    public function toArrayWithDefaults(): void
+    /**
+     * @return void
+     */
+    public function toArrayWithDefaults()
     {
         $button = new SendMessageButton('Click Me');
         $expected = [
@@ -23,7 +24,10 @@ final class SendMessageButtonTest extends TestCase
         ];
         $this->assertEquals($expected, $button->toArray());
     }
-    public function toArrayWithAllParameters(): void
+    /**
+     * @return void
+     */
+    public function toArrayWithAllParameters()
     {
         $button = new SendMessageButton('Confirm', 'confirm-action-123', Intent::Positive);
         $expected = [

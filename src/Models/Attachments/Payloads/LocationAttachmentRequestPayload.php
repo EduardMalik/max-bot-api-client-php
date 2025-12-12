@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads;
 
 /**
@@ -23,8 +21,10 @@ final class LocationAttachmentRequestPayload extends AbstractAttachmentRequestPa
      * @param float $latitude Latitude as a floating-point number.
      * @param float $longitude Longitude as a floating-point number.
      */
-    public function __construct(float $latitude, float $longitude)
+    public function __construct($latitude, $longitude)
     {
+        $latitude = (double) $latitude;
+        $longitude = (double) $longitude;
         $this->latitude = $latitude;
         $this->longitude = $longitude;
     }

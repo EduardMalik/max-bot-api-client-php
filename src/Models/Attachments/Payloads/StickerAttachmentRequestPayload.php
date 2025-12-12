@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads;
 
 /**
@@ -17,8 +15,9 @@ final class StickerAttachmentRequestPayload extends AbstractAttachmentRequestPay
     /**
      * @param string $code The unique code of the sticker to be sent.
      */
-    public function __construct(string $code)
+    public function __construct($code)
     {
+        $code = (string) $code;
         $this->code = $code;
     }
 }

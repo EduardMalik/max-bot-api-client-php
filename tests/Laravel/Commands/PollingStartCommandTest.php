@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Laravel\Commands;
 
 use BushlanovDev\MaxMessengerBot\Laravel\Commands\PollingStartCommand;
@@ -24,7 +22,10 @@ final class PollingStartCommandTest extends TestCase
      * @var \BushlanovDev\MaxMessengerBot\Laravel\Commands\PollingStartCommand
      */
     private $command;
-    protected function setUp(): void
+    /**
+     * @return void
+     */
+    protected function setUp()
     {
         parent::setUp();
 
@@ -40,7 +41,10 @@ final class PollingStartCommandTest extends TestCase
         $commandInApp = $application->find('maxbot:polling:start');
         $this->tester = new CommandTester($commandInApp);
     }
-    public function handleSuccessfullyCallsManagerWithCustomTimeout(): void
+    /**
+     * @return void
+     */
+    public function handleSuccessfullyCallsManagerWithCustomTimeout()
     {
         $timeout = 60;
         $this->botManagerMock
@@ -52,7 +56,10 @@ final class PollingStartCommandTest extends TestCase
         $output = $this->tester->getDisplay();
         $this->assertStringContainsString("Starting long polling with a timeout of $timeout seconds...", $output);
     }
-    public function handleSuccessfullyUsesDefaultTimeout(): void
+    /**
+     * @return void
+     */
+    public function handleSuccessfullyUsesDefaultTimeout()
     {
         $defaultTimeout = 90;
         $this->botManagerMock
@@ -67,7 +74,10 @@ final class PollingStartCommandTest extends TestCase
             $output
         );
     }
-    public function handleCatchesExceptionAndLogsError(): void
+    /**
+     * @return void
+     */
+    public function handleCatchesExceptionAndLogsError()
     {
         $exceptionMessage = 'Something went wrong';
         $exception = new \RuntimeException($exceptionMessage);

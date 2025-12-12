@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -17,7 +15,10 @@ use PHPUnit\Framework\TestCase;
 
 final class PhotoAttachmentRequestTest extends TestCase
 {
-    public function testFromUrl(): void
+    /**
+     * @return void
+     */
+    public function testFromUrl()
     {
         $url = 'https://example.com/image.jpg';
         $request = PhotoAttachmentRequest::fromUrl($url);
@@ -37,7 +38,10 @@ final class PhotoAttachmentRequestTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $request->toArray());
     }
-    public function testFromToken(): void
+    /**
+     * @return void
+     */
+    public function testFromToken()
     {
         $token = 'some_upload_token_12345';
         $request = PhotoAttachmentRequest::fromToken($token);
@@ -57,7 +61,10 @@ final class PhotoAttachmentRequestTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $request->toArray());
     }
-    public function testFromPhotos(): void
+    /**
+     * @return void
+     */
+    public function testFromPhotos()
     {
         $photos = [
             new PhotoToken('token_A'),
@@ -83,7 +90,10 @@ final class PhotoAttachmentRequestTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $request->toArray());
     }
-    public function payloadThrowsExceptionWhenNotExactlyOneArgumentIsProvided(): void
+    /**
+     * @return void
+     */
+    public function payloadThrowsExceptionWhenNotExactlyOneArgumentIsProvided()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Provide one of "url", "token", or "photos" for PhotoAttachmentRequestPayload.');

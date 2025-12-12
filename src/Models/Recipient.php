@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 use BushlanovDev\MaxMessengerBot\Enums\ChatType;
@@ -32,7 +30,7 @@ final class Recipient extends AbstractModel
      * @param int|null $chatId Chat identifier.
      * @param \BushlanovDev\MaxMessengerBot\Enums\ChatType::* $chatType
      */
-    public function __construct($chatType, ?int $userId, ?int $chatId)
+    public function __construct($chatType, $userId, $chatId)
     {
         $this->chatType = $chatType;
         $this->userId = $userId;

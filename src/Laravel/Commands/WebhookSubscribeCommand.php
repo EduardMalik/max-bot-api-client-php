@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Laravel\Commands;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -9,7 +7,6 @@ use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Support\Facades\Log;
-use Throwable;
 
 /**
  * Artisan command for subscribing to webhook updates.
@@ -37,11 +34,12 @@ class WebhookSubscribeCommand extends Command
      * Execute the console command.
      * @param \BushlanovDev\MaxMessengerBot\Api $api
      * @param Config $config
+     * @return int
      */
-    public function handle($api, $config): int
+    public function handle($api, $config)
     {
         $url = (string)$this->argument('url'); // @phpstan-ignore-line
-        $secret = $this->option('secret') ?? $config->get('maxbot.webhook_secret');
+        $secret = $this->option('secret') !== null ? $this->option('secret') : $config->get('maxbot.webhook_secret');
         $types = $this->option('types');
 
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
@@ -90,12 +88,11 @@ class WebhookSubscribeCommand extends Command
 
                 return self::FAILURE;
             }
-        } catch (Throwable $e) {
+        }catch (\Exception $e) {
             Log::error("Webhook subscription error: {$e->getMessage()}", [
                 'exception' => $e,
             ]);
             $this->error("❌ Webhook subscription error: {$e->getMessage()}");
-
             return self::FAILURE;
         }
     }

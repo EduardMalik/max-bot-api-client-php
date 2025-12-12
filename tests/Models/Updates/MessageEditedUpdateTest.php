@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -17,7 +15,10 @@ use PHPUnit\Framework\TestCase;
 
 final class MessageEditedUpdateTest extends TestCase
 {
-    public function canBeCreatedFromArray(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArray()
     {
         $data = [
             'update_type' => 'message_edited',

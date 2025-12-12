@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -32,8 +30,9 @@ final class LongPollingHandlerTest extends TestCase
      * @param AbstractUpdate[] $updatesToReturn
      * @param int $expectedDispatchCount
      * @param int|null $expectedMarker
+     * @return void
      */
-    public function processUpdates($updatesToReturn, $expectedDispatchCount, $expectedMarker): void
+    public function processUpdates($updatesToReturn, $expectedDispatchCount, $expectedMarker)
     {
         $apiMock = $this->createMock(Api::class);
         $loggerMock = $this->createMock(LoggerInterface::class);
@@ -56,7 +55,10 @@ final class LongPollingHandlerTest extends TestCase
         );
         $this->assertSame($expectedMarker, $returnedMarker, 'Method should return the correct marker.');
     }
-    public static function processUpdatesProvider(): array
+    /**
+     * @return mixed[]
+     */
+    public static function processUpdatesProvider()
     {
         $user = new User(1, 'Test', null, null, false, time());
         $update1 = new BotStartedUpdate(time(), 1, $user, null, null);
@@ -75,7 +77,10 @@ final class LongPollingHandlerTest extends TestCase
             ],
         ];
     }
-    public function runCatchesNetworkExceptionAndSleeps5Seconds(): void
+    /**
+     * @return void
+     */
+    public function runCatchesNetworkExceptionAndSleeps5Seconds()
     {
         $apiMock = $this->createMock(Api::class);
         $loggerMock = $this->createMock(LoggerInterface::class);
@@ -98,7 +103,10 @@ final class LongPollingHandlerTest extends TestCase
             $this->assertSame('Stop test loop', $e->getMessage());
         }
     }
-    public function runCatchesGenericExceptionAndSleeps1Second(): void
+    /**
+     * @return void
+     */
+    public function runCatchesGenericExceptionAndSleeps1Second()
     {
         $apiMock = $this->createMock(Api::class);
         $loggerMock = $this->createMock(LoggerInterface::class);
@@ -121,7 +129,10 @@ final class LongPollingHandlerTest extends TestCase
             $this->assertSame('Stop test loop', $e->getMessage());
         }
     }
-    public function processUpdatesContinuesAndLogsWhenHandlerThrows(): void
+    /**
+     * @return void
+     */
+    public function processUpdatesContinuesAndLogsWhenHandlerThrows()
     {
         $apiMock = $this->createMock(Api::class);
         $loggerMock = $this->createMock(LoggerInterface::class);

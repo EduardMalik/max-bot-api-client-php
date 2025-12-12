@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\FileAttachmentPayload;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class FileAttachmentPayloadTest extends TestCase
 {
-    public function canBeCreatedAndSerialized(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedAndSerialized()
     {
         $payload = new FileAttachmentPayload('https://example.com/doc.pdf', 'file_token_456');
         $this->assertSame('https://example.com/doc.pdf', $payload->url);

@@ -1,12 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Exceptions;
 
-use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
-use Throwable;
 
 class ClientApiException extends RuntimeException
 {
@@ -25,20 +21,32 @@ class ClientApiException extends RuntimeException
      * @var int|null
      */
     public $httpStatusCode;
+    /**
+     * @param \Psr\Http\Message\ResponseInterface|null $response
+     * @param int|null $httpStatusCode
+     * @param \Exception|null $previous
+     * @param string $message
+     * @param string $errorCode
+     */
     public function __construct(
-        string $message,
-        string $errorCode,
-        ?ResponseInterface $response = null,
-        ?int $httpStatusCode = null,
-        ?Throwable $previous = null
+        $message,
+        $errorCode,
+        $response = null,
+        $httpStatusCode = null,
+        $previous = null
     ) {
+        $message = (string) $message;
+        $errorCode = (string) $errorCode;
         $this->errorCode = $errorCode;
         $this->response = $response;
         $this->httpStatusCode = $httpStatusCode;
-        parent::__construct($message, $httpStatusCode ?? 0, $previous);
+        parent::__construct($message, isset($httpStatusCode) ? $httpStatusCode : 0, $previous);
     }
 
-    public function getHttpStatusCode(): ?int
+    /**
+     * @return int|null
+     */
+    public function getHttpStatusCode()
     {
         return $this->httpStatusCode;
     }

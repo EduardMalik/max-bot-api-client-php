@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads;
 
 /**
@@ -35,7 +33,7 @@ final class ContactAttachmentRequestPayload extends AbstractAttachmentRequestPay
      * @param string|null $vcfInfo Full information about the contact in VCF format.
      * @param string|null $vcfPhone Contact phone in VCF format.
      */
-    public function __construct(?string $name = null, ?int $contactId = null, ?string $vcfInfo = null, ?string $vcfPhone = null)
+    public function __construct($name = null, $contactId = null, $vcfInfo = null, $vcfPhone = null)
     {
         $this->name = $name;
         $this->contactId = $contactId;

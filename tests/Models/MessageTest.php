@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Models\LinkedMessage;
@@ -17,7 +15,10 @@ use PHPUnit\Framework\TestCase;
 
 final class MessageTest extends TestCase
 {
-    public function canBeCreatedFromArrayWithAllData(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayWithAllData()
     {
         $data = [
             'timestamp' => time(),

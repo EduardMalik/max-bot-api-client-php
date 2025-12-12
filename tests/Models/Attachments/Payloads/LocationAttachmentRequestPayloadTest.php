@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\LocationAttachmentRequestPayload;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class LocationAttachmentRequestPayloadTest extends TestCase
 {
-    public function itConstructsAndSerializesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function itConstructsAndSerializesCorrectly()
     {
         $latitude = 55.7558;
         $longitude = 37.6173;
@@ -25,7 +26,10 @@ final class LocationAttachmentRequestPayloadTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $payload->toArray());
     }
-    public function itHandlesNegativeCoordinates(): void
+    /**
+     * @return void
+     */
+    public function itHandlesNegativeCoordinates()
     {
         $latitude = -34.6037;
         $longitude = -58.3816;

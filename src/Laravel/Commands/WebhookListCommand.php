@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Laravel\Commands;
 
 use BushlanovDev\MaxMessengerBot\Api;
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Throwable;
 
 /**
  * Artisan command for listing active webhook subscriptions.
@@ -32,8 +29,9 @@ class WebhookListCommand extends Command
     /**
      * Execute the console command.
      * @param \BushlanovDev\MaxMessengerBot\Api $api
+     * @return int
      */
-    public function handle($api): int
+    public function handle($api)
     {
         $this->info('Fetching webhook subscriptions...');
 
@@ -65,12 +63,11 @@ class WebhookListCommand extends Command
             $this->table($headers, $rows);
 
             return self::SUCCESS;
-        } catch (Throwable $e) {
+        } catch (\Exception $e) {
             Log::error("Webhook list error: {$e->getMessage()}", [
                 'exception' => $e,
             ]);
             $this->error("❌ Webhook list error: {$e->getMessage()}");
-
             return self::FAILURE;
         }
     }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -18,7 +16,10 @@ use PHPUnit\Framework\TestCase;
 
 final class MessageCallbackUpdateTest extends TestCase
 {
-    public function canBeCreatedFromArrayWithAllData(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayWithAllData()
     {
         $data = [
             'update_type' => 'message_callback',
@@ -48,7 +49,10 @@ final class MessageCallbackUpdateTest extends TestCase
         $this->assertSame('button_1_pressed', $update->callback->payload);
         $this->assertSame('mid.123', $update->message->body->mid);
     }
-    public function canBeCreatedWithNullableFieldsAsNull(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithNullableFieldsAsNull()
     {
         $data = [
             'update_type' => 'message_callback',

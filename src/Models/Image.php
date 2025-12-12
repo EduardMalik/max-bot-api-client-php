@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 final class Image extends AbstractModel
@@ -14,8 +12,9 @@ final class Image extends AbstractModel
     /**
      * @param string $url URL of image.
      */
-    public function __construct(string $url)
+    public function __construct($url)
     {
+        $url = (string) $url;
         $this->url = $url;
     }
 }

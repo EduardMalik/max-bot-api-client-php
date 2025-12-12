@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ChatMemberTest extends TestCase
 {
-    public function canBeCreatedForAdmin(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedForAdmin()
     {
         $data = [
             'user_id' => 101,
@@ -42,7 +43,10 @@ final class ChatMemberTest extends TestCase
         $this->assertSame(ChatAdminPermission::Write, $member->permissions[1]);
         $this->assertEquals($data, $member->toArray());
     }
-    public function canBeCreatedForRegularMember(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedForRegularMember()
     {
         $data = [
             'user_id' => 102,

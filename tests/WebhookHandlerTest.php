@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -34,7 +32,7 @@ use Psr\Log\LoggerInterface;
 final class WebhookHandlerTest extends TestCase
 {
     use PHPMock;
-    private const SECRET = 'my-secret-key';
+    const SECRET = 'my-secret-key';
     /**
      * @var (\BushlanovDev\MaxMessengerBot\Api & \PHPUnit\Framework\MockObject\MockObject)
      */
@@ -51,14 +49,20 @@ final class WebhookHandlerTest extends TestCase
      * @var (\PHPUnit\Framework\MockObject\MockObject & \Psr\Log\LoggerInterface)
      */
     private $loggerMock;
-    protected function setUp(): void
+    /**
+     * @return void
+     */
+    protected function setUp()
     {
         $this->apiMock = $this->createMock(Api::class);
         $this->modelFactoryMock = $this->createMock(ModelFactory::class);
         $this->loggerMock = $this->createMock(LoggerInterface::class);
         $this->dispatcher = new UpdateDispatcher($this->apiMock);
     }
-    private function createValidUpdate(): MessageCreatedUpdate
+    /**
+     * @return \BushlanovDev\MaxMessengerBot\Models\Updates\MessageCreatedUpdate
+     */
+    private function createValidUpdate()
     {
         $messageBody = new MessageBody('m.1', 1, 'Hi', null, null);
         $recipient = new Recipient(ChatType::Dialog, 1, null);
@@ -66,8 +70,15 @@ final class WebhookHandlerTest extends TestCase
 
         return new MessageCreatedUpdate(time(), $message, 'ru-RU');
     }
-    private function createMockRequest(string $body, string $signature): ServerRequestInterface
+    /**
+     * @param string $body
+     * @param string $signature
+     * @return \Psr\Http\Message\ServerRequestInterface
+     */
+    private function createMockRequest($body, $signature)
     {
+        $body = (string) $body;
+        $signature = (string) $signature;
         $streamMock = $this->createMock(StreamInterface::class);
         $streamMock->method('__toString')->willReturn($body);
 
@@ -80,8 +91,9 @@ final class WebhookHandlerTest extends TestCase
     /**
      * @param string|null $secret
      * @param string $signatureHeader
+     * @return void
      */
-    public function handleSuccessfulRequest($secret, $signatureHeader): void
+    public function handleSuccessfulRequest($secret, $signatureHeader)
     {
         $payload = '{"update_type":"message_created","timestamp":123}';
         $updateData = json_decode($payload, true);
@@ -99,21 +111,30 @@ final class WebhookHandlerTest extends TestCase
         $handler->handle($request);
         $this->assertTrue($handlerWasCalled, 'Dispatcher was not called on successful request.');
     }
-    public static function successfulRequestProvider(): array
+    /**
+     * @return mixed[]
+     */
+    public static function successfulRequestProvider()
     {
         return [
             'with correct secret' => [self::SECRET, self::SECRET],
             'with no secret configured' => [null, 'any-signature'],
         ];
     }
-    public function handleThrowsSecurityExceptionOnInvalidSignature(): void
+    /**
+     * @return void
+     */
+    public function handleThrowsSecurityExceptionOnInvalidSignature()
     {
         $this->expectException(SecurityException::class);
         $request = $this->createMockRequest('{}', 'wrong-signature');
         $handler = new WebhookHandler($this->dispatcher, $this->modelFactoryMock, $this->loggerMock, self::SECRET);
         $handler->handle($request);
     }
-    public function handleLogsWarningOnSignatureFailure(): void
+    /**
+     * @return void
+     */
+    public function handleLogsWarningOnSignatureFailure()
     {
         $this->loggerMock->expects($this->once())
             ->method('warning')
@@ -126,7 +147,10 @@ final class WebhookHandlerTest extends TestCase
             // Expected
         }
     }
-    public function handleThrowsSerializationExceptionOnEmptyBody(): void
+    /**
+     * @return void
+     */
+    public function handleThrowsSerializationExceptionOnEmptyBody()
     {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage('Webhook body is empty.');
@@ -134,7 +158,10 @@ final class WebhookHandlerTest extends TestCase
         $handler = new WebhookHandler($this->dispatcher, $this->modelFactoryMock, $this->loggerMock, self::SECRET);
         $handler->handle($request);
     }
-    public function handleThrowsSerializationExceptionOnInvalidJson(): void
+    /**
+     * @return void
+     */
+    public function handleThrowsSerializationExceptionOnInvalidJson()
     {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage('Failed to decode webhook body as JSON.');
@@ -142,7 +169,10 @@ final class WebhookHandlerTest extends TestCase
         $handler = new WebhookHandler($this->dispatcher, $this->modelFactoryMock, $this->loggerMock, self::SECRET);
         $handler->handle($request);
     }
-    public function handleWithoutRequestThrowsLogicExceptionWhenGuzzleIsMissing(): void
+    /**
+     * @return void
+     */
+    public function handleWithoutRequestThrowsLogicExceptionWhenGuzzleIsMissing()
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessageMatches('/No ServerRequest was provided and "guzzlehttp\/psr7" is not found/');
@@ -153,7 +183,10 @@ final class WebhookHandlerTest extends TestCase
         $handler = new WebhookHandler($this->dispatcher, $this->modelFactoryMock, $this->loggerMock, null);
         $handler->handle(null);
     }
-    public function handleWithoutRequestWhenGuzzleIsPresent(): void
+    /**
+     * @return void
+     */
+    public function handleWithoutRequestWhenGuzzleIsPresent()
     {
         if (!class_exists(\GuzzleHttp\Psr7\ServerRequest::class)) {
             $this->markTestSkipped('guzzlehttp/psr7 is not installed, cannot run this test.');
@@ -163,7 +196,10 @@ final class WebhookHandlerTest extends TestCase
         $handler = new WebhookHandler($this->dispatcher, $this->modelFactoryMock, $this->loggerMock, null);
         $handler->handle(null);
     }
-    public function handleCatchesAndLogsLogicExceptionFromModelFactory(): void
+    /**
+     * @return void
+     */
+    public function handleCatchesAndLogsLogicExceptionFromModelFactory()
     {
         $payload = '{"update_type":"unknown_type","timestamp":123}';
         $updateData = json_decode($payload, true);
@@ -177,7 +213,8 @@ final class WebhookHandlerTest extends TestCase
         $this->loggerMock->expects($this->exactly(2))
             ->method('debug')
             ->willReturnCallback(
-                function (string $message, array $context = []) use (&$callIndex, $payload, $exception) {
+                function ($message, array $context = []) use (&$callIndex, $payload, $exception) {
+                    $message = (string) $message;
                     if ($callIndex === 0) {
                         $this->assertSame('Received webhook payload', $message);
                         $this->assertArrayHasKey('body', $context);

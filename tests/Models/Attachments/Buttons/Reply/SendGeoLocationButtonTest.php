@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Buttons\Reply;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply\SendGeoLocationButton;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class SendGeoLocationButtonTest extends TestCase
 {
-    public function toArrayWithDefaultQuick(): void
+    /**
+     * @return void
+     */
+    public function toArrayWithDefaultQuick()
     {
         $button = new SendGeoLocationButton('Share Location');
         $expected = [
@@ -21,7 +22,10 @@ final class SendGeoLocationButtonTest extends TestCase
         ];
         $this->assertEquals($expected, $button->toArray());
     }
-    public function toArrayWithQuickTrue(): void
+    /**
+     * @return void
+     */
+    public function toArrayWithQuickTrue()
     {
         $button = new SendGeoLocationButton('Quick Share', true);
         $expected = [

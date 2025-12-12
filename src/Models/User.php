@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 final class User extends AbstractModel
@@ -45,8 +43,12 @@ final class User extends AbstractModel
      * @param int $lastActivityTime Time of last user activity in Max (Unix timestamp in milliseconds).
      *                              Can be outdated if user disabled its "online" status in settings.
      */
-    public function __construct(int $userId, string $firstName, ?string $lastName, ?string $username, bool $isBot, int $lastActivityTime)
+    public function __construct($userId, $firstName, $lastName, $username, $isBot, $lastActivityTime)
     {
+        $userId = (int) $userId;
+        $firstName = (string) $firstName;
+        $isBot = (bool) $isBot;
+        $lastActivityTime = (int) $lastActivityTime;
         $this->userId = $userId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;

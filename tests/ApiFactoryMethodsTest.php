@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -36,7 +34,10 @@ final class ApiFactoryMethodsTest extends TestCase
      * @var \BushlanovDev\MaxMessengerBot\Api
      */
     private $api;
-    protected function setUp(): void
+    /**
+     * @return void
+     */
+    protected function setUp()
     {
         $this->clientMock = $this->createMock(ClientApiInterface::class);
         $this->modelFactoryMock = $this->createMock(ModelFactory::class);
@@ -49,7 +50,10 @@ final class ApiFactoryMethodsTest extends TestCase
             $this->loggerMock
         );
     }
-    public function createWebhookHandlerReturnsCorrectlyConfiguredInstance(): void
+    /**
+     * @return void
+     */
+    public function createWebhookHandlerReturnsCorrectlyConfiguredInstance()
     {
         $secret = 'my-test-secret';
         $webhookHandler = $this->api->createWebhookHandler($secret);
@@ -71,7 +75,10 @@ final class ApiFactoryMethodsTest extends TestCase
             $this->getPrivateProperty($webhookHandler, 'secret')
         );
     }
-    public function createLongPollingHandlerReturnsCorrectlyConfiguredInstance(): void
+    /**
+     * @return void
+     */
+    public function createLongPollingHandlerReturnsCorrectlyConfiguredInstance()
     {
         $longPollingHandler = $this->api->createLongPollingHandler();
         $this->assertInstanceOf(LongPollingHandler::class, $longPollingHandler);
@@ -91,9 +98,11 @@ final class ApiFactoryMethodsTest extends TestCase
     /**
      * @return mixed
      * @param object $object
+     * @param string $propertyName
      */
-    private function getPrivateProperty($object, string $propertyName)
+    private function getPrivateProperty($object, $propertyName)
     {
+        $propertyName = (string) $propertyName;
         $reflection = new ReflectionClass($object);
         $property = $reflection->getProperty($propertyName);
 

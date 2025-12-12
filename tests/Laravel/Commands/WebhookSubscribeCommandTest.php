@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Laravel\Commands;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -31,7 +29,10 @@ final class WebhookSubscribeCommandTest extends TestCase
      * @var \BushlanovDev\MaxMessengerBot\Laravel\Commands\WebhookSubscribeCommand
      */
     private $command;
-    protected function setUp(): void
+    /**
+     * @return void
+     */
+    protected function setUp()
     {
         parent::setUp();
 
@@ -48,7 +49,10 @@ final class WebhookSubscribeCommandTest extends TestCase
         $commandInApp = $application->find('maxbot:webhook:subscribe');
         $this->tester = new CommandTester($commandInApp);
     }
-    public function handleSuccessfullySubscribesWithAllOptions(): void
+    /**
+     * @return void
+     */
+    public function handleSuccessfullySubscribesWithAllOptions()
     {
         $url = 'https://example.com/webhook';
         $secret = 'my-super-secret';
@@ -71,7 +75,10 @@ final class WebhookSubscribeCommandTest extends TestCase
         $this->assertStringContainsString("Secret: ***************", $output);
         $this->assertStringContainsString("Update types: message_created, bot_started", $output);
     }
-    public function handleUsesSecretFromConfigWhenOptionIsNotProvided(): void
+    /**
+     * @return void
+     */
+    public function handleUsesSecretFromConfigWhenOptionIsNotProvided()
     {
         $url = 'https://example.com/webhook';
         $configSecret = 'secret-from-config';
@@ -88,14 +95,20 @@ final class WebhookSubscribeCommandTest extends TestCase
         $this->tester->execute(['url' => $url]);
         $this->tester->assertCommandIsSuccessful();
     }
-    public function handleFailsForInvalidUrl(): void
+    /**
+     * @return void
+     */
+    public function handleFailsForInvalidUrl()
     {
         $this->apiMock->expects($this->never())->method('subscribe');
         $statusCode = $this->tester->execute(['url' => 'not-a-valid-url']);
         $this->assertSame(1, $statusCode);
         $this->assertStringContainsString('Invalid URL provided.', $this->tester->getDisplay());
     }
-    public function handleFailsForInvalidUpdateType(): void
+    /**
+     * @return void
+     */
+    public function handleFailsForInvalidUpdateType()
     {
         $this->apiMock->expects($this->never())->method('subscribe');
         $statusCode = $this->tester->execute([
@@ -105,7 +118,10 @@ final class WebhookSubscribeCommandTest extends TestCase
         $this->assertSame(1, $statusCode);
         $this->assertStringContainsString('Invalid update type: invalid_type', $this->tester->getDisplay());
     }
-    public function handleDisplaysApiErrorMessageOnFailure(): void
+    /**
+     * @return void
+     */
+    public function handleDisplaysApiErrorMessageOnFailure()
     {
         $url = 'https://example.com/webhook';
         $apiErrorMessage = 'URL is already subscribed';
@@ -119,7 +135,10 @@ final class WebhookSubscribeCommandTest extends TestCase
         $this->assertStringContainsString('❌ Failed to subscribe to webhook.', $output);
         $this->assertStringContainsString("Response: $apiErrorMessage", $output);
     }
-    public function handleCatchesExceptionAndLogsError(): void
+    /**
+     * @return void
+     */
+    public function handleCatchesExceptionAndLogsError()
     {
         $url = 'https://example.com/webhook';
         $exceptionMessage = 'Network error';

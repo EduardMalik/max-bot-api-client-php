@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\StickerAttachmentRequestPayload;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class StickerAttachmentRequestPayloadTest extends TestCase
 {
-    public function itCorrectlyHandlesCreationSerializationAndState(): void
+    /**
+     * @return void
+     */
+    public function itCorrectlyHandlesCreationSerializationAndState()
     {
         $codeValue = 'some_code_string_123';
         $rawData = ['code' => $codeValue];

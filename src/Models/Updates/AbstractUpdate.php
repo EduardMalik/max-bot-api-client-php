@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -27,8 +25,9 @@ abstract class AbstractUpdate extends AbstractModel
      * @param int $timestamp Unix-time when event has occurred.
      * @param \BushlanovDev\MaxMessengerBot\Enums\UpdateType::* $updateType
      */
-    public function __construct($updateType, int $timestamp)
+    public function __construct($updateType, $timestamp)
     {
+        $timestamp = (int) $timestamp;
         $this->updateType = $updateType;
         $this->timestamp = $timestamp;
     }

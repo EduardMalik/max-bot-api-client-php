@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -34,11 +32,14 @@ final class ChatTitleChangedUpdate extends AbstractUpdate
      * @param string $title The new title.
      */
     public function __construct(
-        int $timestamp,
-        int $chatId,
+        $timestamp,
+        $chatId,
         User $user,
-        string $title
+        $title
     ) {
+        $timestamp = (int) $timestamp;
+        $chatId = (int) $chatId;
+        $title = (string) $title;
         $this->chatId = $chatId;
         $this->user = $user;
         $this->title = $title;

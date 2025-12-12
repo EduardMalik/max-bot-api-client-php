@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Buttons\Inline;
 
 use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
@@ -12,7 +10,10 @@ use PHPUnit\Framework\TestCase;
 
 final class OpenAppButtonTest extends TestCase
 {
-    public function toArraySerializesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function toArraySerializesCorrectly()
     {
         $button = new OpenAppButton('Test Button', 'MyWebApp', 123);
         $expectedArray = [
@@ -24,7 +25,10 @@ final class OpenAppButtonTest extends TestCase
         $resultArray = $button->toArray();
         $this->assertSame($expectedArray, $resultArray);
     }
-    public function fromArrayHydratesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function fromArrayHydratesCorrectly()
     {
         $data = [
             'type' => 'open_app',

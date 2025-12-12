@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ChatAdminTest extends TestCase
 {
-    public function toArraySerializesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function toArraySerializesCorrectly()
     {
         $admin = new ChatAdmin(123, [ChatAdminPermission::Write, ChatAdminPermission::PinMessage]);
         $expected = [

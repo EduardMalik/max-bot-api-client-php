@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Models\MessageStat;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class MessageStatTest extends TestCase
 {
-    public function canBeCreatedAndSerialized(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedAndSerialized()
     {
         $data = ['views' => 1234];
         $stat = MessageStat::fromArray($data);

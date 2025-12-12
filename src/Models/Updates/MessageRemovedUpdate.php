@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -33,11 +31,15 @@ final class MessageRemovedUpdate extends AbstractUpdate
      * @param int $userId User who deleted this message.
      */
     public function __construct(
-        int $timestamp,
-        string $messageId,
-        int $chatId,
-        int $userId
+        $timestamp,
+        $messageId,
+        $chatId,
+        $userId
     ) {
+        $timestamp = (int) $timestamp;
+        $messageId = (string) $messageId;
+        $chatId = (int) $chatId;
+        $userId = (int) $userId;
         $this->messageId = $messageId;
         $this->chatId = $chatId;
         $this->userId = $userId;

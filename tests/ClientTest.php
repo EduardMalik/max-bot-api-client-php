@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests;
 
 use BushlanovDev\MaxMessengerBot\Client;
@@ -33,9 +31,9 @@ use Psr\Log\LoggerInterface;
 
 final class ClientTest extends TestCase
 {
-    private const FAKE_TOKEN = '12345:abcdef';
-    private const API_VERSION = '0.0.6';
-    private const API_BASE_URL = 'https://platform-api.max.ru';
+    const FAKE_TOKEN = '12345:abcdef';
+    const API_VERSION = '0.0.6';
+    const API_BASE_URL = 'https://platform-api.max.ru';
     /**
      * @var (\PHPUnit\Framework\MockObject\MockObject & \Psr\Http\Client\ClientInterface)
      */
@@ -72,8 +70,9 @@ final class ClientTest extends TestCase
      * This method is called before each test.
      *
      * @throws Exception
+     * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -102,13 +101,19 @@ final class ClientTest extends TestCase
             $this->loggerMock
         );
     }
-    public function constructorThrowsExceptionOnEmptyToken(): void
+    /**
+     * @return void
+     */
+    public function constructorThrowsExceptionOnEmptyToken()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Access token cannot be empty.');
         new Client('', $this->httpClientMock, $this->requestFactoryMock, $this->streamFactory, '', '');
     }
-    public function successfulGetRequest(): void
+    /**
+     * @return void
+     */
+    public function successfulGetRequest()
     {
         $uri = '/me';
         $expectedUrl = self::API_BASE_URL . $uri . '?' . http_build_query([
@@ -137,7 +142,10 @@ final class ClientTest extends TestCase
         $result = $this->client->request('GET', $uri);
         $this->assertSame($responsePayload, $result);
     }
-    public function successfulPostRequestWithJsonBody(): void
+    /**
+     * @return void
+     */
+    public function successfulPostRequestWithJsonBody()
     {
         $uri = '/subscriptions';
         $requestBody = [
@@ -171,7 +179,9 @@ final class ClientTest extends TestCase
         $this->requestMock
             ->expects($this->exactly(2))
             ->method('withHeader')
-            ->willReturnCallback(function (string $header, string $value) use (&$headerCallCount) {
+            ->willReturnCallback(function ($header, $value) use (&$headerCallCount) {
+                $header = (string) $header;
+                $value = (string) $value;
                 if ($headerCallCount === 0) {
                     $this->assertSame('Authorization', $header);
                     $this->assertSame(self::FAKE_TOKEN, $value);
@@ -189,24 +199,33 @@ final class ClientTest extends TestCase
         $result = $this->client->request('POST', $uri, [], $requestBody);
         $this->assertSame($responsePayload, $result);
     }
-    public function handlesEmptySuccessfulResponse(): void
+    /**
+     * @return void
+     */
+    public function handlesEmptySuccessfulResponse()
     {
         $this->responseMock->method('getStatusCode')->willReturn(200);
         $this->streamMock->method('__toString')->willReturn('');
         $result = $this->client->request('DELETE', '/subscriptions');
         $this->assertSame(['success' => true], $result);
     }
-    public function throwsNetworkExceptionOnClientError(): void
+    /**
+     * @return void
+     */
+    public function throwsNetworkExceptionOnClientError()
     {
         $this->expectException(NetworkException::class);
         // Create a generic PSR-18 exception
-        $psrException = new class extends \Exception implements ClientExceptionInterface {};
+        $psrException = new Anonymous__317dd49a38557269f3fe4b9fbe7c3914__0();
         $this->httpClientMock
             ->method('sendRequest')
             ->willThrowException($psrException);
         $this->client->request('GET', '/me');
     }
-    public function throwsSerializationExceptionOnInvalidJsonResponse(): void
+    /**
+     * @return void
+     */
+    public function throwsSerializationExceptionOnInvalidJsonResponse()
     {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage('Failed to decode API response JSON.');
@@ -214,7 +233,10 @@ final class ClientTest extends TestCase
         $this->streamMock->method('__toString')->willReturn('{not-valid-json');
         $this->client->request('GET', '/me');
     }
-    public function throwsSerializationExceptionOnInvalidRequestBody(): void
+    /**
+     * @return void
+     */
+    public function throwsSerializationExceptionOnInvalidRequestBody()
     {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage('Failed to encode request body to JSON.');
@@ -224,8 +246,9 @@ final class ClientTest extends TestCase
     }
     /**
      * Data provider for testing various API error status codes.
+     * @return mixed[]
      */
-    public static function apiErrorProvider(): array
+    public static function apiErrorProvider()
     {
         return [
             '400 Attachment Not Ready' => [
@@ -258,8 +281,9 @@ final class ClientTest extends TestCase
      * @param string $exceptionClass
      * @param string $errorCode
      * @param string $errorMessage
+     * @return void
      */
-    public function throwsCorrectExceptionForApiErrorStatusCodes($statusCode, $exceptionClass, $errorCode, $errorMessage): void
+    public function throwsCorrectExceptionForApiErrorStatusCodes($statusCode, $exceptionClass, $errorCode, $errorMessage)
     {
         $this->expectException($exceptionClass);
         $this->expectExceptionMessage($errorMessage);
@@ -276,7 +300,10 @@ final class ClientTest extends TestCase
             throw $e; // Re-throw for PHPUnit to catch the expected exception type
         }
     }
-    public function uploadMethodSendsCorrectMultipartRequest(): void
+    /**
+     * @return void
+     */
+    public function uploadMethodSendsCorrectMultipartRequest()
     {
         $uploadUrl = 'https://upload.server/path';
         $fileContents = 'fake-image-binary-data';
@@ -302,7 +329,9 @@ final class ClientTest extends TestCase
         $this->requestMock
             ->expects($this->exactly(2))
             ->method('withHeader')
-            ->willReturnCallback(function (string $header, string $value) use (&$headerCallCount) {
+            ->willReturnCallback(function ($header, $value) use (&$headerCallCount) {
+                $header = (string) $header;
+                $value = (string) $value;
                 if ($headerCallCount === 0) {
                     $this->assertSame('Content-Type', $header);
                     $this->assertStringStartsWith('multipart/form-data; boundary=', $value);
@@ -325,7 +354,10 @@ final class ClientTest extends TestCase
         $result = $this->client->multipartUpload($uploadUrl, $fileContents, $fileName);
         $this->assertSame(json_encode($responsePayload), $result);
     }
-    public function uploadMethodHandlesStreamResourceCorrectly(): void
+    /**
+     * @return void
+     */
+    public function uploadMethodHandlesStreamResourceCorrectly()
     {
         $uploadUrl = 'https://upload.server/path';
         $fileContents = 'data from a stream resource';
@@ -339,7 +371,9 @@ final class ClientTest extends TestCase
         $this->requestMock
             ->expects($this->exactly(2))
             ->method('withHeader')
-            ->willReturnCallback(function (string $header, string $value) use (&$headerCallCount) {
+            ->willReturnCallback(function ($header, $value) use (&$headerCallCount) {
+                $header = (string) $header;
+                $value = (string) $value;
                 if ($headerCallCount === 0) {
                     $this->assertSame('Content-Type', $header);
                     $this->assertStringStartsWith('multipart/form-data; boundary=', $value);
@@ -359,21 +393,26 @@ final class ClientTest extends TestCase
         $this->assertSame(json_encode($responsePayload), $result);
         fclose($tmpFileHandle);
     }
-    public function uploadThrowsNetworkExceptionOnClientError(): void
+    /**
+     * @return void
+     */
+    public function uploadThrowsNetworkExceptionOnClientError()
     {
         $this->expectException(NetworkException::class);
         $this->requestFactoryMock->method('createRequest')->willReturn($this->requestMock);
         $this->requestMock->method('withHeader')->willReturn($this->requestMock);
         $this->requestMock->method('withBody')->willReturn($this->requestMock);
-        $psrException = new class extends \Exception implements ClientExceptionInterface {
-        };
+        $psrException = new Anonymous__317dd49a38557269f3fe4b9fbe7c3914__1();
         $this->httpClientMock
             ->method('sendRequest')
             ->with($this->requestMock)
             ->willThrowException($psrException);
         $this->client->multipartUpload('http://some.url', 'content', 'file.txt');
     }
-    public function requestLogsRequestAndResponseOnDebugLevel(): void
+    /**
+     * @return void
+     */
+    public function requestLogsRequestAndResponseOnDebugLevel()
     {
         $this->responseMock->method('getStatusCode')->willReturn(200);
         $this->streamMock->method('__toString')->willReturn('{"success":true}');
@@ -382,7 +421,10 @@ final class ClientTest extends TestCase
             ->method('debug');
         $this->client->request('GET', '/me');
     }
-    public function handleErrorResponseLogsWarning(): void
+    /**
+     * @return void
+     */
+    public function handleErrorResponseLogsWarning()
     {
         $this->responseMock->method('getStatusCode')->willReturn(404);
         $this->streamMock->method('__toString')->willReturn('{"code":"not.found","message":"Not Found"}');
@@ -393,7 +435,10 @@ final class ClientTest extends TestCase
         $this->expectException(NotFoundException::class);
         $this->client->request('GET', '/not/found');
     }
-    public function uploadMethodReturnsRawStringResponse(): void
+    /**
+     * @return void
+     */
+    public function uploadMethodReturnsRawStringResponse()
     {
         $uploadUrl = 'https://upload.server/path';
         $fileContents = 'data';
@@ -408,13 +453,19 @@ final class ClientTest extends TestCase
         $result = $this->client->multipartUpload($uploadUrl, $fileContents, $fileName);
         $this->assertSame($rawResponse, $result);
     }
-    public function resumableUploadThrowsExceptionForInvalidResource(): void
+    /**
+     * @return void
+     */
+    public function resumableUploadThrowsExceptionForInvalidResource()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('fileResource must be a valid stream resource.');
         $this->client->resumableUpload('http://a.b', 'not-a-resource', 'file.txt', 100);
     }
-    public function resumableUploadThrowsExceptionForZeroFileSize(): void
+    /**
+     * @return void
+     */
+    public function resumableUploadThrowsExceptionForZeroFileSize()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('File size must be greater than 0.');
@@ -422,7 +473,10 @@ final class ClientTest extends TestCase
         $this->client->resumableUpload('http://a.b', $fileResource, 'file.txt', 0);
         fclose($fileResource);
     }
-    public function resumableUploadThrowsNetworkExceptionOnChunkUploadFailure(): void
+    /**
+     * @return void
+     */
+    public function resumableUploadThrowsNetworkExceptionOnChunkUploadFailure()
     {
         $this->expectException(NetworkException::class);
         $fileResource = fopen('php://memory', 'w+');
@@ -431,14 +485,17 @@ final class ClientTest extends TestCase
         $this->requestFactoryMock->method('createRequest')->willReturn($this->requestMock);
         $this->requestMock->method('withBody')->willReturnSelf();
         $this->requestMock->method('withHeader')->willReturnSelf();
-        $psrException = new class extends \Exception implements ClientExceptionInterface {};
+        $psrException = new Anonymous__317dd49a38557269f3fe4b9fbe7c3914__2();
         $this->httpClientMock
             ->method('sendRequest')
             ->willThrowException($psrException);
         $this->client->resumableUpload('http://a.b', $fileResource, 'file.txt', 9);
         fclose($fileResource);
     }
-    public function resumableUploadSuccessfullyUploadsSingleChunk(): void
+    /**
+     * @return void
+     */
+    public function resumableUploadSuccessfullyUploadsSingleChunk()
     {
         $fileContents = 'test-data';
         $fileResource = fopen('php://memory', 'w+');
@@ -453,7 +510,9 @@ final class ClientTest extends TestCase
         $this->requestMock
             ->expects($this->exactly(4))
             ->method('withHeader')
-            ->willReturnCallback(function (string $header, string $value) use (&$headerCallCount, $fileName, $fileSize) {
+            ->willReturnCallback(function ($header, $value) use (&$headerCallCount, $fileName, $fileSize) {
+                $header = (string) $header;
+                $value = (string) $value;
                 if ($headerCallCount === 0) {
                     $this->assertSame('Content-Type', $header);
                     $this->assertSame('application/octet-stream', $value);
@@ -483,7 +542,10 @@ final class ClientTest extends TestCase
         $this->assertSame('<retval>1</retval>', $result);
         fclose($fileResource);
     }
-    public function resumableUploadSuccessfullyUploadsMultipleChunks(): void
+    /**
+     * @return void
+     */
+    public function resumableUploadSuccessfullyUploadsMultipleChunks()
     {
         $chunkSize = 1024 * 1024;
         $fileContents = str_repeat('A', 3 * $chunkSize);
@@ -513,7 +575,10 @@ final class ClientTest extends TestCase
         $this->assertSame('<retval>1</retval>', $result);
         fclose($fileResource);
     }
-    public function resumableUploadStopsOnEmptyChunk(): void
+    /**
+     * @return void
+     */
+    public function resumableUploadStopsOnEmptyChunk()
     {
         $fileResource = fopen('php://memory', 'w+');
         rewind($fileResource);
@@ -525,4 +590,13 @@ final class ClientTest extends TestCase
         $this->assertSame('', $result);
         fclose($fileResource);
     }
+}
+class Anonymous__317dd49a38557269f3fe4b9fbe7c3914__0 extends \Exception implements ClientExceptionInterface
+{
+}
+class Anonymous__317dd49a38557269f3fe4b9fbe7c3914__1 extends \Exception implements ClientExceptionInterface
+{
+}
+class Anonymous__317dd49a38557269f3fe4b9fbe7c3914__2 extends \Exception implements ClientExceptionInterface
+{
 }

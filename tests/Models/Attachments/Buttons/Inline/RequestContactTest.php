@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Buttons\Inline;
 
 use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
@@ -12,7 +10,10 @@ use PHPUnit\Framework\TestCase;
 
 final class RequestContactTest extends TestCase
 {
-    public function toArraySerializesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function toArraySerializesCorrectly()
     {
         $button = new RequestContactButton('Test Button');
         $expectedArray = [

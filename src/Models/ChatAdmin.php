@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -27,11 +25,12 @@ final class ChatAdmin extends AbstractModel
      * @param ChatAdminPermission[] $permissions The list of permissions to grant to the user.
      */
     public function __construct(
-        int $userId,
+        $userId,
         #[\BushlanovDev\MaxMessengerBot\Attributes\ArrayOf(\BushlanovDev\MaxMessengerBot\Enums\ChatAdminPermission::class)]
         array $permissions
     )
     {
+        $userId = (int) $userId;
         $this->userId = $userId;
         $this->permissions = $permissions;
     }

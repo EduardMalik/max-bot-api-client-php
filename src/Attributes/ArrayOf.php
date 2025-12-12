@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Attributes;
 
 use Attribute;
@@ -17,8 +15,9 @@ final class ArrayOf
     /**
      * @param class-string $class Class name (model or enum)
      */
-    public function __construct(string $class)
+    public function __construct($class)
     {
+        $class = (string) $class;
         $this->class = $class;
     }
 }

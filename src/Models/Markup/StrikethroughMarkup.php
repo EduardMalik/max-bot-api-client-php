@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Markup;
 
 use BushlanovDev\MaxMessengerBot\Enums\MarkupType;
@@ -16,9 +14,11 @@ final class StrikethroughMarkup extends AbstractMarkup
      * @param int $length Length of the markup element.
      */
     public function __construct(
-        int $from,
-        int $length
+        $from,
+        $length
     ) {
+        $from = (int) $from;
+        $length = (int) $length;
         parent::__construct(MarkupType::Strikethrough, $from, $length);
     }
 }

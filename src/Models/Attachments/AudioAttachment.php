@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -25,7 +23,7 @@ final class AudioAttachment extends AbstractAttachment
      */
     public function __construct(
         MediaAttachmentPayload $payload,
-        ?string $transcription
+        $transcription
     ) {
         $this->payload = $payload;
         $this->transcription = $transcription;

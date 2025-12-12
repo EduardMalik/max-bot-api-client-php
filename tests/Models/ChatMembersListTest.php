@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ChatMembersListTest extends TestCase
 {
-    public function canBeCreatedWithData(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithData()
     {
         $data = [
             'members' => [
@@ -38,7 +39,10 @@ final class ChatMembersListTest extends TestCase
         $this->assertSame(101, $list->members[0]->userId);
         $this->assertSame(12345, $list->marker);
     }
-    public function canBeCreatedWithEmptyMembersAndNullMarker(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithEmptyMembersAndNullMarker()
     {
         $data = ['members' => [], 'marker' => null];
         $list = ChatMembersList::fromArray($data);

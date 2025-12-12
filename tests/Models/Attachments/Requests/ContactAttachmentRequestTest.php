@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ContactAttachmentRequestTest extends TestCase
 {
-    public function itCreatesRequestWithAllFieldsAndSerializes(): void
+    /**
+     * @return void
+     */
+    public function itCreatesRequestWithAllFieldsAndSerializes()
     {
         $request = new ContactAttachmentRequest(
             'John Doe',
@@ -38,7 +39,10 @@ final class ContactAttachmentRequestTest extends TestCase
         ];
         $this->assertEquals($expectedArray, $request->toArray());
     }
-    public function itCreatesRequestWithOnlySomeFields(): void
+    /**
+     * @return void
+     */
+    public function itCreatesRequestWithOnlySomeFields()
     {
         $request = new ContactAttachmentRequest('Jane Doe', null, null, 'TEL:+9876543210');
         $expectedArray = [

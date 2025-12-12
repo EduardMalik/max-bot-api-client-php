@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline;
 
 use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
@@ -24,8 +22,9 @@ abstract class AbstractInlineButton extends AbstractModel
      * @param string $text Visible text of the button.
      * @param \BushlanovDev\MaxMessengerBot\Enums\InlineButtonType::* $type
      */
-    public function __construct($type, string $text)
+    public function __construct($type, $text)
     {
+        $text = (string) $text;
         $this->type = $type;
         $this->text = $text;
     }

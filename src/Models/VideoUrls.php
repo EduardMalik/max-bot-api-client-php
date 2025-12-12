@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 /**
@@ -53,7 +51,7 @@ final class VideoUrls extends AbstractModel
      * @param string|null $mp4_144 Video URL in 144p resolution, if available.
      * @param string|null $hls Live streaming URL (HLS), if available.
      */
-    public function __construct(?string $mp4_1080 = null, ?string $mp4_720 = null, ?string $mp4_480 = null, ?string $mp4_360 = null, ?string $mp4_240 = null, ?string $mp4_144 = null, ?string $hls = null)
+    public function __construct($mp4_1080 = null, $mp4_720 = null, $mp4_480 = null, $mp4_360 = null, $mp4_240 = null, $mp4_144 = null, $hls = null)
     {
         $this->mp4_1080 = $mp4_1080;
         $this->mp4_720 = $mp4_720;

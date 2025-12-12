@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Laravel\Commands;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -26,7 +24,10 @@ final class WebhookListCommandTest extends TestCase
      * @var \BushlanovDev\MaxMessengerBot\Laravel\Commands\WebhookListCommand
      */
     private $command;
-    protected function setUp(): void
+    /**
+     * @return void
+     */
+    protected function setUp()
     {
         parent::setUp();
 
@@ -41,7 +42,10 @@ final class WebhookListCommandTest extends TestCase
         $commandInApp = $application->find('maxbot:webhook:list');
         $this->tester = new CommandTester($commandInApp);
     }
-    public function handleDisplaysTableWithActiveSubscriptions(): void
+    /**
+     * @return void
+     */
+    public function handleDisplaysTableWithActiveSubscriptions()
     {
         $timestamp = 1678886400;
         // 2023-03-15 13:20:00 UTC
@@ -73,7 +77,10 @@ final class WebhookListCommandTest extends TestCase
         $this->assertStringContainsString(date('Y-m-d H:i:s', $timestamp), $output);
         $this->assertStringContainsString(date('Y-m-d H:i:s', $timestamp + 3600), $output);
     }
-    public function handleDisplaysMessageWhenNoSubscriptionsExist(): void
+    /**
+     * @return void
+     */
+    public function handleDisplaysMessageWhenNoSubscriptionsExist()
     {
         $this->apiMock
             ->expects($this->once())
@@ -85,7 +92,10 @@ final class WebhookListCommandTest extends TestCase
         $this->assertStringContainsString('No active webhook subscriptions found.', $output);
         $this->assertStringNotContainsString('URL', $output, 'Table headers should not be displayed.');
     }
-    public function handleCatchesExceptionAndLogsError(): void
+    /**
+     * @return void
+     */
+    public function handleCatchesExceptionAndLogsError()
     {
         $exceptionMessage = 'API is down';
         $exception = new \RuntimeException($exceptionMessage);

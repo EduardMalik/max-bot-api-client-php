@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\ModelFactory;
@@ -18,7 +16,10 @@ use PHPUnit\Framework\TestCase;
 
 final class KeyboardPayloadTest extends TestCase
 {
-    public function canBeCreatedFromArrayViaFactory(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayViaFactory()
     {
         $data = [
             'type' => 'inline_keyboard',

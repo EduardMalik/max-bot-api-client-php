@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot;
 
 use BushlanovDev\MaxMessengerBot\Exceptions\ClientApiException;
@@ -24,7 +22,7 @@ interface ClientApiInterface
      * @throws NetworkException for network-related issues.
      * @throws SerializationException for JSON encoding/decoding failures.
      */
-    public function request($method, $uri, $queryParams = [], $body = []): array;
+    public function request($method, $uri, $queryParams = [], $body = []);
 
     /**
      * Performs a file upload at the specified URL.
@@ -38,7 +36,7 @@ interface ClientApiInterface
      * @throws NetworkException
      * @throws SerializationException
      */
-    public function multipartUpload($uri, $fileContents, $fileName): string;
+    public function multipartUpload($uri, $fileContents, $fileName);
 
     /**
      * Uploads a file in chunks using the resumable upload method.
@@ -61,5 +59,5 @@ interface ClientApiInterface
         $fileName,
         $fileSize,
         $chunkSize = 1048576
-    ): string;
+    );
 }

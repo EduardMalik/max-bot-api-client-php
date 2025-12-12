@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
@@ -19,8 +17,9 @@ final class PhotoToken extends AbstractModel
     /**
      * @param string $token Encoded information of uploaded image.
      */
-    public function __construct(string $token)
+    public function __construct($token)
     {
+        $token = (string) $token;
         $this->token = $token;
     }
 }

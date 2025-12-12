@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\ShareAttachmentRequestPayload;
@@ -13,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ShareAttachmentRequestPayloadTest extends TestCase
 {
-    public function canBeCreatedWithUrlOnly(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithUrlOnly()
     {
         $payload = new ShareAttachmentRequestPayload('https://example.com');
         $this->assertSame('https://example.com', $payload->url);
@@ -21,7 +22,10 @@ final class ShareAttachmentRequestPayloadTest extends TestCase
         $expectedArray = ['url' => 'https://example.com', 'token' => null];
         $this->assertEquals($expectedArray, $payload->toArray());
     }
-    public function canBeCreatedWithTokenOnly(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithTokenOnly()
     {
         $payload = new ShareAttachmentRequestPayload(null, 'share_token_abc');
         $this->assertSame('share_token_abc', $payload->token);
@@ -29,7 +33,10 @@ final class ShareAttachmentRequestPayloadTest extends TestCase
         $expectedArray = ['url' => null, 'token' => 'share_token_abc'];
         $this->assertEquals($expectedArray, $payload->toArray());
     }
-    public function constructorThrowsExceptionForInvalidArguments(): void
+    /**
+     * @return void
+     */
+    public function constructorThrowsExceptionForInvalidArguments()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Provide one of "url" or "token" for ShareAttachmentRequestPayload.');

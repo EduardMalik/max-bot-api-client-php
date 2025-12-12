@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot;
 
 use BushlanovDev\MaxMessengerBot\Enums\MessageFormat;
@@ -48,34 +46,34 @@ use RuntimeException;
  */
 class Api
 {
-    public const LIBRARY_VERSION = '1.4.2';
+    const LIBRARY_VERSION = '1.4.2';
 
-    public const API_VERSION = '1.2.5';
+    const API_VERSION = '1.2.5';
 
-    private const API_BASE_URL = 'https://platform-api.max.ru';
+    const API_BASE_URL = 'https://platform-api.max.ru';
 
-    private const METHOD_GET = 'GET';
-    private const METHOD_POST = 'POST';
-    private const METHOD_DELETE = 'DELETE';
-    private const METHOD_PATCH = 'PATCH';
-    private const METHOD_PUT = 'PUT';
+    const METHOD_GET = 'GET';
+    const METHOD_POST = 'POST';
+    const METHOD_DELETE = 'DELETE';
+    const METHOD_PATCH = 'PATCH';
+    const METHOD_PUT = 'PUT';
 
-    private const ACTION_ME = '/me';
-    private const ACTION_SUBSCRIPTIONS = '/subscriptions';
-    private const ACTION_MESSAGES = '/messages';
-    private const ACTION_UPLOADS = '/uploads';
-    private const ACTION_CHATS = '/chats';
-    private const ACTION_CHATS_ACTIONS = '/chats/%d/actions';
-    private const ACTION_CHATS_PIN = '/chats/%d/pin';
-    private const ACTION_CHATS_MEMBERS_ME = '/chats/%d/members/me';
-    private const ACTION_CHATS_MEMBERS_ADMINS = '/chats/%d/members/admins';
-    private const ACTION_CHATS_MEMBERS_ADMINS_ID = '/chats/%d/members/admins/%d';
-    private const ACTION_CHATS_MEMBERS = '/chats/%d/members';
-    private const ACTION_UPDATES = '/updates';
-    private const ACTION_ANSWERS = '/answers';
-    private const ACTION_VIDEO_DETAILS = '/videos/%s';
+    const ACTION_ME = '/me';
+    const ACTION_SUBSCRIPTIONS = '/subscriptions';
+    const ACTION_MESSAGES = '/messages';
+    const ACTION_UPLOADS = '/uploads';
+    const ACTION_CHATS = '/chats';
+    const ACTION_CHATS_ACTIONS = '/chats/%d/actions';
+    const ACTION_CHATS_PIN = '/chats/%d/pin';
+    const ACTION_CHATS_MEMBERS_ME = '/chats/%d/members/me';
+    const ACTION_CHATS_MEMBERS_ADMINS = '/chats/%d/members/admins';
+    const ACTION_CHATS_MEMBERS_ADMINS_ID = '/chats/%d/members/admins/%d';
+    const ACTION_CHATS_MEMBERS = '/chats/%d/members';
+    const ACTION_UPDATES = '/updates';
+    const ACTION_ANSWERS = '/answers';
+    const ACTION_VIDEO_DETAILS = '/videos/%s';
 
-    private const RESUMABLE_UPLOAD_THRESHOLD_BYTES = 10 * 1024 * 1024; // 10 MB
+    const RESUMABLE_UPLOAD_THRESHOLD_BYTES = 10 * 1024 * 1024; // 10 MB
     /**
      * @readonly
      * @var \BushlanovDev\MaxMessengerBot\ClientApiInterface
@@ -111,16 +109,16 @@ class Api
      * @throws InvalidArgumentException
      */
     public function __construct(
-        ?string $accessToken = null,
-        ?ClientApiInterface $client = null,
-        ?ModelFactory $modelFactory = null,
-        ?LoggerInterface $logger = null
+        $accessToken = null,
+        $client = null,
+        $modelFactory = null,
+        $logger = null
     ) {
         if (empty($accessToken) && $client === null) {
             throw new InvalidArgumentException('You must provide either an access token or a client.');
         }
 
-        $this->logger = $logger ?? new NullLogger();
+        $this->logger = isset($logger) ? $logger : new NullLogger();
 
         if ($client === null) {
             if (!class_exists(\GuzzleHttp\Client::class) || !class_exists(\GuzzleHttp\Psr7\HttpFactory::class)) {
@@ -149,7 +147,7 @@ class Api
         }
 
         $this->client = $client;
-        $this->modelFactory = $modelFactory ?? new ModelFactory($this->logger);
+        $this->modelFactory = isset($modelFactory) ? $modelFactory : new ModelFactory($this->logger);
         $this->updateDispatcher = new UpdateDispatcher($this);
     }
 
@@ -167,7 +165,7 @@ class Api
      * @throws SerializationException for JSON encoding/decoding failures.
      * @codeCoverageIgnore
      */
-    public function request($method, $uri, $queryParams = [], $body = []): array
+    public function request($method, $uri, $queryParams = [], $body = [])
     {
         return $this->client->request($method, $uri, $queryParams, $body);
     }
@@ -178,7 +176,7 @@ class Api
      * @return UpdateDispatcher
      * @codeCoverageIgnore
      */
-    public function getUpdateDispatcher(): UpdateDispatcher
+    public function getUpdateDispatcher()
     {
         return $this->updateDispatcher;
     }
@@ -190,7 +188,7 @@ class Api
      *
      * @return WebhookHandler
      */
-    public function createWebhookHandler($secret = null): WebhookHandler
+    public function createWebhookHandler($secret = null)
     {
         return new WebhookHandler(
             $this->updateDispatcher,
@@ -205,7 +203,7 @@ class Api
      *
      * @return LongPollingHandler
      */
-    public function createLongPollingHandler(): LongPollingHandler
+    public function createLongPollingHandler()
     {
         return new LongPollingHandler(
             $this,
@@ -234,13 +232,13 @@ class Api
         $timeout = null,
         $marker = null,
         $types = null
-    ): UpdateList {
+    ) {
         $query = [
             'limit' => $limit,
             'timeout' => $timeout,
             'marker' => $marker,
             'types' => $types !== null ? implode(',', array_map(function ($type) {
-                return $type->value;
+                return $type;
             }, $types)) : null,
         ];
 
@@ -264,7 +262,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function getBotInfo(): BotInfo
+    public function getBotInfo()
     {
         return $this->modelFactory->createBotInfo(
             $this->client->request(self::METHOD_GET, self::ACTION_ME)
@@ -280,7 +278,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function getSubscriptions(): array
+    public function getSubscriptions()
     {
         return $this->modelFactory->createSubscriptions(
             $this->client->request(self::METHOD_GET, self::ACTION_SUBSCRIPTIONS)
@@ -304,7 +302,7 @@ class Api
         $url,
         $secret = null,
         $updateTypes = null
-    ): Result {
+    ) {
         return $this->modelFactory->createResult(
             $this->client->request(
                 self::METHOD_POST,
@@ -332,7 +330,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function unsubscribe($url): Result
+    public function unsubscribe($url)
     {
         return $this->modelFactory->createResult(
             $this->client->request(
@@ -370,7 +368,7 @@ class Api
         $link = null,
         $notify = true,
         $disableLinkPreview = false
-    ): Message {
+    ) {
         $query = [
             'user_id' => $userId,
             'chat_id' => $chatId,
@@ -415,7 +413,7 @@ class Api
         $link = null,
         $notify = true,
         $disableLinkPreview = false
-    ): Message {
+    ) {
         return $this->sendMessage($userId, null, $text, $attachments, $format, $link, $notify, $disableLinkPreview);
     }
 
@@ -445,7 +443,7 @@ class Api
         $link = null,
         $notify = true,
         $disableLinkPreview = false
-    ): Message {
+    ) {
         return $this->sendMessage(null, $chatId, $text, $attachments, $format, $link, $notify, $disableLinkPreview);
     }
 
@@ -457,13 +455,13 @@ class Api
      * @return UploadEndpoint Endpoint you should upload to your binaries.
      * @throws ReflectionException
      */
-    public function getUploadUrl($type): UploadEndpoint
+    public function getUploadUrl($type)
     {
         return $this->modelFactory->createUploadEndpoint(
             $this->client->request(
                 self::METHOD_POST,
                 self::ACTION_UPLOADS,
-                ['type' => $type->value]
+                ['type' => $type]
             )
         );
     }
@@ -481,7 +479,7 @@ class Api
      * @throws SerializationException
      * @throws RuntimeException
      */
-    public function uploadFile($uploadUrl, $fileHandle, $fileName): string
+    public function uploadFile($uploadUrl, $fileHandle, $fileName)
     {
         $stat = fstat($fileHandle);
         if (!is_array($stat)) {
@@ -512,7 +510,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function uploadAttachment($type, $filePath): AbstractAttachmentRequest
+    public function uploadAttachment($type, $filePath)
     {
         if (!file_exists($filePath) || !is_readable($filePath)) {
             throw new InvalidArgumentException("File not found or not readable: $filePath");
@@ -530,7 +528,7 @@ class Api
         if ($type === UploadType::Audio || $type === UploadType::Video) {
             if (empty($uploadEndpoint->token)) {
                 throw new SerializationException(
-                    "API did not return a pre-upload token for type '$type->value'."
+                    "API did not return a pre-upload token for type '$type'."
                 );
             }
 
@@ -551,14 +549,14 @@ class Api
 
         try {
             $uploadResult = json_decode($responseBody, true, 512, 0);
-        } catch (JsonException $e) {
+        } catch (\Exception $e) {
             throw new SerializationException('Failed to decode upload server response JSON.', 0, $e);
         }
 
         // Using switch because match expression arms cannot be code blocks.
         switch ($type) {
             case UploadType::Image:
-                $photoData = current($uploadResult['photos'] ?? []); // Get first photo from response
+                $photoData = current(isset($uploadResult['photos']) ? $uploadResult['photos'] : []); // Get first photo from response
                 if (!isset($photoData['token'])) {
                     throw new SerializationException('Could not find "token" in photo upload response.');
                 }
@@ -571,7 +569,7 @@ class Api
         }
 
         // @codeCoverageIgnoreStart
-        throw new LogicException("Attachment creation for type '$type->value' is not yet implemented."); // @phpstan-ignore-line
+        throw new LogicException("Attachment creation for type '$type' is not yet implemented."); // @phpstan-ignore-line
         // @codeCoverageIgnoreEnd
     }
 
@@ -586,7 +584,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function getChat($chatId): Chat
+    public function getChat($chatId)
     {
         return $this->modelFactory->createChat(
             $this->client->request(self::METHOD_GET, self::ACTION_CHATS . '/' . $chatId)
@@ -605,7 +603,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function getChatByLink($chatLink): Chat
+    public function getChatByLink($chatLink)
     {
         return $this->modelFactory->createChat(
             $this->client->request(
@@ -627,7 +625,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function getChats($count = null, $marker = null): ChatList
+    public function getChats($count = null, $marker = null)
     {
         $query = [
             'count' => $count,
@@ -656,7 +654,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function deleteChat($chatId): Result
+    public function deleteChat($chatId)
     {
         return $this->modelFactory->createResult(
             $this->client->request(
@@ -678,7 +676,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function sendAction($chatId, $action): Result
+    public function sendAction($chatId, $action)
     {
         return $this->modelFactory->createResult(
             $this->client->request(
@@ -701,7 +699,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function getPinnedMessage($chatId): ?Message
+    public function getPinnedMessage($chatId)
     {
         $response = $this->client->request(
             self::METHOD_GET,
@@ -726,7 +724,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function unpinMessage($chatId): Result
+    public function unpinMessage($chatId)
     {
         return $this->modelFactory->createResult(
             $this->client->request(
@@ -747,7 +745,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function getMembership($chatId): ChatMember
+    public function getMembership($chatId)
     {
         return $this->modelFactory->createChatMember(
             $this->client->request(
@@ -768,7 +766,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function leaveChat($chatId): Result
+    public function leaveChat($chatId)
     {
         return $this->modelFactory->createResult(
             $this->client->request(
@@ -799,7 +797,7 @@ class Api
         $from = null,
         $to = null,
         $count = null
-    ): array {
+    ) {
         $query = [
             'chat_id' => $chatId,
             'message_ids' => $messageIds !== null ? implode(',', $messageIds) : null,
@@ -830,7 +828,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function deleteMessage($messageId): Result
+    public function deleteMessage($messageId)
     {
         return $this->modelFactory->createResult(
             $this->client->request(
@@ -852,7 +850,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function getMessageById($messageId): Message
+    public function getMessageById($messageId)
     {
         return $this->modelFactory->createMessage(
             $this->client->request(
@@ -875,7 +873,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function pinMessage($chatId, $messageId, $notify = true): Result
+    public function pinMessage($chatId, $messageId, $notify = true)
     {
         return $this->modelFactory->createResult(
             $this->client->request(
@@ -901,7 +899,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function getAdmins($chatId): ChatMembersList
+    public function getAdmins($chatId)
     {
         return $this->modelFactory->createChatMembersList(
             $this->client->request(
@@ -931,7 +929,7 @@ class Api
         $userIds = null,
         $marker = null,
         $count = null
-    ): ChatMembersList {
+    ) {
         $query = [
             'user_ids' => $userIds !== null ? implode(',', $userIds) : null,
             'marker' => $marker,
@@ -961,7 +959,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function deleteAdmin($chatId, $userId): Result
+    public function deleteAdmin($chatId, $userId)
     {
         return $this->modelFactory->createResult(
             $this->client->request(
@@ -985,7 +983,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function deleteMember($chatId, $userId, $block = false): Result
+    public function deleteMember($chatId, $userId, $block = false)
     {
         return $this->modelFactory->createResult(
             $this->client->request(
@@ -1011,7 +1009,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function addAdmins($chatId, $admins): Result
+    public function addAdmins($chatId, $admins)
     {
         return $this->modelFactory->createResult(
             $this->client->request(
@@ -1037,7 +1035,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function addMembers($chatId, $userIds): Result
+    public function addMembers($chatId, $userIds)
     {
         return $this->modelFactory->createResult(
             $this->client->request(
@@ -1074,7 +1072,7 @@ class Api
         $link = null,
         $format = null,
         $notify = true
-    ): Result {
+    ) {
         $answerBody = ['notification' => $notification];
         if ($text !== null || $attachments !== null || $link !== null) {
             $answerBody['message'] = $this->buildNewMessageBody($text, $attachments, $format, $link, $notify);
@@ -1118,7 +1116,7 @@ class Api
         $format = null,
         $link = null,
         $notify = true
-    ): Result {
+    ) {
         return $this->modelFactory->createResult(
             $this->client->request(
                 self::METHOD_PUT,
@@ -1142,7 +1140,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function editBotInfo($botPatch): BotInfo
+    public function editBotInfo($botPatch)
     {
         return $this->modelFactory->createBotInfo(
             $this->client->request(
@@ -1171,7 +1169,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function editChat($chatId, $chatPatch): Chat
+    public function editChat($chatId, $chatPatch)
     {
         return $this->modelFactory->createChat(
             $this->client->request(
@@ -1194,7 +1192,7 @@ class Api
      * @throws ReflectionException
      * @throws SerializationException
      */
-    public function getVideoAttachmentDetails($videoToken): VideoAttachmentDetails
+    public function getVideoAttachmentDetails($videoToken)
     {
         return $this->modelFactory->createVideoAttachmentDetails(
             $this->client->request(
@@ -1218,13 +1216,14 @@ class Api
      * @param ?\BushlanovDev\MaxMessengerBot\Enums\MessageFormat::* $format
      */
     private function buildNewMessageBody(
-        ?string $text,
-        ?array $attachments,
+        $text,
+        $attachments,
         $format,
-        ?MessageLink $link,
-        bool $notify
-    ):array {
+        $link,
+        $notify
+    ) {
 
+        $notify = (bool) $notify;
         $body = [
             'text' => $text,
             'format' => $format,

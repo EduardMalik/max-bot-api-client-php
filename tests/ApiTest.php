@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -95,8 +93,9 @@ final class ApiTest extends TestCase
     private $api;
     /**
      * @throws Exception
+     * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -106,7 +105,10 @@ final class ApiTest extends TestCase
 
         $this->api = new Api('fake-token', $this->clientMock, $this->modelFactoryMock, $this->loggerMock);
     }
-    public function constructorCanCreateDefaultDependencies(): void
+    /**
+     * @return void
+     */
+    public function constructorCanCreateDefaultDependencies()
     {
         $api = new Api('some-token');
         $reflection = new ReflectionClass($api);
@@ -115,7 +117,10 @@ final class ApiTest extends TestCase
         $factoryProp = $reflection->getProperty('modelFactory');
         $this->assertInstanceOf(ModelFactory::class, $factoryProp->getValue($api));
     }
-    public function getBotInfoCallsClientAndFactoryCorrectly(): void
+    /**
+     * @return void
+     */
+    public function getBotInfoCallsClientAndFactoryCorrectly()
     {
         $rawResponseData = ['user_id' => 123, 'first_name' => 'ApiTestBot'];
         $botInfo = new BotInfo(
@@ -136,7 +141,10 @@ final class ApiTest extends TestCase
         $result = $this->api->getBotInfo();
         $this->assertSame($botInfo, $result);
     }
-    public function testSubscribeCallsClientAndFactoryCorrectly(): void
+    /**
+     * @return void
+     */
+    public function testSubscribeCallsClientAndFactoryCorrectly()
     {
         $rawResponseData = [
             'subscriptions' => [
@@ -170,7 +178,10 @@ final class ApiTest extends TestCase
         $this->assertInstanceOf(Subscription::class, $result[0]);
         $this->assertSame(UpdateType::MessageCreated, $result[0]->updateTypes[0]);
     }
-    public function subscribeCallsClientWithAllParameters(): void
+    /**
+     * @return void
+     */
+    public function subscribeCallsClientWithAllParameters()
     {
         $url = 'https://example.com/webhook';
         $secret = 'secure';
@@ -198,7 +209,10 @@ final class ApiTest extends TestCase
         $result = $this->api->subscribe($url, $secret, $updateTypes);
         $this->assertSame($expectedResultObject, $result);
     }
-    public function subscribeHandlesOptionalParametersAsNull(): void
+    /**
+     * @return void
+     */
+    public function subscribeHandlesOptionalParametersAsNull()
     {
         $url = 'https://example.com/webhook';
         $expectedBody = [
@@ -221,7 +235,10 @@ final class ApiTest extends TestCase
         $result = $this->api->subscribe($url);
         $this->assertSame($expectedResultObject, $result);
     }
-    public function unsubscribeCallsClientWithCorrectParameters(): void
+    /**
+     * @return void
+     */
+    public function unsubscribeCallsClientWithCorrectParameters()
     {
         $url = 'https://example.com/webhook';
         $expectedQueryParams = ['url' => $url];
@@ -240,7 +257,10 @@ final class ApiTest extends TestCase
         $result = $this->api->unsubscribe($url);
         $this->assertSame($expectedResultObject, $result);
     }
-    public function sendMessageBuildsCorrectRequestForAllParameters(): void
+    /**
+     * @return void
+     */
+    public function sendMessageBuildsCorrectRequestForAllParameters()
     {
         $chatId = 123456;
         $text = 'Hello, **world**!';
@@ -304,7 +324,10 @@ final class ApiTest extends TestCase
         );
         $this->assertSame($expectedMessageObject, $result);
     }
-    public function sendMessageWithAttachmentsBuildsCorrectRequest(): void
+    /**
+     * @return void
+     */
+    public function sendMessageWithAttachmentsBuildsCorrectRequest()
     {
         $chatId = 123456;
         $text = 'Test message with a keyboard';
@@ -365,7 +388,10 @@ final class ApiTest extends TestCase
         $result = $this->api->sendMessage(null, $chatId, $text, [$keyboard], null, null, true, $disableLinkPreview);
         $this->assertSame($expectedMessageObject, $result);
     }
-    public function uploadAttachmentForImage(): void
+    /**
+     * @return void
+     */
+    public function uploadAttachmentForImage()
     {
         $filePath = $this->createTempFile('image-content');
         $uploadUrl = 'https://upload.server/image';
@@ -378,7 +404,10 @@ final class ApiTest extends TestCase
         $this->assertEquals($expectedAttachment, $result);
         unlink($filePath);
     }
-    public function uploadAttachmentForFile(): void
+    /**
+     * @return void
+     */
+    public function uploadAttachmentForFile()
     {
         $filePath = $this->createTempFile('file-content');
         $uploadUrl = 'https://upload.server/file';
@@ -391,7 +420,10 @@ final class ApiTest extends TestCase
         $this->assertEquals($expectedAttachment, $result);
         unlink($filePath);
     }
-    public function uploadAttachmentForAudio(): void
+    /**
+     * @return void
+     */
+    public function uploadAttachmentForAudio()
     {
         $filePath = $this->createTempFile('audio-content');
         $uploadUrl = 'https://upload.server/audio';
@@ -419,7 +451,10 @@ final class ApiTest extends TestCase
         $this->assertEquals($expectedAttachment, $result);
         unlink($filePath);
     }
-    public function uploadAttachmentForVideo(): void
+    /**
+     * @return void
+     */
+    public function uploadAttachmentForVideo()
     {
         $filePath = $this->createTempFile('video-content');
         $uploadUrl = 'https://upload.server/video';
@@ -447,19 +482,30 @@ final class ApiTest extends TestCase
         $this->assertEquals($expectedAttachment, $result);
         unlink($filePath);
     }
-    private function createTempFile(string $content): string
+    /**
+     * @param string $content
+     * @return string
+     */
+    private function createTempFile($content)
     {
+        $content = (string) $content;
         $filePath = tempnam(sys_get_temp_dir(), 'test_upload_');
         file_put_contents($filePath, $content);
         return $filePath;
     }
-    public function uploadAttachmentThrowsExceptionForNonExistentFile(): void
+    /**
+     * @return void
+     */
+    public function uploadAttachmentThrowsExceptionForNonExistentFile()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('/File not found or not readable/');
         $this->api->uploadAttachment(UploadType::Image, '/path/to/non/existent/file.jpg');
     }
-    public function getChatCallsClientAndFactoryCorrectly(): void
+    /**
+     * @return void
+     */
+    public function getChatCallsClientAndFactoryCorrectly()
     {
         $chatId = 100123456789;
         $rawResponseData = [
@@ -493,7 +539,10 @@ final class ApiTest extends TestCase
         $result = $this->api->getChat($chatId);
         $this->assertSame($expectedChatObject, $result);
     }
-    public function getUpdatesCallsClientWithCorrectParameters(): void
+    /**
+     * @return void
+     */
+    public function getUpdatesCallsClientWithCorrectParameters()
     {
         $limit = 50;
         $timeout = 60;
@@ -520,7 +569,10 @@ final class ApiTest extends TestCase
         $result = $this->api->getUpdates($limit, $timeout, $marker, $types);
         $this->assertSame($expectedUpdateList, $result);
     }
-    public function getUpdatesHandlesNullParameters(): void
+    /**
+     * @return void
+     */
+    public function getUpdatesHandlesNullParameters()
     {
         $this->clientMock
             ->expects($this->once())
@@ -532,7 +584,10 @@ final class ApiTest extends TestCase
             ->willReturn(new UpdateList([], null));
         $this->api->getUpdates();
     }
-    public function constructorThrowsExceptionWhenGuzzleIsMissing(): void
+    /**
+     * @return void
+     */
+    public function constructorThrowsExceptionWhenGuzzleIsMissing()
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessageMatches('/"guzzlehttp\/guzzle" is not found/');
@@ -542,7 +597,10 @@ final class ApiTest extends TestCase
             ->willReturn(false);
         new Api('some-token');
     }
-    public function uploadAttachmentThrowsRuntimeExceptionWhenPathIsADirectory(): void
+    /**
+     * @return void
+     */
+    public function uploadAttachmentThrowsRuntimeExceptionWhenPathIsADirectory()
     {
         $root = vfsStream::setup('root');
         $directory = vfsStream::newDirectory('my_dir')->at($root);
@@ -550,7 +608,10 @@ final class ApiTest extends TestCase
         $this->expectExceptionMessageMatches('/Could not open file for reading/');
         $this->api->uploadAttachment(UploadType::File, $directory->url());
     }
-    public function uploadAttachmentThrowsSerializationExceptionForInvalidUploadResponse(): void
+    /**
+     * @return void
+     */
+    public function uploadAttachmentThrowsSerializationExceptionForInvalidUploadResponse()
     {
         $filePath = tempnam(sys_get_temp_dir(), 'test_upload_');
         file_put_contents($filePath, 'content');
@@ -582,7 +643,10 @@ final class ApiTest extends TestCase
             unlink($filePath);
         }
     }
-    public function uploadAttachmentSuccessfullyUploadsFileAndReturnsAttachment(): void
+    /**
+     * @return void
+     */
+    public function uploadAttachmentSuccessfullyUploadsFileAndReturnsAttachment()
     {
         $filePath = tempnam(sys_get_temp_dir(), 'test_file_');
         file_put_contents($filePath, 'fake-file-content');
@@ -612,7 +676,10 @@ final class ApiTest extends TestCase
         $this->assertEquals($expectedAttachment, $result);
         unlink($filePath);
     }
-    public function sendMessageWithStickerAttachmentBuildsCorrectRequest(): void
+    /**
+     * @return void
+     */
+    public function sendMessageWithStickerAttachmentBuildsCorrectRequest()
     {
         $chatId = 12345;
         $stickerCode = 'sticker_id_ok';
@@ -651,7 +718,10 @@ final class ApiTest extends TestCase
         $result = $this->api->sendMessage(null, $chatId, null, [$stickerRequest]);
         $this->assertSame($expectedMessageObject, $result);
     }
-    public function sendMessageWithContactAttachmentBuildsCorrectRequest(): void
+    /**
+     * @return void
+     */
+    public function sendMessageWithContactAttachmentBuildsCorrectRequest()
     {
         $chatId = 12345;
         $contactRequest = new ContactAttachmentRequest('Service Desk', null, null, '555-1234');
@@ -692,7 +762,10 @@ final class ApiTest extends TestCase
         $result = $this->api->sendMessage(null, $chatId, null, [$contactRequest]);
         $this->assertSame($expectedMessageObject, $result);
     }
-    public function sendMessageWithLocationAttachmentBuildsCorrectRequest(): void
+    /**
+     * @return void
+     */
+    public function sendMessageWithLocationAttachmentBuildsCorrectRequest()
     {
         $chatId = 12345;
         $latitude = 59.9343;
@@ -733,7 +806,10 @@ final class ApiTest extends TestCase
         $result = $this->api->sendMessage(null, $chatId, null, [$locationRequest]);
         $this->assertSame($expectedMessageObject, $result);
     }
-    public function sendMessageWithShareAttachmentBuildsCorrectRequest(): void
+    /**
+     * @return void
+     */
+    public function sendMessageWithShareAttachmentBuildsCorrectRequest()
     {
         $chatId = 12345;
         $url = 'https://dev.max.ru';
@@ -773,7 +849,10 @@ final class ApiTest extends TestCase
         $result = $this->api->sendMessage(null, $chatId, null, [$shareRequest]);
         $this->assertSame($expectedMessageObject, $result);
     }
-    public function getChatsPassesAllParametersToClient(): void
+    /**
+     * @return void
+     */
+    public function getChatsPassesAllParametersToClient()
     {
         $count = 30;
         $marker = 12345;
@@ -791,7 +870,10 @@ final class ApiTest extends TestCase
         $result = $this->api->getChats($count, $marker);
         $this->assertSame($expectedChatList, $result);
     }
-    public function getChatsHandlesNullParametersCorrectly(): void
+    /**
+     * @return void
+     */
+    public function getChatsHandlesNullParametersCorrectly()
     {
         $expectedQuery = [];
         $rawResponse = ['chats' => [], 'marker' => null];
@@ -807,7 +889,10 @@ final class ApiTest extends TestCase
         $result = $this->api->getChats(null, null);
         $this->assertSame($expectedChatList, $result);
     }
-    public function getChatByLinkCallsClientAndFactoryCorrectly(): void
+    /**
+     * @return void
+     */
+    public function getChatByLinkCallsClientAndFactoryCorrectly()
     {
         $chatLink = '@test_channel';
         $rawResponseData = [
@@ -833,7 +918,10 @@ final class ApiTest extends TestCase
         $result = $this->api->getChatByLink($chatLink);
         $this->assertSame($expectedChatObject, $result);
     }
-    public function getChatByLinkHandlesLinkWithoutAtSymbol(): void
+    /**
+     * @return void
+     */
+    public function getChatByLinkHandlesLinkWithoutAtSymbol()
     {
         $chatLink = 'test_channel_no_at';
         $rawResponseData = [
@@ -851,7 +939,10 @@ final class ApiTest extends TestCase
         $this->api->getChatByLink($chatLink);
         $this->expectNotToPerformAssertions();
     }
-    public function deleteChatCallsClientAndFactoryCorrectly(): void
+    /**
+     * @return void
+     */
+    public function deleteChatCallsClientAndFactoryCorrectly()
     {
         $chatId = 123456789;
         $rawResponseData = ['success' => true, 'message' => null];
@@ -870,7 +961,10 @@ final class ApiTest extends TestCase
         $this->assertSame($expectedResultObject, $result);
         $this->assertTrue($result->success);
     }
-    public function sendActionCallsClientCorrectly(): void
+    /**
+     * @return void
+     */
+    public function sendActionCallsClientCorrectly()
     {
         $chatId = 12345;
         $action = SenderAction::TypingOn;
@@ -891,7 +985,10 @@ final class ApiTest extends TestCase
         $result = $this->api->sendAction($chatId, $action);
         $this->assertSame($expectedResult, $result);
     }
-    public function getPinnedMessageReturnsMessageOnSuccess(): void
+    /**
+     * @return void
+     */
+    public function getPinnedMessageReturnsMessageOnSuccess()
     {
         $chatId = 12345;
         $uri = '/chats/' . $chatId . '/pin';
@@ -913,7 +1010,10 @@ final class ApiTest extends TestCase
         $actualMessage = $this->api->getPinnedMessage($chatId);
         $this->assertSame($expectedMessage, $actualMessage);
     }
-    public function getPinnedMessageReturnsNullWhenNoMessageIsPinned(): void
+    /**
+     * @return void
+     */
+    public function getPinnedMessageReturnsNullWhenNoMessageIsPinned()
     {
         $chatId = 54321;
         $uri = '/chats/' . $chatId . '/pin';
@@ -927,7 +1027,10 @@ final class ApiTest extends TestCase
         $result = $this->api->getPinnedMessage($chatId);
         $this->assertNull($result);
     }
-    public function unpinMessageCallsClientCorrectly(): void
+    /**
+     * @return void
+     */
+    public function unpinMessageCallsClientCorrectly()
     {
         $chatId = 98765;
         $uri = '/chats/' . $chatId . '/pin';
@@ -947,7 +1050,10 @@ final class ApiTest extends TestCase
         $this->assertSame($expectedResult, $result);
         $this->assertTrue($result->success);
     }
-    public function getMembershipReturnsCorrectChatMember(): void
+    /**
+     * @return void
+     */
+    public function getMembershipReturnsCorrectChatMember()
     {
         $chatId = 12345;
         $uri = sprintf('/chats/%d/members/me', $chatId);
@@ -981,7 +1087,10 @@ final class ApiTest extends TestCase
         $result = $this->api->getMembership($chatId);
         $this->assertSame($expectedMember, $result);
     }
-    public function leaveChatCallsClientCorrectly(): void
+    /**
+     * @return void
+     */
+    public function leaveChatCallsClientCorrectly()
     {
         $chatId = 54321;
         $uri = sprintf('/chats/%d/members/me', $chatId);
@@ -1000,7 +1109,10 @@ final class ApiTest extends TestCase
         $result = $this->api->leaveChat($chatId);
         $this->assertSame($expectedResult, $result);
     }
-    public function getMessagesCallsClientWithAllParameters(): void
+    /**
+     * @return void
+     */
+    public function getMessagesCallsClientWithAllParameters()
     {
         $chatId = 12345;
         $messageIds = ['mid.1', 'mid.2'];
@@ -1033,7 +1145,10 @@ final class ApiTest extends TestCase
         $this->assertIsArray($result);
         $this->assertSame($expectedMessages, $result);
     }
-    public function getMessagesReturnsEmptyArrayForEmptyResponse(): void
+    /**
+     * @return void
+     */
+    public function getMessagesReturnsEmptyArrayForEmptyResponse()
     {
         $chatId = 54321;
         $rawResponse = ['messages' => []];
@@ -1049,7 +1164,10 @@ final class ApiTest extends TestCase
         $this->assertIsArray($result);
         $this->assertEmpty($result);
     }
-    public function deleteMessageCallsClientCorrectly(): void
+    /**
+     * @return void
+     */
+    public function deleteMessageCallsClientCorrectly()
     {
         $messageId = 'mid.12345.abcdef';
         $expectedQuery = ['message_id' => $messageId];
@@ -1072,7 +1190,10 @@ final class ApiTest extends TestCase
         $result = $this->api->deleteMessage($messageId);
         $this->assertSame($expectedResult, $result);
     }
-    public function getMessageByIdCallsClientAndFactoryCorrectly(): void
+    /**
+     * @return void
+     */
+    public function getMessageByIdCallsClientAndFactoryCorrectly()
     {
         $messageId = 'mid.abcdef.123456';
         $uri = sprintf('/messages/%s', $messageId);
@@ -1095,7 +1216,10 @@ final class ApiTest extends TestCase
         $result = $this->api->getMessageById($messageId);
         $this->assertSame($expectedMessage, $result);
     }
-    public function pinMessageCallsClientWithCorrectBody(): void
+    /**
+     * @return void
+     */
+    public function pinMessageCallsClientWithCorrectBody()
     {
         $chatId = 12345;
         $messageId = 'mid.to.pin';
@@ -1122,7 +1246,10 @@ final class ApiTest extends TestCase
         $result = $this->api->pinMessage($chatId, $messageId, $notify);
         $this->assertSame($expectedResult, $result);
     }
-    public function pinMessageUsesDefaultNotificationValue(): void
+    /**
+     * @return void
+     */
+    public function pinMessageUsesDefaultNotificationValue()
     {
         $chatId = 54321;
         $messageId = 'mid.another.pin';
@@ -1140,7 +1267,10 @@ final class ApiTest extends TestCase
             ->willReturn($expectedResult);
         $this->api->pinMessage($chatId, $messageId);
     }
-    public function getAdminsReturnsChatMembersList(): void
+    /**
+     * @return void
+     */
+    public function getAdminsReturnsChatMembersList()
     {
         $chatId = 98765;
         $uri = sprintf('/chats/%d/members/admins', $chatId);
@@ -1175,7 +1305,10 @@ final class ApiTest extends TestCase
         $this->assertCount(1, $result->members);
         $this->assertTrue($result->members[0]->isAdmin);
     }
-    public function getMembersWithPaginationCallsClientCorrectly(): void
+    /**
+     * @return void
+     */
+    public function getMembersWithPaginationCallsClientCorrectly()
     {
         $chatId = 12345;
         $count = 50;
@@ -1197,7 +1330,10 @@ final class ApiTest extends TestCase
         $result = $this->api->getMembers($chatId, null, $marker, $count);
         $this->assertSame($expectedList, $result);
     }
-    public function getMembersWithUserIdsCallsClientCorrectly(): void
+    /**
+     * @return void
+     */
+    public function getMembersWithUserIdsCallsClientCorrectly()
     {
         $chatId = 54321;
         $userIds = [101, 202, 303];
@@ -1232,7 +1368,10 @@ final class ApiTest extends TestCase
         $result = $this->api->getMembers($chatId, $userIds);
         $this->assertSame($expectedList, $result);
     }
-    public function deleteAdminsCallsClientCorrectly(): void
+    /**
+     * @return void
+     */
+    public function deleteAdminsCallsClientCorrectly()
     {
         $chatId = 12345;
         $userId = 987;
@@ -1252,7 +1391,10 @@ final class ApiTest extends TestCase
         $result = $this->api->deleteAdmin($chatId, $userId);
         $this->assertSame($expectedResult, $result);
     }
-    public function removeMemberCallsClientWithDefaultBlockValue(): void
+    /**
+     * @return void
+     */
+    public function removeMemberCallsClientWithDefaultBlockValue()
     {
         $chatId = 12345;
         $userId = 678;
@@ -1273,7 +1415,10 @@ final class ApiTest extends TestCase
         $result = $this->api->deleteMember($chatId, $userId);
         $this->assertSame($expectedResult, $result);
     }
-    public function removeMemberCallsClientWithBlockTrue(): void
+    /**
+     * @return void
+     */
+    public function removeMemberCallsClientWithBlockTrue()
     {
         $chatId = 54321;
         $userId = 910;
@@ -1294,7 +1439,10 @@ final class ApiTest extends TestCase
         $result = $this->api->deleteMember($chatId, $userId, true);
         $this->assertSame($expectedResult, $result);
     }
-    public function postAdminsCallsClientWithCorrectBody(): void
+    /**
+     * @return void
+     */
+    public function postAdminsCallsClientWithCorrectBody()
     {
         $chatId = 12345;
         $uri = sprintf('/chats/%d/members/admins', $chatId);
@@ -1323,7 +1471,10 @@ final class ApiTest extends TestCase
         $result = $this->api->addAdmins($chatId, $admins);
         $this->assertSame($expectedResult, $result);
     }
-    public function addMembersCallsClientWithCorrectBody(): void
+    /**
+     * @return void
+     */
+    public function addMembersCallsClientWithCorrectBody()
     {
         $chatId = 12345;
         $userIds = [101, 202, 303];
@@ -1349,7 +1500,10 @@ final class ApiTest extends TestCase
         $result = $this->api->addMembers($chatId, $userIds);
         $this->assertSame($expectedResult, $result);
     }
-    public function answerOnCallbackWithNotificationOnly(): void
+    /**
+     * @return void
+     */
+    public function answerOnCallbackWithNotificationOnly()
     {
         $callbackId = 'cb.123.abc';
         $notification = 'Action confirmed!';
@@ -1370,7 +1524,10 @@ final class ApiTest extends TestCase
         $result = $this->api->answerOnCallback($callbackId, $notification);
         $this->assertSame($expectedResult, $result);
     }
-    public function answerOnCallbackWithMessageEdit(): void
+    /**
+     * @return void
+     */
+    public function answerOnCallbackWithMessageEdit()
     {
         $callbackId = 'cb.456.def';
         $newText = 'Message updated!';
@@ -1396,7 +1553,10 @@ final class ApiTest extends TestCase
         $result = $this->api->answerOnCallback($callbackId, null, $newText);
         $this->assertSame($expectedResult, $result);
     }
-    public function answerOnCallbackWithBothMessageAndNotification(): void
+    /**
+     * @return void
+     */
+    public function answerOnCallbackWithBothMessageAndNotification()
     {
         $callbackId = 'cb.789.ghi';
         $notification = 'Done!';
@@ -1428,7 +1588,10 @@ final class ApiTest extends TestCase
         );
         $this->assertSame($expectedResult, $result);
     }
-    public function editMessageCallsClientWithCorrectParameters(): void
+    /**
+     * @return void
+     */
+    public function editMessageCallsClientWithCorrectParameters()
     {
         $messageId = 'mid.123.abc';
         $newText = 'This is the edited text.';
@@ -1452,7 +1615,10 @@ final class ApiTest extends TestCase
         $result = $this->api->editMessage($messageId, $newText);
         $this->assertSame($expectedResult, $result);
     }
-    public function editMessageCanClearAttachmentsWithEmptyArray(): void
+    /**
+     * @return void
+     */
+    public function editMessageCanClearAttachmentsWithEmptyArray()
     {
         $messageId = 'mid.456.def';
         $expectedQuery = ['message_id' => $messageId];
@@ -1475,7 +1641,10 @@ final class ApiTest extends TestCase
         $result = $this->api->editMessage($messageId, null, []);
         $this->assertSame($expectedResult, $result);
     }
-    public function editBotInfoSendsCorrectPatchBody(): void
+    /**
+     * @return void
+     */
+    public function editBotInfoSendsCorrectPatchBody()
     {
         $patch = new BotPatch();
         $expectedBody = [
@@ -1502,7 +1671,10 @@ final class ApiTest extends TestCase
             ->willReturn($expectedBotInfo);
         $this->api->editBotInfo($patch);
     }
-    public function editChatSendsCorrectPatchBody(): void
+    /**
+     * @return void
+     */
+    public function editChatSendsCorrectPatchBody()
     {
         $chatId = 12345;
         $uri = sprintf('/chats/%d', $chatId);
@@ -1534,7 +1706,10 @@ final class ApiTest extends TestCase
         $result = $this->api->editChat($chatId, $patch);
         $this->assertSame($expectedChat, $result);
     }
-    public function getVideoAttachmentDetailsCallsClientCorrectly(): void
+    /**
+     * @return void
+     */
+    public function getVideoAttachmentDetailsCallsClientCorrectly()
     {
         $videoToken = 'some_video_token_xyz';
         $uri = sprintf('/videos/%s', $videoToken);
@@ -1559,7 +1734,10 @@ final class ApiTest extends TestCase
         $result = $this->api->getVideoAttachmentDetails($videoToken);
         $this->assertSame($expectedDetails, $result);
     }
-    public function constructorThrowsExceptionWhenNoTokenAndNoClientProvided(): void
+    /**
+     * @return void
+     */
+    public function constructorThrowsExceptionWhenNoTokenAndNoClientProvided()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('You must provide either an access token or a client.');
@@ -1568,7 +1746,10 @@ final class ApiTest extends TestCase
             null
         );
     }
-    public function uploadAttachmentThrowsSerializationExceptionOnInvalidUploadResponse(): void
+    /**
+     * @return void
+     */
+    public function uploadAttachmentThrowsSerializationExceptionOnInvalidUploadResponse()
     {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage('Failed to decode upload server response JSON.');
@@ -1587,7 +1768,10 @@ final class ApiTest extends TestCase
             unlink($filePath);
         }
     }
-    public function uploadAttachmentForVideoThrowsExceptionOnMissingPreUploadToken(): void
+    /**
+     * @return void
+     */
+    public function uploadAttachmentForVideoThrowsExceptionOnMissingPreUploadToken()
     {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage("API did not return a pre-upload token for type 'video'.");
@@ -1612,7 +1796,10 @@ final class ApiTest extends TestCase
             unlink($filePath);
         }
     }
-    public function uploadAttachmentForFileThrowsExceptionOnMissingPostUploadToken(): void
+    /**
+     * @return void
+     */
+    public function uploadAttachmentForFileThrowsExceptionOnMissingPostUploadToken()
     {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage('Could not find "token" in file upload response.');
@@ -1631,7 +1818,10 @@ final class ApiTest extends TestCase
             unlink($filePath);
         }
     }
-    public function uploadFileUsesMultipartForSmallFiles(): void
+    /**
+     * @return void
+     */
+    public function uploadFileUsesMultipartForSmallFiles()
     {
         $uploadUrl = 'https://upload.server/path';
         $fileName = 'small.txt';
@@ -1655,7 +1845,10 @@ final class ApiTest extends TestCase
         $this->assertSame($expectedResponse, $result);
         fclose($fileHandle);
     }
-    public function uploadFileUsesResumableForLargeFiles(): void
+    /**
+     * @return void
+     */
+    public function uploadFileUsesResumableForLargeFiles()
     {
         $uploadUrl = 'https://upload.server/path';
         $fileName = 'large.zip';
@@ -1677,7 +1870,10 @@ final class ApiTest extends TestCase
         $this->assertSame($expectedResponse, $result);
         fclose($fileHandle);
     }
-    public function uploadFileThrowsExceptionWhenFstatFails(): void
+    /**
+     * @return void
+     */
+    public function uploadFileThrowsExceptionWhenFstatFails()
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('File handle is not a valid resource.');

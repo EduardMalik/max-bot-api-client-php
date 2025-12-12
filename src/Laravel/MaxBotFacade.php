@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Laravel;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -37,7 +35,7 @@ class MaxBotFacade extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor(): string
+    protected static function getFacadeAccessor()
     {
         return 'maxbot';
     }

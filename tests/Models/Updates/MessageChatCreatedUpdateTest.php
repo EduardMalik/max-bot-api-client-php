@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -16,7 +14,10 @@ use PHPUnit\Framework\TestCase;
 
 final class MessageChatCreatedUpdateTest extends TestCase
 {
-    public function canBeCreatedWithAllData(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithAllData()
     {
         $data = [
             'update_type' => 'message_chat_created',
@@ -41,7 +42,10 @@ final class MessageChatCreatedUpdateTest extends TestCase
         $this->assertSame('mid.original.with.button', $update->messageId);
         $this->assertSame('payload_from_chat_button', $update->startPayload);
     }
-    public function canBeCreatedWithNullStartPayload(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithNullStartPayload()
     {
         $data = [
             'update_type' => 'message_chat_created',

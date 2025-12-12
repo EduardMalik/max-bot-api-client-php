@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Laravel\Commands;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -25,7 +23,10 @@ final class WebhookUnsubscribeCommandTest extends TestCase
      * @var \BushlanovDev\MaxMessengerBot\Laravel\Commands\WebhookUnsubscribeCommand
      */
     private $command;
-    protected function setUp(): void
+    /**
+     * @return void
+     */
+    protected function setUp()
     {
         parent::setUp();
 
@@ -40,7 +41,10 @@ final class WebhookUnsubscribeCommandTest extends TestCase
         $commandInApp = $application->find('maxbot:webhook:unsubscribe');
         $this->tester = new CommandTester($commandInApp);
     }
-    public function handleSuccessfullyUnsubscribesWithConfirmationFlag(): void
+    /**
+     * @return void
+     */
+    public function handleSuccessfullyUnsubscribesWithConfirmationFlag()
     {
         $url = 'https://example.com/webhook';
         $this->apiMock
@@ -56,7 +60,10 @@ final class WebhookUnsubscribeCommandTest extends TestCase
         $output = $this->tester->getDisplay();
         $this->assertStringContainsString('✅ Successfully unsubscribed from webhook!', $output);
     }
-    public function handleCancelsWhenNotConfirmed(): void
+    /**
+     * @return void
+     */
+    public function handleCancelsWhenNotConfirmed()
     {
         $url = 'https://example.com/webhook';
         $this->apiMock->expects($this->never())->method('unsubscribe');
@@ -67,14 +74,20 @@ final class WebhookUnsubscribeCommandTest extends TestCase
         $this->assertStringContainsString('Are you sure you want to unsubscribe', $output);
         $this->assertStringContainsString('Operation cancelled.', $output);
     }
-    public function handleFailsForInvalidUrl(): void
+    /**
+     * @return void
+     */
+    public function handleFailsForInvalidUrl()
     {
         $this->apiMock->expects($this->never())->method('unsubscribe');
         $statusCode = $this->tester->execute(['url' => 'not-a-valid-url']);
         $this->assertSame(1, $statusCode);
         $this->assertStringContainsString('Invalid URL provided.', $this->tester->getDisplay());
     }
-    public function handleDisplaysApiErrorMessageOnFailure(): void
+    /**
+     * @return void
+     */
+    public function handleDisplaysApiErrorMessageOnFailure()
     {
         $url = 'https://example.com/webhook';
         $apiErrorMessage = 'Subscription not found';
@@ -88,7 +101,10 @@ final class WebhookUnsubscribeCommandTest extends TestCase
         $this->assertStringContainsString('❌ Failed to unsubscribe from webhook.', $output);
         $this->assertStringContainsString("Response: $apiErrorMessage", $output);
     }
-    public function handleCatchesExceptionAndLogsError(): void
+    /**
+     * @return void
+     */
+    public function handleCatchesExceptionAndLogsError()
     {
         $url = 'https://example.com/webhook';
         $exceptionMessage = 'API connection refused';

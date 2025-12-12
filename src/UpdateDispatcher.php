@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -45,7 +43,7 @@ final class UpdateDispatcher
      * @return $this
      * @param \BushlanovDev\MaxMessengerBot\Enums\UpdateType::* $type
      */
-    public function addHandler($type, callable $handler): self
+    public function addHandler($type, callable $handler)
     {
         $this->handlers[$type] = $handler;
 
@@ -61,8 +59,9 @@ final class UpdateDispatcher
      *
      * @return $this
      */
-    public function onCommand(string $command, callable $handler): self
+    public function onCommand($command, callable $handler)
     {
+        $command = (string) $command;
         $this->commandHandlers[$command] = $handler;
 
         return $this;
@@ -73,8 +72,9 @@ final class UpdateDispatcher
      * Command handlers are prioritized over generic message handlers.
      *
      * @param AbstractUpdate $update The update object to dispatch.
+     * @return void
      */
-    public function dispatch(AbstractUpdate $update): void
+    public function dispatch(AbstractUpdate $update)
     {
         if ($update instanceof MessageCreatedUpdate && (($nullsafeVariable1 = $update->message->body) ? $nullsafeVariable1->text : null)) {
             $text = $update->message->body->text;
@@ -87,7 +87,7 @@ final class UpdateDispatcher
             }
         }
 
-        $handler = $this->handlers[$update->updateType] ?? null;
+        $handler = isset($this->handlers[$update->updateType]) ? $this->handlers[$update->updateType] : null;
         if ($handler) {
             $handler($update, $this->api);
         }
@@ -101,7 +101,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onMessageCreated(callable $handler): self
+    public function onMessageCreated(callable $handler)
     {
         return $this->addHandler(UpdateType::MessageCreated, $handler);
     }
@@ -114,7 +114,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onMessageCallback(callable $handler): self
+    public function onMessageCallback(callable $handler)
     {
         return $this->addHandler(UpdateType::MessageCallback, $handler);
     }
@@ -127,7 +127,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onMessageEdited(callable $handler): self
+    public function onMessageEdited(callable $handler)
     {
         return $this->addHandler(UpdateType::MessageEdited, $handler);
     }
@@ -140,7 +140,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onMessageRemoved(callable $handler): self
+    public function onMessageRemoved(callable $handler)
     {
         return $this->addHandler(UpdateType::MessageRemoved, $handler);
     }
@@ -153,7 +153,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onBotAdded(callable $handler): self
+    public function onBotAdded(callable $handler)
     {
         return $this->addHandler(UpdateType::BotAdded, $handler);
     }
@@ -166,7 +166,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onBotRemoved(callable $handler): self
+    public function onBotRemoved(callable $handler)
     {
         return $this->addHandler(UpdateType::BotRemoved, $handler);
     }
@@ -179,7 +179,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onDialogMuted(callable $handler): self
+    public function onDialogMuted(callable $handler)
     {
         return $this->addHandler(UpdateType::DialogMuted, $handler);
     }
@@ -192,7 +192,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onDialogUnmuted(callable $handler): self
+    public function onDialogUnmuted(callable $handler)
     {
         return $this->addHandler(UpdateType::DialogUnmuted, $handler);
     }
@@ -205,7 +205,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onDialogCleared(callable $handler): self
+    public function onDialogCleared(callable $handler)
     {
         return $this->addHandler(UpdateType::DialogCleared, $handler);
     }
@@ -218,7 +218,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onDialogRemoved(callable $handler): self
+    public function onDialogRemoved(callable $handler)
     {
         return $this->addHandler(UpdateType::DialogRemoved, $handler);
     }
@@ -231,7 +231,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onUserAdded(callable $handler): self
+    public function onUserAdded(callable $handler)
     {
         return $this->addHandler(UpdateType::UserAdded, $handler);
     }
@@ -244,7 +244,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onUserRemoved(callable $handler): self
+    public function onUserRemoved(callable $handler)
     {
         return $this->addHandler(UpdateType::UserRemoved, $handler);
     }
@@ -257,7 +257,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onBotStarted(callable $handler): self
+    public function onBotStarted(callable $handler)
     {
         return $this->addHandler(UpdateType::BotStarted, $handler);
     }
@@ -270,7 +270,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onBotStopped(callable $handler): self
+    public function onBotStopped(callable $handler)
     {
         return $this->addHandler(UpdateType::BotStopped, $handler);
     }
@@ -283,7 +283,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onChatTitleChanged(callable $handler): self
+    public function onChatTitleChanged(callable $handler)
     {
         return $this->addHandler(UpdateType::ChatTitleChanged, $handler);
     }
@@ -296,7 +296,7 @@ final class UpdateDispatcher
      * @return $this
      * @codeCoverageIgnore
      */
-    public function onMessageChatCreated(callable $handler): self
+    public function onMessageChatCreated(callable $handler)
     {
         return $this->addHandler(UpdateType::MessageChatCreated, $handler);
     }

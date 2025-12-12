@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Laravel;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -30,8 +28,9 @@ class MaxBotServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
+     * @return void
      */
-    public function register(): void
+    public function register()
     {
         $this->mergeConfigFrom(
             __DIR__ . '/config/maxbot.php',
@@ -170,8 +169,9 @@ class MaxBotServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
         $this->publishes([
             __DIR__ . '/config/maxbot.php' => $this->app->configPath('maxbot.php'),
@@ -192,7 +192,7 @@ class MaxBotServiceProvider extends ServiceProvider
      *
      * @return array<int, string>
      */
-    public function provides(): array
+    public function provides()
     {
         return [
             Api::class,

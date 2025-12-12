@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Requests;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -16,8 +14,10 @@ final class LocationAttachmentRequest extends AbstractAttachmentRequest
      * @param float $latitude Latitude as a floating-point number.
      * @param float $longitude Longitude as a floating-point number.
      */
-    public function __construct(float $latitude, float $longitude)
+    public function __construct($latitude, $longitude)
     {
+        $latitude = (double) $latitude;
+        $longitude = (double) $longitude;
         parent::__construct(
             AttachmentType::Location,
             new LocationAttachmentRequestPayload($latitude, $longitude)

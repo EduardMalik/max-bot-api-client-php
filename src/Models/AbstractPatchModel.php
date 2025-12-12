@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 /**
@@ -30,7 +28,7 @@ abstract class AbstractPatchModel extends AbstractModel
      * @return array<string, mixed>
      * @throws \ReflectionException
      */
-    final public function toArray(): array
+    final public function toArray()
     {
         $result = [];
         foreach ($this->patchData as $key => $value) {

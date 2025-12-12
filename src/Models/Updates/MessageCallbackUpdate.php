@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -35,11 +33,12 @@ final class MessageCallbackUpdate extends AbstractUpdate
      * @param string|null $userLocale Current user locale in IETF BCP 47 format.
      */
     public function __construct(
-        int $timestamp,
+        $timestamp,
         Callback $callback,
-        ?Message $message,
-        ?string $userLocale
+        $message,
+        $userLocale
     ) {
+        $timestamp = (int) $timestamp;
         $this->callback = $callback;
         $this->message = $message;
         $this->userLocale = $userLocale;

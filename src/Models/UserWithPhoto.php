@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 final class UserWithPhoto extends AbstractModel
@@ -62,8 +60,12 @@ final class UserWithPhoto extends AbstractModel
      * @param string|null $avatarUrl URL of avatar.
      * @param string|null $fullAvatarUrl URL of avatar of a bigger size.
      */
-    public function __construct(int $userId, string $firstName, ?string $lastName, ?string $username, bool $isBot, int $lastActivityTime, ?string $description, ?string $avatarUrl, ?string $fullAvatarUrl)
+    public function __construct($userId, $firstName, $lastName, $username, $isBot, $lastActivityTime, $description, $avatarUrl, $fullAvatarUrl)
     {
+        $userId = (int) $userId;
+        $firstName = (string) $firstName;
+        $isBot = (bool) $isBot;
+        $lastActivityTime = (int) $lastActivityTime;
         $this->userId = $userId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;

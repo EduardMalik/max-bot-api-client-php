@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoAttachmentPayload;
@@ -13,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 final class PhotoAttachmentTest extends TestCase
 {
-    public function canBeCreatedFromArray(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArray()
     {
         $data = ['type' => 'image', 'payload' => ['photo_id' => 1, 'token' => 't', 'url' => 'u']];
         $attachment = PhotoAttachment::fromArray($data);

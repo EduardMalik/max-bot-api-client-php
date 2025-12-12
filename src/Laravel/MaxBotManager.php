@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Laravel;
 
 use BushlanovDev\MaxMessengerBot\Api;
@@ -19,7 +17,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Throwable;
 
 /**
  * Max Bot Manager for Laravel integration.
@@ -87,7 +84,7 @@ class MaxBotManager
                     $request->getUri(),
                     $headers,
                     $request->getContent(),
-                    $request->getProtocolVersion() ?? '1.1'
+                    $request->getProtocolVersion() !== null ? $request->getProtocolVersion() : '1.1'
                 )
             );
 
@@ -112,7 +109,7 @@ class MaxBotManager
                 'status' => 'error',
                 'message' => 'Bad Request',
             ], 400);
-        } catch (Throwable $e) {
+        } catch (\Exception $e) {
             Log::error("Webhook processing error: {$e->getMessage()}", [
                 'exception' => $e,
                 'request_content' => $request->getContent(),
@@ -135,8 +132,9 @@ class MaxBotManager
      * @codeCoverageIgnore
      * @param int $timeout
      * @param int|null $marker
+     * @return void
      */
-    public function startLongPolling($timeout = 90, $marker = null): void
+    public function startLongPolling($timeout = 90, $marker = null)
     {
         /** @var LongPollingHandler $longPolling */
         $longPolling = $this->container->make(LongPollingHandler::class);
@@ -152,8 +150,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function addHandler($type, $handler): void
+    public function addHandler($type, $handler)
     {
         $this->dispatcher->addHandler($type, $this->resolveHandler($handler));
     }
@@ -166,8 +165,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onCommand($command, $handler): void
+    public function onCommand($command, $handler)
     {
         $this->dispatcher->onCommand($command, $this->resolveHandler($handler));
     }
@@ -179,8 +179,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onMessageCreated($handler): void
+    public function onMessageCreated($handler)
     {
         $this->dispatcher->onMessageCreated($this->resolveHandler($handler));
     }
@@ -192,8 +193,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onMessageCallback($handler): void
+    public function onMessageCallback($handler)
     {
         $this->dispatcher->onMessageCallback($this->resolveHandler($handler));
     }
@@ -205,8 +207,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onMessageEdited($handler): void
+    public function onMessageEdited($handler)
     {
         $this->dispatcher->onMessageEdited($this->resolveHandler($handler));
     }
@@ -218,8 +221,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onMessageRemoved($handler): void
+    public function onMessageRemoved($handler)
     {
         $this->dispatcher->onMessageRemoved($this->resolveHandler($handler));
     }
@@ -231,8 +235,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onBotAdded($handler): void
+    public function onBotAdded($handler)
     {
         $this->dispatcher->onBotAdded($this->resolveHandler($handler));
     }
@@ -244,8 +249,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onBotRemoved($handler): void
+    public function onBotRemoved($handler)
     {
         $this->dispatcher->onBotRemoved($this->resolveHandler($handler));
     }
@@ -257,8 +263,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onDialogMuted($handler): void
+    public function onDialogMuted($handler)
     {
         $this->dispatcher->onDialogMuted($this->resolveHandler($handler));
     }
@@ -270,8 +277,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onDialogUnmuted($handler): void
+    public function onDialogUnmuted($handler)
     {
         $this->dispatcher->onDialogUnmuted($this->resolveHandler($handler));
     }
@@ -283,8 +291,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onDialogCleared($handler): void
+    public function onDialogCleared($handler)
     {
         $this->dispatcher->onDialogCleared($this->resolveHandler($handler));
     }
@@ -296,8 +305,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onDialogRemoved($handler): void
+    public function onDialogRemoved($handler)
     {
         $this->dispatcher->onDialogRemoved($this->resolveHandler($handler));
     }
@@ -309,8 +319,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onUserAdded($handler): void
+    public function onUserAdded($handler)
     {
         $this->dispatcher->onUserAdded($this->resolveHandler($handler));
     }
@@ -322,8 +333,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onUserRemoved($handler): void
+    public function onUserRemoved($handler)
     {
         $this->dispatcher->onUserRemoved($this->resolveHandler($handler));
     }
@@ -335,8 +347,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onBotStarted($handler): void
+    public function onBotStarted($handler)
     {
         $this->dispatcher->onBotStarted($this->resolveHandler($handler));
     }
@@ -348,8 +361,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onBotStopped($handler): void
+    public function onBotStopped($handler)
     {
         $this->dispatcher->onBotStopped($this->resolveHandler($handler));
     }
@@ -361,8 +375,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onChatTitleChanged($handler): void
+    public function onChatTitleChanged($handler)
     {
         $this->dispatcher->onChatTitleChanged($this->resolveHandler($handler));
     }
@@ -374,8 +389,9 @@ class MaxBotManager
      *
      * @throws BindingResolutionException
      * @codeCoverageIgnore
+     * @return void
      */
-    public function onMessageChatCreated($handler): void
+    public function onMessageChatCreated($handler)
     {
         $this->dispatcher->onMessageChatCreated($this->resolveHandler($handler));
     }
@@ -383,8 +399,9 @@ class MaxBotManager
     /**
      * Get the API instance.
      * @codeCoverageIgnore
+     * @return \BushlanovDev\MaxMessengerBot\Api
      */
-    public function getApi(): Api
+    public function getApi()
     {
         return $this->api;
     }
@@ -392,8 +409,9 @@ class MaxBotManager
     /**
      * Get the update dispatcher.
      * @codeCoverageIgnore
+     * @return \BushlanovDev\MaxMessengerBot\UpdateDispatcher
      */
-    public function getDispatcher(): UpdateDispatcher
+    public function getDispatcher()
     {
         return $this->dispatcher;
     }
@@ -406,7 +424,7 @@ class MaxBotManager
      * @phpstan-return callable(AbstractUpdate, Api): void
      * @throws BindingResolutionException
      */
-    private function resolveHandler($handler): callable
+    private function resolveHandler($handler)
     {
         if (is_string($handler)) {
             if ($this->container->bound($handler)) {
@@ -427,7 +445,7 @@ class MaxBotManager
             }
 
             if (strpos($handler, '@') !== false) {
-                [$class, $method] = explode('@', $handler, 2);
+                list($class, $method) = explode('@', $handler, 2);
                 $instance = $this->container->make($class);
                 /** @var callable */
                 return [$instance, $method];

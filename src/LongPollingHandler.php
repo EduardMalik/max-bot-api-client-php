@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot;
 
 use BushlanovDev\MaxMessengerBot\Exceptions\NetworkException;
@@ -54,14 +52,15 @@ final class LongPollingHandler
      * @return int|null The new marker to be used for the next iteration.
      * @throws \Exception Re-throws exceptions from the API or dispatcher.
      */
-    public function processUpdates(int $timeout, ?int $marker): ?int
+    public function processUpdates($timeout, $marker)
     {
+        $timeout = (int) $timeout;
         $updateList = $this->api->getUpdates(null, $timeout, $marker);
 
         foreach ($updateList->updates as $update) {
             try {
                 $this->dispatcher->dispatch($update);
-            } catch (\Throwable $e) {
+            } catch (\Exception $e) {
                 $this->logger->error('Error dispatching update', [
                     'message' => $e->getMessage(),
                     'exception' => $e,
@@ -78,9 +77,11 @@ final class LongPollingHandler
      *
      * @param int $timeout Timeout in seconds for long polling (0-90).
      * @param int|null $marker Initial marker. Pass `null` to get updates you didn't get yet.
+     * @return void
      */
-    public function handle(int $timeout = 90, ?int $marker = null): void
+    public function handle($timeout = 90, $marker = null)
     {
+        $timeout = (int) $timeout;
         $this->listenSignals();
         // @phpstan-ignore-next-line
         while (true) {
@@ -104,19 +105,10 @@ final class LongPollingHandler
 
     /**
      * @codeCoverageIgnore
+     * @return void
      */
-    protected function listenSignals(): void
+    protected function listenSignals()
     {
-        if (extension_loaded('pcntl')) {
-            pcntl_async_signals(true);
 
-            $kill = static function () {
-                exit(0);
-            };
-
-            pcntl_signal(SIGINT, $kill);
-            pcntl_signal(SIGQUIT, $kill);
-            pcntl_signal(SIGTERM, $kill);
-        }
     }
 }

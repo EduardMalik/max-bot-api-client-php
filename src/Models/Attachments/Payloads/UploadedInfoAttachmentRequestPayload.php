@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads;
 
 /**
@@ -17,8 +15,9 @@ final class UploadedInfoAttachmentRequestPayload extends AbstractAttachmentReque
     /**
      * @param string $token The unique token received after a successful file upload.
      */
-    public function __construct(string $token)
+    public function __construct($token)
     {
+        $token = (string) $token;
         $this->token = $token;
     }
 }

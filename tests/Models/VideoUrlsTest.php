@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Models\VideoUrls;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class VideoUrlsTest extends TestCase
 {
-    public function canBeCreatedWithAllFields(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWithAllFields()
     {
         $data = [
             'mp4_720' => 'http://example.com/video_720p.mp4',

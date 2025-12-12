@@ -3,9 +3,9 @@
 use Rector\Set\ValueObject\DowngradeLevelSetList;
 use Rector\Config\RectorConfig;
 
-return static function (RectorConfig $rectorConfig): void {
+return static function (RectorConfig $rectorConfig) {
     $rectorConfig->sets([
-        DowngradeLevelSetList::DOWN_TO_PHP_71,
+        DowngradeLevelSetList::DOWN_TO_PHP_56,
     ]);
-    //$rectorConfig->paths([__DIR__ . '/test.php]);
+    $rectorConfig->paths([__DIR__ . '/src']);
 };

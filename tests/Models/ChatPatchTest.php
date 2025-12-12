@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoAttachmentRequestPayload;
@@ -13,12 +11,18 @@ use PHPUnit\Framework\TestCase;
 
 final class ChatPatchTest extends TestCase
 {
-    public function toArrayIncludesOnlySetFields(): void
+    /**
+     * @return void
+     */
+    public function toArrayIncludesOnlySetFields()
     {
         $patch = new ChatPatch();
         $this->assertEquals(['title' => 'New Title'], $patch->toArray());
     }
-    public function toArrayHandlesMultipleFields(): void
+    /**
+     * @return void
+     */
+    public function toArrayHandlesMultipleFields()
     {
         $photoPayload = new PhotoAttachmentRequestPayload(null, 'icon_token');
         $patch = new ChatPatch();
@@ -33,7 +37,10 @@ final class ChatPatchTest extends TestCase
         ];
         $this->assertEquals($expected, $patch->toArray());
     }
-    public function toArrayIsEmptyForEmptyPatch(): void
+    /**
+     * @return void
+     */
+    public function toArrayIsEmptyForEmptyPatch()
     {
         $patch = new ChatPatch();
         $this->assertEmpty($patch->toArray());

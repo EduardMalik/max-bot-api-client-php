@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments;
 
 use BushlanovDev\MaxMessengerBot\ModelFactory;
@@ -16,7 +14,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ReplyKeyboardAttachmentTest extends TestCase
 {
-    public function canBeCreatedFromArrayViaFactory(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayViaFactory()
     {
         $data = [
             'type' => 'reply_keyboard',

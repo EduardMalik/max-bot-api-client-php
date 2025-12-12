@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Markup;
 
 use BushlanovDev\MaxMessengerBot\Enums\MarkupType;
@@ -20,7 +18,10 @@ use PHPUnit\Framework\TestCase;
 
 final class MarkupTest extends TestCase
 {
-    public function linkMarkupIsCreatedCorrectly(): void
+    /**
+     * @return void
+     */
+    public function linkMarkupIsCreatedCorrectly()
     {
         $data = ['type' => 'link', 'from' => 6, 'length' => 10, 'url' => 'https://dev.max.ru'];
         $markup = LinkMarkup::fromArray($data);
@@ -28,7 +29,10 @@ final class MarkupTest extends TestCase
         $this->assertSame('https://dev.max.ru', $markup->url);
         $this->assertEquals($data, $markup->toArray());
     }
-    public function userMentionMarkupIsCreatedCorrectly(): void
+    /**
+     * @return void
+     */
+    public function userMentionMarkupIsCreatedCorrectly()
     {
         $data = ['type' => 'user_mention', 'from' => 17, 'length' => 8, 'user_link' => '@username', 'user_id' => 12345];
         $markup = UserMentionMarkup::fromArray($data);
@@ -37,7 +41,10 @@ final class MarkupTest extends TestCase
         $this->assertSame(12345, $markup->userId);
         $this->assertEquals($data, $markup->toArray());
     }
-    public function strongMarkupIsCreatesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function strongMarkupIsCreatesCorrectly()
     {
         $data = ['type' => 'strong', 'from' => 0, 'length' => 5];
         $markup = StrongMarkup::fromArray($data);
@@ -47,7 +54,10 @@ final class MarkupTest extends TestCase
         $this->assertSame(5, $markup->length);
         $this->assertEquals($data, $markup->toArray());
     }
-    public function underlineMarkupIsCreatesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function underlineMarkupIsCreatesCorrectly()
     {
         $data = ['type' => 'underline', 'from' => 1, 'length' => 4];
         $markup = UnderlineMarkup::fromArray($data);
@@ -57,7 +67,10 @@ final class MarkupTest extends TestCase
         $this->assertSame(4, $markup->length);
         $this->assertEquals($data, $markup->toArray());
     }
-    public function strikethroughMarkupIsCreatesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function strikethroughMarkupIsCreatesCorrectly()
     {
         $data = ['type' => 'strikethrough', 'from' => 1, 'length' => 4];
         $markup = StrikethroughMarkup::fromArray($data);
@@ -67,7 +80,10 @@ final class MarkupTest extends TestCase
         $this->assertSame(4, $markup->length);
         $this->assertEquals($data, $markup->toArray());
     }
-    public function monospacedMarkupIsCreatesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function monospacedMarkupIsCreatesCorrectly()
     {
         $data = ['type' => 'monospaced', 'from' => 1, 'length' => 4];
         $markup = MonospacedMarkup::fromArray($data);
@@ -77,7 +93,10 @@ final class MarkupTest extends TestCase
         $this->assertSame(4, $markup->length);
         $this->assertEquals($data, $markup->toArray());
     }
-    public function emphasizedMarkupIsCreatesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function emphasizedMarkupIsCreatesCorrectly()
     {
         $data = ['type' => 'emphasized', 'from' => 1, 'length' => 4];
         $markup = EmphasizedMarkup::fromArray($data);
@@ -87,7 +106,10 @@ final class MarkupTest extends TestCase
         $this->assertSame(4, $markup->length);
         $this->assertEquals($data, $markup->toArray());
     }
-    public function headingMarkupIsCreatesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function headingMarkupIsCreatesCorrectly()
     {
         $data = ['type' => 'heading', 'from' => 1, 'length' => 4];
         $markup = HeadingMarkup::fromArray($data);
@@ -97,7 +119,10 @@ final class MarkupTest extends TestCase
         $this->assertSame(4, $markup->length);
         $this->assertEquals($data, $markup->toArray());
     }
-    public function highlightedMarkupIsCreatesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function highlightedMarkupIsCreatesCorrectly()
     {
         $data = ['type' => 'highlighted', 'from' => 1, 'length' => 4];
         $markup = HighlightedMarkup::fromArray($data);

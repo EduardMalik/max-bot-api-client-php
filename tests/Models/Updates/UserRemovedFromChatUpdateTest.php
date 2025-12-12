@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class UserRemovedFromChatUpdateTest extends TestCase
 {
-    public function canBeCreatedWhenRemovedByAdmin(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWhenRemovedByAdmin()
     {
         $data = [
             'update_type' => 'user_removed',
@@ -41,7 +42,10 @@ final class UserRemovedFromChatUpdateTest extends TestCase
         $this->assertSame(111, $update->user->userId);
         $this->assertEquals($data, $update->toArray());
     }
-    public function canBeCreatedWhenUserLeft(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedWhenUserLeft()
     {
         $data = [
             'update_type' => 'user_removed',

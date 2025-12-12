@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -33,10 +31,10 @@ final class PhotoAttachmentRequestPayload extends AbstractAttachmentRequestPaylo
      * @param PhotoToken[]|null $photos Tokens were obtained after uploading images.
      */
     public function __construct(
-        ?string $url = null,
-        ?string $token = null,
+        $url = null,
+        $token = null,
         #[\BushlanovDev\MaxMessengerBot\Attributes\ArrayOf(\BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoToken::class)]
-        ?array $photos = null
+        $photos = null
     ) {
         $this->url = $url;
         $this->token = $token;

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\ContactAttachmentPayload;
@@ -13,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ContactAttachmentPayloadTest extends TestCase
 {
-    public function canBeCreatedAndSerialized(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedAndSerialized()
     {
         $user = User::fromArray(
             ['user_id' => 101, 'first_name' => 'MaxUser', 'is_bot' => false, 'last_activity_time' => time()]

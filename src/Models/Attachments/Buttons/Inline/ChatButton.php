@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline;
 
 use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
@@ -40,12 +38,14 @@ final class ChatButton extends AbstractInlineButton
      * @param int|null $uuid Optional unique identifier for the button. If not passed, it will be generated.
      */
     public function __construct(
-        string $text,
-        string $chatTitle,
-        ?string $chatDescription = null,
-        ?string $startPayload = null,
-        ?int $uuid = null
+        $text,
+        $chatTitle,
+        $chatDescription = null,
+        $startPayload = null,
+        $uuid = null
     ) {
+        $text = (string) $text;
+        $chatTitle = (string) $chatTitle;
         $this->chatTitle = $chatTitle;
         $this->chatDescription = $chatDescription;
         $this->startPayload = $startPayload;

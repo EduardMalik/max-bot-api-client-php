@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 /**
@@ -35,8 +33,11 @@ final class Callback extends AbstractModel
      * @param string $payload Payload from the pressed button.
      * @param User $user User who pressed the button.
      */
-    public function __construct(int $timestamp, string $callbackId, string $payload, User $user)
+    public function __construct($timestamp, $callbackId, $payload, User $user)
     {
+        $timestamp = (int) $timestamp;
+        $callbackId = (string) $callbackId;
+        $payload = (string) $payload;
         $this->timestamp = $timestamp;
         $this->callbackId = $callbackId;
         $this->payload = $payload;

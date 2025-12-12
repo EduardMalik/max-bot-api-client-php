@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Buttons\Inline;
 
 use BushlanovDev\MaxMessengerBot\Enums\InlineButtonType;
@@ -12,7 +10,10 @@ use PHPUnit\Framework\TestCase;
 
 final class RequestGeoLocationTest extends TestCase
 {
-    public function toArraySerializesCorrectly(): void
+    /**
+     * @return void
+     */
+    public function toArraySerializesCorrectly()
     {
         $button = new RequestGeoLocationButton('Test Button');
         $expectedArray = [
@@ -23,7 +24,10 @@ final class RequestGeoLocationTest extends TestCase
         $resultArray = $button->toArray();
         $this->assertSame($expectedArray, $resultArray);
     }
-    public function toArraySerializesCorrectlyWithQuick(): void
+    /**
+     * @return void
+     */
+    public function toArraySerializesCorrectlyWithQuick()
     {
         $button = new RequestGeoLocationButton('Test Button', true);
         $expectedArray = [

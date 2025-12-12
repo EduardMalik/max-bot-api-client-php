@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\AbstractAttachment;
@@ -44,8 +42,10 @@ final class MessageBody extends AbstractModel
      * @param AbstractAttachment[]|null $attachments Message attachments.
      * @param AbstractMarkup[]|null $markup Message text markup.
      */
-    public function __construct(string $mid, int $seq, ?string $text, ?array $attachments, ?array $markup)
+    public function __construct($mid, $seq, $text, $attachments, $markup)
     {
+        $mid = (string) $mid;
+        $seq = (int) $seq;
         $this->mid = $mid;
         $this->seq = $seq;
         $this->text = $text;

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\LocationAttachment;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class LocationAttachmentTest extends TestCase
 {
-    public function canBeCreatedFromArray(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArray()
     {
         $data = ['type' => 'location', 'latitude' => 55.75, 'longitude' => 37.61];
         $attachment = LocationAttachment::fromArray($data);

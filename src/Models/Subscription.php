@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 use BushlanovDev\MaxMessengerBot\Attributes\ArrayOf;
@@ -39,13 +37,15 @@ final class Subscription extends AbstractModel
      * @param string|null $version Version of the API.
      */
     public function __construct(
-        string $url,
-        int $time,
+        $url,
+        $time,
         #[\BushlanovDev\MaxMessengerBot\Attributes\ArrayOf(\BushlanovDev\MaxMessengerBot\Enums\UpdateType::class)]
-        ?array $updateTypes,
-        ?string $version
+        $updateTypes,
+        $version
     )
     {
+        $url = (string) $url;
+        $time = (int) $time;
         $this->url = $url;
         $this->time = $time;
         $this->updateTypes = $updateTypes;

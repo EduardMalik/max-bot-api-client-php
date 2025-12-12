@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\StickerAttachmentPayload;
@@ -13,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 final class StickerAttachmentTest extends TestCase
 {
-    public function canBeCreatedFromArray(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArray()
     {
         $data = ['type' => 'sticker', 'payload' => ['url' => 'u', 'code' => 'c'], 'width' => 128, 'height' => 128];
         $attachment = StickerAttachment::fromArray($data);

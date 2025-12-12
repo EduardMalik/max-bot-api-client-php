@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -14,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ChatTitleChangedUpdateTest extends TestCase
 {
-    public function canBeCreatedFromArrayAndSerialized(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayAndSerialized()
     {
         $data = [
             'update_type' => 'chat_title_changed',

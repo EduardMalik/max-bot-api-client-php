@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments;
 
 use BushlanovDev\MaxMessengerBot\Enums\AttachmentType;
@@ -32,11 +30,16 @@ final class ShareAttachment extends AbstractAttachment
      * @var string|null
      */
     public $imageUrl;
+    /**
+     * @param string|null $title
+     * @param string|null $description
+     * @param string|null $imageUrl
+     */
     public function __construct(
         ShareAttachmentRequestPayload $payload,
-        ?string $title,
-        ?string $description,
-        ?string $imageUrl
+        $title,
+        $description,
+        $imageUrl
     ) {
         $this->payload = $payload;
         $this->title = $title;

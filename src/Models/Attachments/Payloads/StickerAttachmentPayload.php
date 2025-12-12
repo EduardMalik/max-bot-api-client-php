@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
@@ -25,8 +23,10 @@ final class StickerAttachmentPayload extends AbstractModel
      * @param string $url Media attachment URL.
      * @param string $code Sticker identifier.
      */
-    public function __construct(string $url, string $code)
+    public function __construct($url, $code)
     {
+        $url = (string) $url;
+        $code = (string) $code;
         $this->url = $url;
         $this->code = $code;
     }

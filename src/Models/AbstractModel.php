@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models;
 
 
@@ -11,7 +9,6 @@ use BushlanovDev\MaxMessengerBot\Models\Message;
 use BushlanovDev\MaxMessengerBot\Models\Recipient;
 use ReflectionClass;
 use ReflectionException;
-use ReflectionNamedType;
 use ReflectionProperty;
 
 
@@ -28,12 +25,12 @@ abstract class AbstractModel
         $reflectionClass = new ReflectionClass(static::class);
         $constructorArgs = [];
 
-        foreach ((($nullsafeVariable1 = $reflectionClass->getConstructor()) ? $nullsafeVariable1->getParameters() : null) ?? [] as $param) {
+        foreach ((($nullsafeVariable1 = $reflectionClass->getConstructor()) ? $nullsafeVariable1->getParameters() : null) !== null ? ($nullsafeVariable1 = $reflectionClass->getConstructor()) ? $nullsafeVariable1->getParameters() : null : [] as $param) {
             $phpPropertyName = $param->getName();
             $property = $reflectionClass->getProperty($phpPropertyName);
 
             $jsonKey = self::toSnakeCase($phpPropertyName);
-            $rawValue = $data[$jsonKey] ?? null;
+            $rawValue = isset($data[$jsonKey]) ? $data[$jsonKey] : null;
 
             if (!array_key_exists($jsonKey, $data) && $param->isDefaultValueAvailable()) {
                 $constructorArgs[$phpPropertyName] = $param->getDefaultValue();
@@ -122,7 +119,7 @@ abstract class AbstractModel
      * @return array<string, mixed>
      * @throws ReflectionException
      */
-    public function toArray(): array
+    public function toArray()
     {
         $reflectionClass = new ReflectionClass($this);
         $properties = $reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC);
@@ -146,7 +143,7 @@ abstract class AbstractModel
      *
      * @return string
      */
-    protected static function toSnakeCase($input): string
+    protected static function toSnakeCase($input)
     {
         return strtolower((string)preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
     }
@@ -230,7 +227,7 @@ abstract class AbstractModel
      * @return array<string, mixed>
      * @throws ReflectionException
      */
-    private static function castArray($value, ReflectionProperty $property): array
+    private static function castArray($value, ReflectionProperty $property)
     {
         if (!is_array($value)) {
             return (array)$value;

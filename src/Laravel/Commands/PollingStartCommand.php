@@ -1,13 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Laravel\Commands;
 
 use BushlanovDev\MaxMessengerBot\Laravel\MaxBotManager;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Throwable;
 
 /**
  * Artisan command to start processing updates via long polling.
@@ -32,8 +29,9 @@ class PollingStartCommand extends Command
     /**
      * Execute the console command.
      * @param \BushlanovDev\MaxMessengerBot\Laravel\MaxBotManager $botManager
+     * @return int
      */
-    public function handle($botManager): int
+    public function handle($botManager)
     {
         $timeout = (int)$this->option('timeout');
 
@@ -46,7 +44,7 @@ class PollingStartCommand extends Command
             // This part is unreachable as startLongPolling is an infinite loop
             return self::SUCCESS;
             // @codeCoverageIgnoreEnd
-        } catch (Throwable $e) {
+        } catch (\Exception $e) {
             Log::error("Long polling failed to start or crashed: {$e->getMessage()}", [
                 'exception' => $e,
             ]);

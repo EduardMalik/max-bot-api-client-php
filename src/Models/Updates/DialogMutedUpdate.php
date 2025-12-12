@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -40,12 +38,14 @@ final class DialogMutedUpdate extends AbstractUpdate
      * @param string|null $userLocale Current user locale in IETF BCP 47 format.
      */
     public function __construct(
-        int $timestamp,
-        int $chatId,
+        $timestamp,
+        $chatId,
         User $user,
-        ?int $mutedUntil,
-        ?string $userLocale
+        $mutedUntil,
+        $userLocale
     ) {
+        $timestamp = (int) $timestamp;
+        $chatId = (int) $chatId;
         $this->chatId = $chatId;
         $this->user = $user;
         $this->mutedUntil = $mutedUntil;

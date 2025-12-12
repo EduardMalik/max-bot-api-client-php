@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply;
 
 use BushlanovDev\MaxMessengerBot\Enums\ReplyButtonType;
@@ -18,9 +16,11 @@ final class SendGeoLocationButton extends AbstractReplyButton
      * @param bool $quick If `true`, sends location without asking user's confirmation.
      */
     public function __construct(
-        string $text,
-        bool $quick = false
+        $text,
+        $quick = false
     ) {
+        $text = (string) $text;
+        $quick = (bool) $quick;
         $this->quick = $quick;
         parent::__construct(ReplyButtonType::UserGeoLocation, $text);
     }

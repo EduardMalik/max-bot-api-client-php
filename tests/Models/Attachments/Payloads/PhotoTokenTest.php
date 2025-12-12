@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoToken;
@@ -11,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 final class PhotoTokenTest extends TestCase
 {
-    public function itCorrectlyHandlesCreationSerializationAndState(): void
+    /**
+     * @return void
+     */
+    public function itCorrectlyHandlesCreationSerializationAndState()
     {
         $tokenValue = 'some_unique_token_string_123';
         $rawData = ['token' => $tokenValue];

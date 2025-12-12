@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models\Attachments\Payloads;
 
 use BushlanovDev\MaxMessengerBot\Enums\Intent;
@@ -15,7 +13,10 @@ use PHPUnit\Framework\TestCase;
 
 final class ReplyKeyboardAttachmentRequestPayloadTest extends TestCase
 {
-    public function toArrayWithDefaults(): void
+    /**
+     * @return void
+     */
+    public function toArrayWithDefaults()
     {
         $buttons = [
             [new SendMessageButton('Help')],
@@ -44,7 +45,10 @@ final class ReplyKeyboardAttachmentRequestPayloadTest extends TestCase
         ];
         $this->assertEquals($expected, $payload->toArray());
     }
-    public function toArrayWithAllParameters(): void
+    /**
+     * @return void
+     */
+    public function toArrayWithAllParameters()
     {
         $buttons = [
             [new SendMessageButton('Confirm', 'confirm-action', Intent::Positive)],
@@ -70,7 +74,10 @@ final class ReplyKeyboardAttachmentRequestPayloadTest extends TestCase
         ];
         $this->assertEquals($expected, $payload->toArray());
     }
-    public function toArrayWithEmptyButtons(): void
+    /**
+     * @return void
+     */
+    public function toArrayWithEmptyButtons()
     {
         $payload = new ReplyKeyboardAttachmentRequestPayload([]);
         $expected = [

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Tests\Models;
 
 use BushlanovDev\MaxMessengerBot\Models\AbstractModel;
@@ -13,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 final class BotCommandTest extends TestCase
 {
-    public function canBeCreatedFromArrayWithAllData(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayWithAllData()
     {
         $data = [
             'name' => 'start',
@@ -27,7 +28,10 @@ final class BotCommandTest extends TestCase
         $this->assertIsArray($arrayResult);
         $this->assertSame($data, $arrayResult);
     }
-    public function canBeCreatedFromArrayWithOptionalDataNull(): void
+    /**
+     * @return void
+     */
+    public function canBeCreatedFromArrayWithOptionalDataNull()
     {
         $command = BotCommand::fromArray([
             'name' => 'help',

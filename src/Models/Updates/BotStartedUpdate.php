@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BushlanovDev\MaxMessengerBot\Models\Updates;
 
 use BushlanovDev\MaxMessengerBot\Enums\UpdateType;
@@ -40,12 +38,14 @@ final class BotStartedUpdate extends AbstractUpdate
      * @param string|null $userLocale Current user locale in IETF BCP 47 format.
      */
     public function __construct(
-        int $timestamp,
-        int $chatId,
+        $timestamp,
+        $chatId,
         User $user,
-        ?string $payload,
-        ?string $userLocale
+        $payload,
+        $userLocale
     ) {
+        $timestamp = (int) $timestamp;
+        $chatId = (int) $chatId;
         $this->chatId = $chatId;
         $this->user = $user;
         $this->payload = $payload;
