@@ -32,36 +32,12 @@
             "BushlanovDev\\MaxMessengerBot\\": "src"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "BushlanovDev\\MaxMessengerBot\\Tests\\": "tests"
-        }
-    },
     "config": {
         "sort-packages": true
     },
     "extra": {
-        "laravel": {
-            "providers": [
-                "BushlanovDev\\MaxMessengerBot\\Laravel\\MaxBotServiceProvider"
-            ],
-            "aliases": {
-                "MaxBot": "BushlanovDev\\MaxMessengerBot\\Laravel\\MaxBotFacade"
-            }
-        },
-        "phabel": {
-            "revision": 0
-        }
     },
     "scripts": {
-        "analyse": "vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=512M",
-        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes src",
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
-        "create-coverage-badge": [
-            "vendor/bin/phpunit --coverage-clover clover.xml",
-            "vendor/bin/php-coverage-badger --square clover.xml .github/badge-coverage.svg"
-        ]
     },
     "require-dev": {
     }
